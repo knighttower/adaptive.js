@@ -1,0 +1,28 @@
+# Sensitive files
+.env
+env
+.db.cnf
+
+# Build artifacts
+/node_modules
+/vendor
+/npm-debug.log
+/logs
+
+
+# Development artifacts
+/.idea
+/.vagrant
+/Homestead.json
+/Homestead.yaml
+_ide_helper.php
+.favorites.json
+docker-compose.yml
+
+
+# OS meta files
+.DS_Store
+**/.DS_Store
+*.bak
+_notes/
+

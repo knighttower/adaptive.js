@@ -12,11 +12,11 @@ export default class ElementHelper {
     */
     constructor(selector) {
         if (typeof (selector) === 'object') {
-            this.element = selector;
+            this.domElement = selector;
         } else if (String(selector).includes('//')) {
-            this.element = this.getElementByXpath(selector);
+            this.domElement = this.getElementByXpath(selector);
         } else {
-            this.element = document.querySelector(selector);
+            this.domElement = document.querySelector(selector);
         }
     }
 
@@ -48,7 +48,7 @@ export default class ElementHelper {
     * @return {String}
     */
     getXpathTo() {
-        let element = this.element;
+        let element = this.domElement;
 
         if (element.id) {
             return "//*[@id='" + element.id + "']";
@@ -77,7 +77,7 @@ export default class ElementHelper {
     * @return {String|Array|Object|Null}
     */
     getAttribute(attr) {
-        let attrData = this.element.getAttribute(attr);
+        let attrData = this.domElement.getAttribute(attr);
         if (String(attrData).includes('{') || String(attrData).includes('[')) {
             attrData = JSON.parse(this._convertString(attrData));
         }

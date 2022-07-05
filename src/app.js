@@ -8,19 +8,6 @@ const app = createApp({});
 app.component('hello', hello);
 app.mount('#app');
 
-if (document.readyState === "completed") {
-    alert("Your page is loaded");
-}
-
-
-// when DOM is ready
-// The ready event handler and self cleanup method
-function completed() {
-    document.removeEventListener("DOMContentLoaded", completed);
-    window.removeEventListener("load", completed);
-    console.log('ready later');
-}
-
 
 
 // Monitor changes in the DOM
@@ -37,10 +24,8 @@ const callback = function (mutationList, observer) {
 };
 const config = { attributes: true, childList: true, subtree: true };
 
-// Select the node that will be observed for mutations
-const targetNode = document.getElementById('app');
 const observer = new MutationObserver(callback);
-observer.observe(targetNode, config);
+observer.observe((document.body), config);
 
 (function (root, factory) {
     "use strict";
@@ -71,20 +56,160 @@ observer.observe(targetNode, config);
     const domElements = {};
 
 
+    /**
+    * All the elements that will be part of the grid
+    * @private
+    * @return {Object}
+    */
+    const domQueriesMatch = {};
+    const domQueriesUnMatch = {};
+
+    /* set the queries possible sizes */
+    //other sizes can be added to this array
+    $this._screens = {
+        '320': ['1', '379'],
+        '480': ['380', '519'],
+        '520': ['520', '599'], /* up to : mobiles */
+        '600': ['600', '699'], /* up to : mid-size-tables */
+        '700': ['700', '799'], /* up to : tablets / ipad */
+        '800': ['800', '919'], /* transition in between tablets and desktop */
+        '920': ['920', '999'], /* from here on for desktops */
+        '1000': ['1000', '1199'],
+        '1200': ['1200', '1439'],
+        '1440': ['1440', '1599'],
+        '1600': ['1600', '1700'],
+    };
+
+    /* break the 3 major device types */
+    //do not remove or add devices !!
+    $this._devices = {
+        'mobile': ['1', '599'],/* Actual phones */
+        'tablet': ['600', '799'],/* tablets in portrait or below */
+        'odd-device': ['800', '1024'],/* small Laptops and Ipads in landscape */
+        'desktop': ['1025', '1440'],/* Most common resolutions below 1920 */
+    };
+
+
+    $this._customMediaQueries = {
+        'non-desktop': ['100', '1024'],
+        'fullscreen': ['1441', '6000'],/* Large monitos and fullscreen in 1920 res */
+    };
+
+
+    $this.getAllQueries = () => {
+        return Object.assign(
+            {},
+            $this._screens,
+            $this._devices,
+            $this._customMediaQueries
+        );
+    };
+
+
+    $this.registerElement = (element) => {
+        let helper = new ElementHelper(element);
+        // Register only unique non indexed elements
+        if (!helper.getAttribute('data-adaptive-id')) {
+            let uniqueId = helper.getHash();
+            helper.domElement.setAttribute('data-adaptive-id', uniqueId);
+
+            domElements[uniqueId] = new AdaptiveElement({
+                helper: helper,
+                domElement: helper.domElement,
+                xpath: helper.getXpathTo(),
+                settings: helper.getAttribute('data-adaptive')
+            });
+        }
+    };
+
+    function AdaptiveElement(props) {
+        this.props = props;
+        for (let directive in props.settings) {
+            this[directive](props.settings[directive]);
+        }
+    }
+
+    AdaptiveElement.prototype = {
+        addClass: function (queries) {
+            return new QueryHandler(queries, ($class) => {
+                return this.props.domElement.classList.add($class);
+            }, ($class) => {
+                return this.props.domElement.classList.remove($class);
+            });
+        },
+        removeClass: function (queries) {
+            QueryHandler(queries, ($class) => {
+                return this.props.domElement.classList.remove($class);
+            }, ($class) => {
+                return this.props.domElement.classList.add($class);
+            })
+        },
+        addStyle: function (queries) {
+            // console.log(queries);
+        },
+        removeStyle: function (queries) {
+            // console.log(queries);
+        },
+        teleport: function (queries) {
+            // console.log(queries);
+        },
+    };
+
+
+    function QueryHandler(queries, matchCallback, unMatchCallback) {
+        for (let query in queries) {
+            let values = queries[query];
+            let defaulQuery = $this.getAllQueries()[query];
+            let queryExpression = query;
+            if (defaulQuery) {
+                queryExpression = `screen and (min-width: ${defaulQuery[0]}px) and (max-width: ${defaulQuery[1]}px)`;
+            }
+            this.queryIsRegistered = Boolean(domQueriesMatch[queryExpression]);
+            if (!this.queryIsRegistered) {
+                domQueriesMatch[queryExpression] = [];
+                domQueriesUnMatch[queryExpression] = [];
+            }
+            domQueriesMatch[queryExpression].push([matchCallback, values]);
+            domQueriesUnMatch[queryExpression].push([unMatchCallback, values]);
+
+            let matchQuery = window.matchMedia(queryExpression);
+            this.createListener(matchQuery);
+        }
+    }
+
+    QueryHandler.prototype = {
+        createListener: function (matchQuery) {
+            var $self = this;
+            $self.match(matchQuery);
+            if (!$self.queryIsRegistered) {
+                matchQuery.addListener($self.match);
+            }
+            return;
+        },
+        match: function (matchQuery) {
+            if (matchQuery.matches) {
+                console.log(matchQuery);
+                domQueriesMatch[matchQuery.media].forEach(function (callback) {
+                    return callback[0](callback[1]);
+                });
+            } else {
+                domQueriesUnMatch[matchQuery.media].forEach(function (callback) {
+                    return callback[0](callback[1]);
+                });
+            }
+
+            return;
+        }
+    };
+
 
     function init() {
         Array
-            .from(document.querySelectorAll('[data-adaptive]'))
+            .from(document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])'))
             .forEach(function (element, index) {
-                let helper = new ElementHelper(element);
-                let uniqueId = helper.getHash();
-                let xpath = helper.getXpathTo();
-                let settings = helper.getAttribute('data-adaptive');
-                helper.element.setAttribute('data-adaptive-id', uniqueId);
-                console.log(settings);
-                // xpathArray.push(xpath);
-                // indexArray.push(index);
+                $this.registerElement(element);
             });
+
         return;
     }
 

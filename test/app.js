@@ -91,11 +91,11 @@ var ElementHelper = /*#__PURE__*/function () {
     _classCallCheck(this, ElementHelper);
 
     if (_typeof(selector) === 'object') {
-      this.element = selector;
+      this.domElement = selector;
     } else if (String(selector).includes('//')) {
-      this.element = this.getElementByXpath(selector);
+      this.domElement = this.getElementByXpath(selector);
     } else {
-      this.element = document.querySelector(selector);
+      this.domElement = document.querySelector(selector);
     }
   }
   /**
@@ -131,7 +131,7 @@ var ElementHelper = /*#__PURE__*/function () {
   }, {
     key: "getXpathTo",
     value: function getXpathTo() {
-      var element = this.element;
+      var element = this.domElement;
 
       if (element.id) {
         return "//*[@id='" + element.id + "']";
@@ -165,7 +165,7 @@ var ElementHelper = /*#__PURE__*/function () {
   }, {
     key: "getAttribute",
     value: function getAttribute(attr) {
-      var attrData = this.element.getAttribute(attr);
+      var attrData = this.domElement.getAttribute(attr);
 
       if (String(attrData).includes('{') || String(attrData).includes('[')) {
         attrData = JSON.parse(this._convertString(attrData));
@@ -240,20 +240,7 @@ var _Vue = Vue,
 
 var app = createApp({});
 app.component('hello', _hello_vue__WEBPACK_IMPORTED_MODULE_1__["default"]);
-app.mount('#app');
-
-if (document.readyState === "completed") {
-  alert("Your page is loaded");
-} // when DOM is ready
-// The ready event handler and self cleanup method
-
-
-function completed() {
-  document.removeEventListener("DOMContentLoaded", completed);
-  window.removeEventListener("load", completed);
-  console.log('ready later');
-} // Monitor changes in the DOM
-
+app.mount('#app'); // Monitor changes in the DOM
 
 var callback = function callback(mutationList, observer) {
   // Use traditional 'for loops' for IE 11
@@ -281,11 +268,9 @@ var config = {
   attributes: true,
   childList: true,
   subtree: true
-}; // Select the node that will be observed for mutations
-
-var targetNode = document.getElementById('app');
+};
 var observer = new MutationObserver(callback);
-observer.observe(targetNode, config);
+observer.observe(document.body, config);
 
 (function (root, factory) {
   "use strict";
@@ -313,16 +298,172 @@ observer.observe(targetNode, config);
   */
 
   var domElements = {};
+  /**
+  * All the elements that will be part of the grid
+  * @private
+  * @return {Object}
+  */
+
+  var domQueriesMatch = {};
+  var domQueriesUnMatch = {};
+  /* set the queries possible sizes */
+  //other sizes can be added to this array
+
+  $this._screens = {
+    '320': ['1', '379'],
+    '480': ['380', '519'],
+    '520': ['520', '599'],
+
+    /* up to : mobiles */
+    '600': ['600', '699'],
+
+    /* up to : mid-size-tables */
+    '700': ['700', '799'],
+
+    /* up to : tablets / ipad */
+    '800': ['800', '919'],
+
+    /* transition in between tablets and desktop */
+    '920': ['920', '999'],
+
+    /* from here on for desktops */
+    '1000': ['1000', '1199'],
+    '1200': ['1200', '1439'],
+    '1440': ['1440', '1599'],
+    '1600': ['1600', '1700']
+  };
+  /* break the 3 major device types */
+  //do not remove or add devices !!
+
+  $this._devices = {
+    'mobile': ['1', '599'],
+
+    /* Actual phones */
+    'tablet': ['600', '799'],
+
+    /* tablets in portrait or below */
+    'odd-device': ['800', '1024'],
+
+    /* small Laptops and Ipads in landscape */
+    'desktop': ['1025', '1440']
+    /* Most common resolutions below 1920 */
+
+  };
+  $this._customMediaQueries = {
+    'non-desktop': ['100', '1024'],
+    'fullscreen': ['1441', '6000']
+    /* Large monitos and fullscreen in 1920 res */
+
+  };
+
+  $this.getAllQueries = function () {
+    return Object.assign({}, $this._screens, $this._devices, $this._customMediaQueries);
+  };
+
+  $this.registerElement = function (element) {
+    var helper = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"](element); // Register only unique non indexed elements
+
+    if (!helper.getAttribute('data-adaptive-id')) {
+      var uniqueId = helper.getHash();
+      helper.domElement.setAttribute('data-adaptive-id', uniqueId);
+      domElements[uniqueId] = new AdaptiveElement({
+        helper: helper,
+        domElement: helper.domElement,
+        xpath: helper.getXpathTo(),
+        settings: helper.getAttribute('data-adaptive')
+      });
+    }
+  };
+
+  function AdaptiveElement(props) {
+    this.props = props;
+
+    for (var directive in props.settings) {
+      this[directive](props.settings[directive]);
+    }
+  }
+
+  AdaptiveElement.prototype = {
+    addClass: function addClass(queries) {
+      var _this = this;
+
+      return new QueryHandler(queries, function ($class) {
+        return _this.props.domElement.classList.add($class);
+      }, function ($class) {
+        return _this.props.domElement.classList.remove($class);
+      });
+    },
+    removeClass: function removeClass(queries) {
+      var _this2 = this;
+
+      QueryHandler(queries, function ($class) {
+        return _this2.props.domElement.classList.remove($class);
+      }, function ($class) {
+        return _this2.props.domElement.classList.add($class);
+      });
+    },
+    addStyle: function addStyle(queries) {// console.log(queries);
+    },
+    removeStyle: function removeStyle(queries) {// console.log(queries);
+    },
+    teleport: function teleport(queries) {// console.log(queries);
+    }
+  };
+
+  function QueryHandler(queries, matchCallback, unMatchCallback) {
+    for (var query in queries) {
+      var values = queries[query];
+      var defaulQuery = $this.getAllQueries()[query];
+      var queryExpression = query;
+
+      if (defaulQuery) {
+        queryExpression = "screen and (min-width: ".concat(defaulQuery[0], "px) and (max-width: ").concat(defaulQuery[1], "px)");
+      }
+
+      this.queryIsRegistered = Boolean(domQueriesMatch[queryExpression]);
+
+      if (!this.queryIsRegistered) {
+        domQueriesMatch[queryExpression] = [];
+        domQueriesUnMatch[queryExpression] = [];
+      }
+
+      domQueriesMatch[queryExpression].push([matchCallback, values]);
+      domQueriesUnMatch[queryExpression].push([unMatchCallback, values]);
+      var matchQuery = window.matchMedia(queryExpression);
+      this.createListener(matchQuery);
+    }
+  }
+
+  QueryHandler.prototype = {
+    createListener: function createListener(matchQuery) {
+      var $self = this;
+      $self.match(matchQuery);
+
+      if (!$self.queryIsRegistered) {
+        matchQuery.addListener($self.match);
+      }
+
+      return;
+    },
+    match: function match(matchQuery) {
+      if (matchQuery.matches) {
+        console.log(matchQuery);
+        domQueriesMatch[matchQuery.media].forEach(function (callback) {
+          return callback[0](callback[1]);
+        });
+      } else {
+        domQueriesUnMatch[matchQuery.media].forEach(function (callback) {
+          return callback[0](callback[1]);
+        });
+      }
+
+      return;
+    }
+  };
 
   function init() {
-    Array.from(document.querySelectorAll('[data-adaptive]')).forEach(function (element, index) {
-      var helper = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"](element);
-      var uniqueId = helper.getHash();
-      var xpath = helper.getXpathTo();
-      var settings = helper.getAttribute('data-adaptive');
-      helper.element.setAttribute('data-adaptive-id', uniqueId);
-      console.log(settings); // xpathArray.push(xpath);
-      // indexArray.push(index);
+    Array.from(document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])')).forEach(function (element, index) {
+      $this.registerElement(element);
     });
     return;
   }

@@ -273,36 +273,36 @@ var observer = new MutationObserver(callback);
 observer.observe(document.body, config);
 
 (function (root, factory) {
-  "use strict";
+  'use strict';
 
-  if (( false ? 0 : _typeof(module)) === "object" && (typeof exports === "undefined" ? "undefined" : _typeof(exports)) === "object") {
+  if (( false ? 0 : _typeof(module)) === 'object' && (typeof exports === "undefined" ? "undefined" : _typeof(exports)) === 'object') {
     module.exports = factory(root);
-  } else if (typeof define === "function" && __webpack_require__.amdO) {
+  } else if (typeof define === 'function' && __webpack_require__.amdO) {
     define(factory);
   } else {
     factory(root);
   }
 })(typeof window !== 'undefined' ? window : undefined, function (window) {
-  "use strict";
+  'use strict';
   /**
-  * Register this library into the window
-  * @private
-  * @return {Object}
-  */
+   * Register this library into the window
+   * @private
+   * @return {Object}
+   */
 
   var $this = window.Adaptive = window.Adaptive || {};
   /**
-  * All the elements that will be part of the grid
-  * @private
-  * @return {Object}
-  */
+   * All the elements that will be part of the grid
+   * @private
+   * @return {Object}
+   */
 
   var domElements = {};
   /**
-  * All the elements that will be part of the grid
-  * @private
-  * @return {Object}
-  */
+   * All the elements that will be part of the grid
+   * @private
+   * @return {Object}
+   */
 
   var domQueriesMatch = {};
   var domQueriesUnMatch = {};
@@ -312,21 +312,21 @@ observer.observe(document.body, config);
   $this._screens = {
     '320': ['1', '379'],
     '480': ['380', '519'],
-    '520': ['520', '599'],
-
+    '520': ['520', '599']
     /* up to : mobiles */
-    '600': ['600', '699'],
-
+    ,
+    '600': ['600', '699']
     /* up to : mid-size-tables */
-    '700': ['700', '799'],
-
+    ,
+    '700': ['700', '799']
     /* up to : tablets / ipad */
-    '800': ['800', '919'],
-
+    ,
+    '800': ['800', '919']
     /* transition in between tablets and desktop */
-    '920': ['920', '999'],
-
+    ,
+    '920': ['920', '999']
     /* from here on for desktops */
+    ,
     '1000': ['1000', '1199'],
     '1200': ['1200', '1439'],
     '1440': ['1440', '1599'],
@@ -336,22 +336,22 @@ observer.observe(document.body, config);
   //do not remove or add devices !!
 
   $this._devices = {
-    'mobile': ['1', '599'],
-
+    mobile: ['1', '599']
     /* Actual phones */
-    'tablet': ['600', '799'],
-
+    ,
+    tablet: ['600', '799']
     /* tablets in portrait or below */
-    'odd-device': ['800', '1024'],
-
+    ,
+    'odd-device': ['800', '1024']
     /* small Laptops and Ipads in landscape */
-    'desktop': ['1025', '1440']
+    ,
+    desktop: ['1025', '1440']
     /* Most common resolutions below 1920 */
 
   };
   $this._customMediaQueries = {
     'non-desktop': ['100', '1024'],
-    'fullscreen': ['1441', '6000']
+    fullscreen: ['1441', '6000']
     /* Large monitos and fullscreen in 1920 res */
 
   };
@@ -387,26 +387,68 @@ observer.observe(document.body, config);
     addClass: function addClass(queries) {
       var _this = this;
 
-      return new QueryHandler(queries, function ($class) {
-        return _this.props.domElement.classList.add($class);
-      }, function ($class) {
-        return _this.props.domElement.classList.remove($class);
+      return new QueryHandler(queries, function ($classes) {
+        $classes = $classes.split(' ');
+        $classes.forEach(function ($class) {
+          _this.props.domElement.classList.add($class);
+        });
+        return;
+      }, function ($classes) {
+        $classes = $classes.split(' ');
+        $classes.forEach(function ($class) {
+          _this.props.domElement.classList.remove($class);
+        });
+        return;
       });
     },
     removeClass: function removeClass(queries) {
       var _this2 = this;
 
-      QueryHandler(queries, function ($class) {
-        return _this2.props.domElement.classList.remove($class);
-      }, function ($class) {
-        return _this2.props.domElement.classList.add($class);
+      return new QueryHandler(queries, function ($classes) {
+        $classes = $classes.split(' ');
+        $classes.forEach(function ($class) {
+          _this2.props.domElement.classList.remove($class);
+        });
+        return;
+      }, function ($classes) {
+        $classes = $classes.split(' ');
+        $classes.forEach(function ($class) {
+          _this2.props.domElement.classList.add($class);
+        });
+        return;
       });
     },
-    addStyle: function addStyle(queries) {// console.log(queries);
+    addStyle: function addStyle(queries) {
+      var _this3 = this;
+
+      // Save the original style in memory to not discard them
+      this.props.originalStyle = this.props.domElement.getAttribute('style');
+      return new QueryHandler(queries, function ($styles) {
+        return _this3.props.domElement.style.cssText += $styles;
+      }, function () {
+        return _this3.props.domElement.style.cssText = _this3.props.originalStyle;
+      });
     },
     removeStyle: function removeStyle(queries) {// console.log(queries);
     },
-    teleport: function teleport(queries) {// console.log(queries);
+    teleport: function teleport(queries) {
+      return new QueryHandler(queries, function ($directive) {
+        var direction = Object.keys($directive)[0];
+        var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"]($directive[direction]);
+
+        switch (target) {
+          case 'to':
+            break;
+
+          case 'before':
+            break;
+
+          case 'after':
+            break;
+        }
+
+        return;
+      }, function () {});
     }
   };
 
@@ -417,7 +459,7 @@ observer.observe(document.body, config);
       var queryExpression = query;
 
       if (defaulQuery) {
-        queryExpression = "screen and (min-width: ".concat(defaulQuery[0], "px) and (max-width: ").concat(defaulQuery[1], "px)");
+        queryExpression = "(min-width: ".concat(defaulQuery[0], "px) and (max-width: ").concat(defaulQuery[1], "px)");
       }
 
       this.queryIsRegistered = Boolean(domQueriesMatch[queryExpression]);
@@ -447,7 +489,6 @@ observer.observe(document.body, config);
     },
     match: function match(matchQuery) {
       if (matchQuery.matches) {
-        console.log(matchQuery);
         domQueriesMatch[matchQuery.media].forEach(function (callback) {
           return callback[0](callback[1]);
         });
@@ -468,30 +509,30 @@ observer.observe(document.body, config);
     return;
   }
   /**
-  * When ready trigger the initialization
-  * @private
-  */
+   * When ready trigger the initialization
+   * @private
+   */
 
 
   function domIsReady() {
-    document.removeEventListener("DOMContentLoaded", domIsReady);
-    window.removeEventListener("load", domIsReady);
+    document.removeEventListener('DOMContentLoaded', domIsReady);
+    window.removeEventListener('load', domIsReady);
     return init();
   }
   /**
-  * DOM ready or wait for load
-  * @private
-  */
+   * DOM ready or wait for load
+   * @private
+   */
 
 
   (function () {
-    if (document.readyState === "complete" || document.readyState !== "loading" && !document.documentElement.doScroll) {
+    if (document.readyState === 'complete' || document.readyState !== 'loading' && !document.documentElement.doScroll) {
       return domIsReady();
     } else {
       // Use the handy event callback
-      document.addEventListener("DOMContentLoaded", domIsReady); // A fallback to window.onload, that will always work
+      document.addEventListener('DOMContentLoaded', domIsReady); // A fallback to window.onload, that will always work
 
-      window.addEventListener("load", domIsReady);
+      window.addEventListener('load', domIsReady);
     }
 
     return;

@@ -1,6 +1,6 @@
 {
 	"name": "adaptive.js",
-    "version": "1.0.0",
+	"version": "1.0.0",
 	"private": true,
 	"scripts": {
 		"dev": "npm run development",
@@ -28,19 +28,20 @@
 		"pretty-quick": "^1.11.1",
 		"vue": "3.2.37",
 		"vue-loader": "17.0.0",
-        "vue-template-compiler": "2.6.14"
+		"vue-template-compiler": "2.6.14"
 	},
 	"dependencies": {
 		"install": "^0.12.2",
+		"jshint": "^2.13.4",
 		"lint-staged": "11.1.2",
 		"npm": "^6.14.0"
 	},
-    "lint-staged": {
-        "*.js": [
-            "prettier --config .prettierrc.json --write"
-        ],
-        "*.vue": [
-            "prettier --config .prettierrc.json --write"
-        ]
-    }
+	"lint-staged": {
+		"*.js": [
+			"prettier --config .prettierrc.json --write"
+		],
+		"*.vue": [
+			"prettier --config .prettierrc.json --write"
+		]
+	}
 }

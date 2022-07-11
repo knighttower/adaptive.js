@@ -77,16 +77,41 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
 /**
-* @class Adds some extra functionality to interact with a DOM element
-* @param {String|Object} selector
-* @return {Object}
+* @author Maurix Suarez
+    MIT License
+
+    Copyright (c) [2022] [Maurix Suarez]
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
 */
+
+/**
+ * @class Adds some extra functionality to interact with a DOM element
+ * @param {String|Object} selector
+ * @return {Object}
+ */
 var ElementHelper = /*#__PURE__*/function () {
   /**
-  * Constructor
-  * @param {String|Object} selector
-  * @return {Object}
-  */
+   * Constructor
+   * @param {String|Object} selector
+   * @return {Object}
+   */
   function ElementHelper(selector) {
     _classCallCheck(this, ElementHelper);
 
@@ -99,10 +124,10 @@ var ElementHelper = /*#__PURE__*/function () {
     }
   }
   /**
-  * Conver string into valid JSON
-  * @param {String} string
-  * @return {String}
-  */
+   * Conver string into valid JSON
+   * @param {String} string
+   * @return {String}
+   */
 
 
   _createClass(ElementHelper, [{
@@ -111,11 +136,11 @@ var ElementHelper = /*#__PURE__*/function () {
       return String(string.replace(/'/g, '"'));
     }
     /**
-    * Find element by Xpath string
-    * @param {String} xpath
-    * @example getElementByXpath("//html[1]/body[1]/div[1]")
-    * @return {Object} DOM element
-    */
+     * Find element by Xpath string
+     * @param {String} xpath
+     * @example getElementByXpath("//html[1]/body[1]/div[1]")
+     * @return {Object} DOM element
+     */
 
   }, {
     key: "getElementByXpath",
@@ -123,10 +148,10 @@ var ElementHelper = /*#__PURE__*/function () {
       return document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
     }
     /**
-    * Get the element xpath string
-    * @author Based on https://stackoverflow.com/questions/2631820/how-do-i-ensure-saved-click-coordinates-can-be-reload-to-the-same-place-even-if/2631931#2631931
-    * @return {String}
-    */
+     * Get the element xpath string
+     * @author Based on https://stackoverflow.com/questions/2631820/how-do-i-ensure-saved-click-coordinates-can-be-reload-to-the-same-place-even-if/2631931#2631931
+     * @return {String}
+     */
 
   }, {
     key: "getXpathTo",
@@ -157,10 +182,10 @@ var ElementHelper = /*#__PURE__*/function () {
       }
     }
     /**
-    * Get the element attribute, but parse it if it is an object or array
-    * @param {String} attr Atrribute name
-    * @return {String|Array|Object|Null}
-    */
+     * Get the element attribute, but parse it if it is an object or array
+     * @param {String} attr Atrribute name
+     * @return {String|Array|Object|Null}
+     */
 
   }, {
     key: "getAttribute",
@@ -174,10 +199,10 @@ var ElementHelper = /*#__PURE__*/function () {
       return attrData ? attrData : null;
     }
     /**
-    * Create a unique has for the element derived from its xpath
-    * @author Based on https://www.geeksforgeeks.org/how-to-create-hash-from-string-in-javascript/
-    * @return {String}
-    */
+     * Create a unique has for the element derived from its xpath
+     * @author Based on https://www.geeksforgeeks.org/how-to-create-hash-from-string-in-javascript/
+     * @return {String}
+     */
 
   }, {
     key: "getHash",
@@ -203,10 +228,10 @@ var ElementHelper = /*#__PURE__*/function () {
   return ElementHelper;
 }();
 /**
-* Future
-* @private
-* @todo enhance to extend the prototype like https://stackoverflow.com/questions/779880/in-javascript-can-you-extend-the-dom
-*/
+ * Future
+ * @private
+ * @todo enhance to extend the prototype like https://stackoverflow.com/questions/779880/in-javascript-can-you-extend-the-dom
+ */
 
 
 
@@ -225,14 +250,38 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _hello_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./hello.vue */ "./src/hello.vue");
 /* harmony import */ var _ElementHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ElementHelper.js */ "./src/ElementHelper.js");
 /* module decorator */ module = __webpack_require__.hmd(module);
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
+/**
+* @author Maurix Suarez
+    MIT License
+
+    Copyright (c) [2022] [Maurix Suarez]
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+*/
 var _Vue = Vue,
     createApp = _Vue.createApp;
 
@@ -240,37 +289,7 @@ var _Vue = Vue,
 
 var app = createApp({});
 app.component('hello', _hello_vue__WEBPACK_IMPORTED_MODULE_1__["default"]);
-app.mount('#app'); // Monitor changes in the DOM
-
-var callback = function callback(mutationList, observer) {
-  // Use traditional 'for loops' for IE 11
-  var _iterator = _createForOfIteratorHelper(mutationList),
-      _step;
-
-  try {
-    for (_iterator.s(); !(_step = _iterator.n()).done;) {
-      var mutation = _step.value;
-
-      if (mutation.type === 'childList') {
-        console.log('A child node has been added or removed.');
-      } else if (mutation.type === 'attributes') {
-        console.log('The ' + mutation.attributeName + ' attribute was modified.');
-      }
-    }
-  } catch (err) {
-    _iterator.e(err);
-  } finally {
-    _iterator.f();
-  }
-};
-
-var config = {
-  attributes: true,
-  childList: true,
-  subtree: true
-};
-var observer = new MutationObserver(callback);
-observer.observe(document.body, config);
+app.mount('#app');
 
 (function (root, factory) {
   'use strict';
@@ -294,18 +313,33 @@ observer.observe(document.body, config);
   /**
    * All the elements that will be part of the grid
    * @private
-   * @return {Object}
    */
 
   var domElements = {};
   /**
-   * All the elements that will be part of the grid
+   * Holds memory of registered queries to match
    * @private
-   * @return {Object}
    */
 
   var domQueriesMatch = {};
+  /**
+   * Holds memory of registered queries to Unmatch
+   * @private
+   */
+
   var domQueriesUnMatch = {};
+  /**
+   * Holds memory of registered callbacks
+   * @private
+   */
+
+  var executeOnNodeChanged = {};
+  /**
+   * Holds memory of registered callbacks
+   * @private
+   */
+
+  var executeOnAttrChanged = {};
   /* set the queries possible sizes */
   //other sizes can be added to this array
 
@@ -360,13 +394,14 @@ observer.observe(document.body, config);
     return Object.assign({}, $this._screens, $this._devices, $this._customMediaQueries);
   };
 
-  $this.registerElement = function (element) {
-    var helper = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"](element); // Register only unique non indexed elements
+  $this.registerElement = function (elementOrSelector) {
+    var helper = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"](elementOrSelector); // Register only unique non indexed elements
 
     if (!helper.getAttribute('data-adaptive-id')) {
       var uniqueId = helper.getHash();
       helper.domElement.setAttribute('data-adaptive-id', uniqueId);
       domElements[uniqueId] = new AdaptiveElement({
+        adaptiveId: uniqueId,
         helper: helper,
         domElement: helper.domElement,
         xpath: helper.getXpathTo(),
@@ -432,19 +467,53 @@ observer.observe(document.body, config);
     removeStyle: function removeStyle(queries) {// console.log(queries);
     },
     teleport: function teleport(queries) {
+      var _this4 = this;
+
       return new QueryHandler(queries, function ($directive) {
+        var _target$domElement;
+
+        // Defaults to "to" target if only the selector is passed
+        if (typeof $directive === 'string') {
+          $directive = {
+            to: $directive
+          };
+        }
+
         var direction = Object.keys($directive)[0];
-        var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"]($directive[direction]);
+        var selector = $directive[direction];
+        var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"](selector);
+        var position = 'beforeend';
 
         switch (target) {
           case 'to':
+            // default
             break;
 
           case 'before':
+            position = 'beforebegin';
             break;
 
           case 'after':
+            position = 'afterend';
             break;
+        }
+
+        if ((_target$domElement = target.domElement) !== null && _target$domElement !== void 0 && _target$domElement.outerHTML) {
+          target.domElement.insertAdjacentElement(position, _this4.props.domElement);
+        } else {
+          // This will create a loop up until the Element/Node is found
+          var self = _this4;
+
+          executeOnNodeChanged[self.props.adaptiveId] = function () {
+            var _target$domElement2;
+
+            var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"](selector);
+
+            if ((_target$domElement2 = target.domElement) !== null && _target$domElement2 !== void 0 && _target$domElement2.outerHTML) {
+              delete executeOnNodeChanged[self.props.adaptiveId];
+              target.domElement.insertAdjacentElement(position, self.props.domElement);
+            }
+          };
         }
 
         return;
@@ -500,14 +569,65 @@ observer.observe(document.body, config);
 
       return;
     }
-  };
+  }; // =========================================
+  // --> Listen all DOM changes
+  // --------------------------
 
-  function init() {
+  /**
+   * Observes the DOM for Node or Atrribute Changes
+   * @private
+   */
+
+  function domObserver() {
+    var callback = function callback(mutationList, observer) {
+      // Use traditional 'for loops' for IE 11
+      var _iterator = _createForOfIteratorHelper(mutationList),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var mutation = _step.value;
+
+          if (mutation.type === 'childList') {
+            for (var _callback in executeOnNodeChanged) {
+              executeOnNodeChanged[_callback]();
+            }
+          } else if (mutation.type === 'attributes') {
+            for (var _callback2 in executeOnAttrChanged) {
+              executeOnAttrChanged[_callback2]();
+            }
+          }
+        }
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+    };
+
+    var config = {
+      attributes: true,
+      childList: true,
+      subtree: true
+    };
+    var observer = new MutationObserver(callback);
+    return observer.observe(document.body, config);
+  } // =========================================
+  // --> DomReady and INIT
+  // --------------------------
+
+  /**
+   * Initialization, cam be called externally to reinitialized after dom loaded
+   * @return {Void}
+   */
+
+
+  $this.init = function () {
     Array.from(document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])')).forEach(function (element, index) {
       $this.registerElement(element);
     });
     return;
-  }
+  };
   /**
    * When ready trigger the initialization
    * @private
@@ -517,7 +637,9 @@ observer.observe(document.body, config);
   function domIsReady() {
     document.removeEventListener('DOMContentLoaded', domIsReady);
     window.removeEventListener('load', domIsReady);
-    return init();
+    $this.init();
+    domObserver();
+    return;
   }
   /**
    * DOM ready or wait for load
@@ -540,6 +662,8 @@ observer.observe(document.body, config);
 
   return $this;
 });
+
+setTimeout(function () {}, '1000');
 
 /***/ }),
 

@@ -1,28 +1,35 @@
+/**
+* @author Maurix Suarez
+    MIT License
+
+    Copyright (c) [2022] [Maurix Suarez]
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+*/
 const { createApp } = Vue;
 import { initial } from 'lodash';
 import hello from './hello.vue';
 import ElementHelper from './ElementHelper.js';
-
 const app = createApp({});
 
 app.component('hello', hello);
 app.mount('#app');
-
-// Monitor changes in the DOM
-const callback = function(mutationList, observer) {
-    // Use traditional 'for loops' for IE 11
-    for (const mutation of mutationList) {
-        if (mutation.type === 'childList') {
-            console.log('A child node has been added or removed.');
-        } else if (mutation.type === 'attributes') {
-            console.log('The ' + mutation.attributeName + ' attribute was modified.');
-        }
-    }
-};
-const config = { attributes: true, childList: true, subtree: true };
-
-const observer = new MutationObserver(callback);
-observer.observe(document.body, config);
 
 (function(root, factory) {
     'use strict';
@@ -47,17 +54,32 @@ observer.observe(document.body, config);
     /**
      * All the elements that will be part of the grid
      * @private
-     * @return {Object}
      */
     const domElements = {};
 
     /**
-     * All the elements that will be part of the grid
+     * Holds memory of registered queries to match
      * @private
-     * @return {Object}
      */
     const domQueriesMatch = {};
+
+    /**
+     * Holds memory of registered queries to Unmatch
+     * @private
+     */
     const domQueriesUnMatch = {};
+
+    /**
+     * Holds memory of registered callbacks
+     * @private
+     */
+    const executeOnNodeChanged = {};
+
+    /**
+     * Holds memory of registered callbacks
+     * @private
+     */
+    const executeOnAttrChanged = {};
 
     /* set the queries possible sizes */
     //other sizes can be added to this array
@@ -93,14 +115,15 @@ observer.observe(document.body, config);
         return Object.assign({}, $this._screens, $this._devices, $this._customMediaQueries);
     };
 
-    $this.registerElement = (element) => {
-        let helper = new ElementHelper(element);
+    $this.registerElement = (elementOrSelector) => {
+        let helper = new ElementHelper(elementOrSelector);
         // Register only unique non indexed elements
         if (!helper.getAttribute('data-adaptive-id')) {
             let uniqueId = helper.getHash();
             helper.domElement.setAttribute('data-adaptive-id', uniqueId);
 
             domElements[uniqueId] = new AdaptiveElement({
+                adaptiveId: uniqueId,
                 helper: helper,
                 domElement: helper.domElement,
                 xpath: helper.getXpathTo(),
@@ -176,17 +199,39 @@ observer.observe(document.body, config);
             return new QueryHandler(
                 queries,
                 ($directive) => {
+                    // Defaults to "to" target if only the selector is passed
+                    if (typeof $directive === 'string') {
+                        $directive = { to: $directive };
+                    }
                     let direction = Object.keys($directive)[0];
-                    let target = new ElementHelper($directive[direction]);
-
+                    let selector = $directive[direction];
+                    let target = new ElementHelper(selector);
+                    let position = 'beforeend';
                     switch (target) {
                         case 'to':
+                            // default
                             break;
                         case 'before':
+                            position = 'beforebegin';
                             break;
                         case 'after':
+                            position = 'afterend';
                             break;
                     }
+                    if (target.domElement?.outerHTML) {
+                        target.domElement.insertAdjacentElement(position, this.props.domElement);
+                    } else {
+                        // This will create a loop up until the Element/Node is found
+                        let self = this;
+                        executeOnNodeChanged[self.props.adaptiveId] = () => {
+                            let target = new ElementHelper(selector);
+                            if (target.domElement?.outerHTML) {
+                                delete executeOnNodeChanged[self.props.adaptiveId];
+                                target.domElement.insertAdjacentElement(position, self.props.domElement);
+                            }
+                        };
+                    }
+
                     return;
                 },
                 () => {}
@@ -243,7 +288,42 @@ observer.observe(document.body, config);
         },
     };
 
-    function init() {
+    // =========================================
+    // --> Listen all DOM changes
+    // --------------------------
+    /**
+     * Observes the DOM for Node or Atrribute Changes
+     * @private
+     */
+    function domObserver() {
+        const callback = function(mutationList, observer) {
+            // Use traditional 'for loops' for IE 11
+            for (const mutation of mutationList) {
+                if (mutation.type === 'childList') {
+                    for (let callback in executeOnNodeChanged) {
+                        executeOnNodeChanged[callback]();
+                    }
+                } else if (mutation.type === 'attributes') {
+                    for (let callback in executeOnAttrChanged) {
+                        executeOnAttrChanged[callback]();
+                    }
+                }
+            }
+        };
+        const config = { attributes: true, childList: true, subtree: true };
+        const observer = new MutationObserver(callback);
+
+        return observer.observe(document.body, config);
+    }
+
+    // =========================================
+    // --> DomReady and INIT
+    // --------------------------
+    /**
+     * Initialization, cam be called externally to reinitialized after dom loaded
+     * @return {Void}
+     */
+    $this.init = () => {
         Array.from(document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])')).forEach(function(
             element,
             index
@@ -252,7 +332,7 @@ observer.observe(document.body, config);
         });
 
         return;
-    }
+    };
 
     /**
      * When ready trigger the initialization
@@ -261,8 +341,10 @@ observer.observe(document.body, config);
     function domIsReady() {
         document.removeEventListener('DOMContentLoaded', domIsReady);
         window.removeEventListener('load', domIsReady);
+        $this.init();
+        domObserver();
 
-        return init();
+        return;
     }
 
     /**
@@ -287,3 +369,5 @@ observer.observe(document.body, config);
 
     return $this;
 });
+
+setTimeout(() => {}, '1000');

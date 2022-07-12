@@ -45,6 +45,12 @@ export default class ElementHelper {
     }
 
     /**
+     * Check if the element exists or is visible. It will keep querying
+     * @return {Boolean}
+     */
+    isVisible() {}
+
+    /**
      * Conver string into valid JSON
      * @param {String} string
      * @return {String}

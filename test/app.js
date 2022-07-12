@@ -58,197 +58,14 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
 /***/ }),
 
-/***/ "./src/ElementHelper.js":
-/*!******************************!*\
-  !*** ./src/ElementHelper.js ***!
-  \******************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ ElementHelper)
-/* harmony export */ });
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
-/**
-* @author Antuan Suarez
-    MIT License
-
-    Copyright (c) [2022] [Antuan Suarez] https://github.com/knighttower
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
-*/
-
-/**
- * @class Adds some extra functionality to interact with a DOM element
- * @param {String|Object} selector
- * @return {Object}
- */
-var ElementHelper = /*#__PURE__*/function () {
-  /**
-   * Constructor
-   * @param {String|Object} selector
-   * @return {Object}
-   */
-  function ElementHelper(selector) {
-    _classCallCheck(this, ElementHelper);
-
-    if (_typeof(selector) === 'object') {
-      this.domElement = selector;
-    } else if (String(selector).includes('//')) {
-      this.domElement = this.getElementByXpath(selector);
-    } else {
-      this.domElement = document.querySelector(selector);
-    }
-  }
-  /**
-   * Conver string into valid JSON
-   * @param {String} string
-   * @return {String}
-   */
-
-
-  _createClass(ElementHelper, [{
-    key: "_convertString",
-    value: function _convertString(string) {
-      return String(string.replace(/'/g, '"'));
-    }
-    /**
-     * Find element by Xpath string
-     * @param {String} xpath
-     * @example getElementByXpath("//html[1]/body[1]/div[1]")
-     * @return {Object} DOM element
-     */
-
-  }, {
-    key: "getElementByXpath",
-    value: function getElementByXpath(xpath) {
-      return document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
-    }
-    /**
-     * Get the element xpath string
-     * @author Based on https://stackoverflow.com/questions/2631820/how-do-i-ensure-saved-click-coordinates-can-be-reload-to-the-same-place-even-if/2631931#2631931
-     * @return {String}
-     */
-
-  }, {
-    key: "getXpathTo",
-    value: function getXpathTo() {
-      var element = this.domElement;
-
-      if (element.id) {
-        return "//*[@id='" + element.id + "']";
-      }
-
-      if (element === document.body) {
-        return '//' + element.tagName;
-      }
-
-      var ix = 0;
-      var siblings = element.parentNode.childNodes;
-
-      for (var i = 0; i < siblings.length; i++) {
-        var sibling = siblings[i];
-
-        if (sibling === element) {
-          return new ElementHelper(element.parentNode).getXpathTo() + '/' + element.tagName + '[' + (ix + 1) + ']';
-        }
-
-        if (sibling.nodeType === 1 && sibling.tagName === element.tagName) {
-          ix++;
-        }
-      }
-    }
-    /**
-     * Get the element attribute, but parse it if it is an object or array
-     * @param {String} attr Atrribute name
-     * @return {String|Array|Object|Null}
-     */
-
-  }, {
-    key: "getAttribute",
-    value: function getAttribute(attr) {
-      var attrData = this.domElement.getAttribute(attr);
-
-      if (String(attrData).includes('{') || String(attrData).includes('[')) {
-        attrData = JSON.parse(this._convertString(attrData));
-      }
-
-      return attrData ? attrData : null;
-    }
-    /**
-     * Create a unique has for the element derived from its xpath
-     * @author Based on https://www.geeksforgeeks.org/how-to-create-hash-from-string-in-javascript/
-     * @return {String}
-     */
-
-  }, {
-    key: "getHash",
-    value: function getHash() {
-      var string = String(this.getXpathTo());
-      var hash = 0;
-
-      if (string.length === 0) {
-        return hash;
-      }
-
-      for (var i = 0; i < string.length; i++) {
-        var _char = string.charCodeAt(i);
-
-        hash = (hash << 5) - hash + _char;
-        hash = hash & hash;
-      }
-
-      return hash;
-    }
-  }]);
-
-  return ElementHelper;
-}();
-/**
- * Future
- * @private
- * @todo enhance to extend the prototype like https://stackoverflow.com/questions/779880/in-javascript-can-you-extend-the-dom
- */
-
-
-
-
-/***/ }),
-
-/***/ "./src/app.js":
-/*!********************!*\
-  !*** ./src/app.js ***!
-  \********************/
+/***/ "./src/Adaptive.js":
+/*!*************************!*\
+  !*** ./src/Adaptive.js ***!
+  \*************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "lodash");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _hello_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./hello.vue */ "./src/hello.vue");
-/* harmony import */ var _ElementHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ElementHelper.js */ "./src/ElementHelper.js");
+/* harmony import */ var _ElementHelper_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ElementHelper.js */ "./src/ElementHelper.js");
 /* module decorator */ module = __webpack_require__.hmd(module);
 function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
@@ -259,7 +76,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 /**
-* @author Antuan Suarez
+* //@author Antuan Suarez
     MIT License
 
     Copyright (c) [2022] [Antuan Suarez] https://github.com/knighttower
@@ -282,14 +99,23 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
-var _Vue = Vue,
-    createApp = _Vue.createApp;
 
+/**
+ * Import the Element DOM helper
+ */
+// -----------------------------------------
+ // =========================================
+// --> ADAPTIVE JS
+// --------------------------
 
-
-var app = createApp({});
-app.component('hello', _hello_vue__WEBPACK_IMPORTED_MODULE_1__["default"]);
-app.mount('#app');
+/**
+ * Add/remove classes/styles or teleport an element
+ * @module Adpative
+ * @param {Object} root Window or parent object
+ * @param {Object} factory The Class
+ * @return {Object}
+ * @example Add a data attribute with valid JSON like this --> data-adaptive="{'addClass':{'tablet':'hello','desktop':'dos-tres hellothere'},'teleport':{'tablet':{'to':'.sample'}}}"
+ */
 
 (function (root, factory) {
   'use strict';
@@ -340,10 +166,12 @@ app.mount('#app');
    */
 
   var executeOnAttrChanged = {};
-  /* set the queries possible sizes */
-  //other sizes can be added to this array
+  /**
+   * queries possible sizes
+   * @private
+   */
 
-  $this._screens = {
+  var _screens = {
     '320': ['1', '379'],
     '480': ['380', '519'],
     '520': ['520', '599']
@@ -366,10 +194,12 @@ app.mount('#app');
     '1440': ['1440', '1599'],
     '1600': ['1600', '1700']
   };
-  /* break the 3 major device types */
-  //do not remove or add devices !!
+  /**
+   * break the 3 major device types
+   * @private
+   */
 
-  $this._devices = {
+  var _devices = {
     mobile: ['1', '599']
     /* Actual phones */
     ,
@@ -383,19 +213,41 @@ app.mount('#app');
     /* Most common resolutions below 1920 */
 
   };
-  $this._customMediaQueries = {
+  /**
+   * break the 3 major device types
+   * @private
+   */
+
+  var _broadMediaQueries = {
     'non-desktop': ['100', '1024'],
     fullscreen: ['1441', '6000']
     /* Large monitos and fullscreen in 1920 res */
 
   };
+  /**
+   * To register additional custom queries add the key:[min, max]
+   * @public
+   */
+
+  $this.customQueries = {};
+  /**
+   * Get all the available queries
+   * @private
+   * @return {Object}
+   */
 
   $this.getAllQueries = function () {
-    return Object.assign({}, $this._screens, $this._devices, $this._customMediaQueries);
+    return Object.assign({}, _screens, _devices, _broadMediaQueries, $this.customQueries);
   };
+  /**
+   * Register an element
+   * @param {String|Object} elementOrSelector
+   * @return {Void}
+   */
+
 
   $this.registerElement = function (elementOrSelector) {
-    var helper = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"](elementOrSelector); // Register only unique non indexed elements
+    var helper = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_0__["default"](elementOrSelector); // Register only unique non indexed elements
 
     if (!helper.getAttribute('data-adaptive-id')) {
       var uniqueId = helper.getHash();
@@ -408,7 +260,16 @@ app.mount('#app');
         settings: helper.getAttribute('data-adaptive')
       });
     }
+
+    return;
   };
+  /**
+   * Creates a new Adaptive object per element
+   * @private
+   * @param {Object} props
+   * @return {Object}
+   */
+
 
   function AdaptiveElement(props) {
     this.props = props;
@@ -417,6 +278,11 @@ app.mount('#app');
       this[directive](props.settings[directive]);
     }
   }
+  /**
+   * Add Adaptive prototype
+   * @private
+   */
+
 
   AdaptiveElement.prototype = {
     addClass: function addClass(queries) {
@@ -464,8 +330,6 @@ app.mount('#app');
         return _this3.props.domElement.style.cssText = _this3.props.originalStyle;
       });
     },
-    removeStyle: function removeStyle(queries) {// console.log(queries);
-    },
     teleport: function teleport(queries) {
       var _this4 = this;
 
@@ -481,7 +345,7 @@ app.mount('#app');
 
         var direction = Object.keys($directive)[0];
         var selector = $directive[direction];
-        var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"](selector);
+        var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_0__["default"](selector);
         var position = 'beforeend';
 
         switch (target) {
@@ -513,7 +377,7 @@ app.mount('#app');
           executeOnNodeChanged[self.props.adaptiveId] = function () {
             var _target$domElement2;
 
-            var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"](selector);
+            var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_0__["default"](selector);
 
             if ((_target$domElement2 = target.domElement) !== null && _target$domElement2 !== void 0 && _target$domElement2.outerHTML) {
               delete executeOnNodeChanged[self.props.adaptiveId];
@@ -527,7 +391,7 @@ app.mount('#app');
       }, function () {
         var _target$domElement3;
 
-        var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"]("[name=\"adaptive\"][value=\"".concat(_this4.props.adaptiveId, "\""));
+        var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_0__["default"]("[name=\"adaptive\"][value=\"".concat(_this4.props.adaptiveId, "\""));
 
         if ((_target$domElement3 = target.domElement) !== null && _target$domElement3 !== void 0 && _target$domElement3.outerHTML) {
           target.domElement.insertAdjacentElement('afterend', _this4.props.domElement);
@@ -536,6 +400,14 @@ app.mount('#app');
       });
     }
   };
+  /**
+   * Handle all queries functions
+   * @private
+   * @param {String} queries Media query
+   * @param {Function} matchCallback Callback
+   * @param {Function} unMatchCallback Callback
+   * @return {Object}
+   */
 
   function QueryHandler(queries, matchCallback, unMatchCallback) {
     for (var query in queries) {
@@ -560,6 +432,11 @@ app.mount('#app');
       this.createListener(matchQuery);
     }
   }
+  /**
+   * Add Query prototype
+   * @private
+   */
+
 
   QueryHandler.prototype = {
     createListener: function createListener(matchQuery) {
@@ -679,7 +556,193 @@ app.mount('#app');
   return $this;
 });
 
-setTimeout(function () {}, '1000');
+/***/ }),
+
+/***/ "./src/ElementHelper.js":
+/*!******************************!*\
+  !*** ./src/ElementHelper.js ***!
+  \******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ ElementHelper)
+/* harmony export */ });
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+/**
+* @author Antuan Suarez
+    MIT License
+
+    Copyright (c) [2022] [Antuan Suarez] https://github.com/knighttower
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+*/
+
+/**
+ * @class Adds some extra functionality to interact with a DOM element
+ * @param {String|Object} selector
+ * @return {Object}
+ */
+var ElementHelper = /*#__PURE__*/function () {
+  /**
+   * Constructor
+   * @param {String|Object} selector
+   * @return {Object}
+   */
+  function ElementHelper(selector) {
+    _classCallCheck(this, ElementHelper);
+
+    if (_typeof(selector) === 'object') {
+      this.domElement = selector;
+    } else if (String(selector).includes('//')) {
+      this.domElement = this.getElementByXpath(selector);
+    } else {
+      this.domElement = document.querySelector(selector);
+    }
+  }
+  /**
+   * Check if the element exists or is visible. It will keep querying
+   * @return {Boolean}
+   */
+
+
+  _createClass(ElementHelper, [{
+    key: "isVisible",
+    value: function isVisible() {}
+    /**
+     * Conver string into valid JSON
+     * @param {String} string
+     * @return {String}
+     */
+
+  }, {
+    key: "_convertString",
+    value: function _convertString(string) {
+      return String(string.replace(/'/g, '"'));
+    }
+    /**
+     * Find element by Xpath string
+     * @param {String} xpath
+     * @example getElementByXpath("//html[1]/body[1]/div[1]")
+     * @return {Object} DOM element
+     */
+
+  }, {
+    key: "getElementByXpath",
+    value: function getElementByXpath(xpath) {
+      return document.evaluate(xpath, document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue;
+    }
+    /**
+     * Get the element xpath string
+     * @author Based on https://stackoverflow.com/questions/2631820/how-do-i-ensure-saved-click-coordinates-can-be-reload-to-the-same-place-even-if/2631931#2631931
+     * @return {String}
+     */
+
+  }, {
+    key: "getXpathTo",
+    value: function getXpathTo() {
+      var element = this.domElement;
+
+      if (element.id) {
+        return "//*[@id='" + element.id + "']";
+      }
+
+      if (element === document.body) {
+        return '//' + element.tagName;
+      }
+
+      var ix = 0;
+      var siblings = element.parentNode.childNodes;
+
+      for (var i = 0; i < siblings.length; i++) {
+        var sibling = siblings[i];
+
+        if (sibling === element) {
+          return new ElementHelper(element.parentNode).getXpathTo() + '/' + element.tagName + '[' + (ix + 1) + ']';
+        }
+
+        if (sibling.nodeType === 1 && sibling.tagName === element.tagName) {
+          ix++;
+        }
+      }
+    }
+    /**
+     * Get the element attribute, but parse it if it is an object or array
+     * @param {String} attr Atrribute name
+     * @return {String|Array|Object|Null}
+     */
+
+  }, {
+    key: "getAttribute",
+    value: function getAttribute(attr) {
+      var attrData = this.domElement.getAttribute(attr);
+
+      if (String(attrData).includes('{') || String(attrData).includes('[')) {
+        attrData = JSON.parse(this._convertString(attrData));
+      }
+
+      return attrData ? attrData : null;
+    }
+    /**
+     * Create a unique has for the element derived from its xpath
+     * @author Based on https://www.geeksforgeeks.org/how-to-create-hash-from-string-in-javascript/
+     * @return {String}
+     */
+
+  }, {
+    key: "getHash",
+    value: function getHash() {
+      var string = String(this.getXpathTo());
+      var hash = 0;
+
+      if (string.length === 0) {
+        return hash;
+      }
+
+      for (var i = 0; i < string.length; i++) {
+        var _char = string.charCodeAt(i);
+
+        hash = (hash << 5) - hash + _char;
+        hash = hash & hash;
+      }
+
+      return hash;
+    }
+  }]);
+
+  return ElementHelper;
+}();
+/**
+ * Future
+ * @private
+ * @todo enhance to extend the prototype like https://stackoverflow.com/questions/779880/in-javascript-can-you-extend-the-dom
+ */
+
+
+
 
 /***/ }),
 
@@ -1297,11 +1360,51 @@ module.exports = undefined;
 /******/ 	})();
 /******/ 	
 /************************************************************************/
-/******/ 	
-/******/ 	// startup
-/******/ 	// Load entry module and return exports
-/******/ 	// This entry module is referenced by other modules so it can't be inlined
-/******/ 	var __webpack_exports__ = __webpack_require__("./src/app.js");
-/******/ 	
+var __webpack_exports__ = {};
+// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+(() => {
+/*!********************!*\
+  !*** ./src/app.js ***!
+  \********************/
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _Adaptive_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Adaptive.js */ "./src/Adaptive.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! lodash */ "lodash");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _hello_vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./hello.vue */ "./src/hello.vue");
+/**
+* @author Antuan Suarez
+    MIT License
+
+    Copyright (c) [2022] [Antuan Suarez] https://github.com/knighttower
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+*/
+
+var _Vue = Vue,
+    createApp = _Vue.createApp;
+
+
+var app = createApp({});
+app.component('hello', _hello_vue__WEBPACK_IMPORTED_MODULE_2__["default"]);
+app.mount('#app');
+setTimeout(function () {}, '1000');
+})();
+
 /******/ })()
 ;

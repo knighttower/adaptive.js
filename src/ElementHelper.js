@@ -22,6 +22,13 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
+/**
+ * Import the DOM helpers
+ */
+// -----------------------------------------
+import DomObserver from './DomObserver.js';
+// To avoid too many instances of the obsever, it will init outside
+const $domObserver = new DomObserver();
 
 /**
  * @class Adds some extra functionality to interact with a DOM element
@@ -48,7 +55,24 @@ export default class ElementHelper {
      * Check if the element exists or is visible. It will keep querying
      * @return {Boolean}
      */
-    isVisible() {}
+    isVisible() {
+        let $this = this;
+        if (!$this.domElement?.outerHTML) {
+            let callback = () => {
+                console.log(33);
+                if ($this.domElement?.outerHTML) {
+                    $domObserver.removeOnNodeChange(callback);
+                }
+
+                return;
+            };
+            $domObserver.addOnNodeChange(callback);
+
+            return false;
+        }
+
+        return true;
+    }
 
     /**
      * Conver string into valid JSON

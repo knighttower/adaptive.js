@@ -35,7 +35,7 @@ export default class DomObserver {
      * @param {Function} onAttrChange Callback when any attribute changes
      * @return {Void}
      */
-    constructor(onNodeChange, onAttrChange) {
+    constructor() {
         /**
          * Holds memory of registered callbacks
          */
@@ -46,8 +46,15 @@ export default class DomObserver {
          * @private
          */
         this.executeOnAttrChanged = [];
+
+        this.domObserver();
     }
 
+    /**
+     * When node change
+     * @param {Function} callback Callback when any node changes/ add/deleted/modified
+     * @return {Void}
+     */
     addOnNodeChange(callback) {
         if (callback) {
             this.executeOnNodeChanged.push(callback);
@@ -55,6 +62,11 @@ export default class DomObserver {
         return;
     }
 
+    /**
+     * Add function callback when an attribute change is detected
+     * @param {Function} callback Callback when any attribute changes
+     * @return {Void}
+     */
     addOnAttrChange(callback) {
         if (callback) {
             this.executeOnAttrChanged.push(callback);
@@ -62,17 +74,46 @@ export default class DomObserver {
         return;
     }
 
+    /**
+     * Remove from node change
+     * @param {Function} callback
+     * @return {Void}
+     */
+    removeOnNodeChange(callback) {
+        if (callback) {
+            this.executeOnNodeChanged = this.executeOnNodeChanged.filter((e) => e !== callback);
+        }
+        return;
+    }
+
+    /**
+     * Remvoe from attr change
+     * @param {Function} callback
+     * @return {Void}
+     */
+    removeOnAttrChange(callback) {
+        if (callback) {
+            this.executeOnAttrChanged = this.executeOnAttrChanged.filter((e) => e !== callback);
+        }
+        return;
+    }
+
+    /**
+     * Obsever
+     * @private
+     * @return {MutationObserver}
+     */
     domObserver() {
         const callback = function(mutationList, observer) {
             // Use traditional 'for loops' for IE 11
             for (const mutation of mutationList) {
                 if (mutation.type === 'childList') {
-                    for (let callback in executeOnNodeChanged) {
-                        executeOnNodeChanged[callback]();
+                    for (let callback in this.executeOnNodeChanged) {
+                        this.executeOnNodeChanged[callback]();
                     }
                 } else if (mutation.type === 'attributes') {
-                    for (let callback in executeOnAttrChanged) {
-                        executeOnAttrChanged[callback]();
+                    for (let callback in this.executeOnAttrChanged) {
+                        this.executeOnAttrChanged[callback]();
                     }
                 }
             }

@@ -65,14 +65,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _ElementHelper_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ElementHelper.js */ "./src/ElementHelper.js");
+/* harmony import */ var _DomObserver_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DomObserver.js */ "./src/DomObserver.js");
+/* harmony import */ var _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ElementHelper.js */ "./src/ElementHelper.js");
 /* module decorator */ module = __webpack_require__.hmd(module);
-function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
-
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
-
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
-
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 /**
@@ -104,6 +99,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
  * Import the Element DOM helper
  */
 // -----------------------------------------
+
  // =========================================
 // --> ADAPTIVE JS
 // --------------------------
@@ -155,17 +151,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
   var domQueriesUnMatch = {};
   /**
-   * Holds memory of registered callbacks
+   * Observes the DOM for changes and executes callbacks
    * @private
    */
 
-  var executeOnNodeChanged = {};
-  /**
-   * Holds memory of registered callbacks
-   * @private
-   */
-
-  var executeOnAttrChanged = {};
+  var $domObserver = new _DomObserver_js__WEBPACK_IMPORTED_MODULE_0__["default"]();
   /**
    * queries possible sizes
    * @private
@@ -247,7 +237,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
 
   $this.registerElement = function (elementOrSelector) {
-    var helper = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_0__["default"](elementOrSelector); // Register only unique non indexed elements
+    var helper = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"](elementOrSelector); // Register only unique non indexed elements
 
     if (!helper.getAttribute('data-adaptive-id')) {
       var uniqueId = helper.getHash();
@@ -334,8 +324,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
       var _this4 = this;
 
       return new QueryHandler(queries, function ($directive) {
-        var _target$domElement;
-
         // Defaults to "to" target if only the selector is passed
         if (typeof $directive === 'string') {
           $directive = {
@@ -345,7 +333,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
         var direction = Object.keys($directive)[0];
         var selector = $directive[direction];
-        var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_0__["default"](selector);
+        var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"](selector);
         var position = 'beforeend';
 
         switch (target) {
@@ -366,7 +354,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         placeholder.name = 'adaptive';
         placeholder.value = _this4.props.adaptiveId;
 
-        if ((_target$domElement = target.domElement) !== null && _target$domElement !== void 0 && _target$domElement.outerHTML) {
+        if (target.isVisible()) {
           _this4.props.domElement.insertAdjacentElement('beforebegin', placeholder);
 
           target.domElement.insertAdjacentElement(position, _this4.props.domElement);
@@ -374,26 +362,25 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
           // This will create a loop up until the Element/Node is found
           var self = _this4;
 
-          executeOnNodeChanged[self.props.adaptiveId] = function () {
-            var _target$domElement2;
+          var callback = function callback() {
+            console.log(44);
+            var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"](selector);
 
-            var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_0__["default"](selector);
-
-            if ((_target$domElement2 = target.domElement) !== null && _target$domElement2 !== void 0 && _target$domElement2.outerHTML) {
-              delete executeOnNodeChanged[self.props.adaptiveId];
+            if (target.isVisible()) {
+              $domObserver.removeOnNodeChange(callback);
               self.props.domElement.insertAdjacentElement('beforebegin', placeholder);
               target.domElement.insertAdjacentElement(position, self.props.domElement);
             }
           };
+
+          $domObserver.addOnNodeChange(callback);
         }
 
         return;
       }, function () {
-        var _target$domElement3;
+        var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"]("[name=\"adaptive\"][value=\"".concat(_this4.props.adaptiveId, "\""));
 
-        var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_0__["default"]("[name=\"adaptive\"][value=\"".concat(_this4.props.adaptiveId, "\""));
-
-        if ((_target$domElement3 = target.domElement) !== null && _target$domElement3 !== void 0 && _target$domElement3.outerHTML) {
+        if (target.isVisible()) {
           target.domElement.insertAdjacentElement('afterend', _this4.props.domElement);
           target.domElement.remove();
         }
@@ -463,49 +450,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
       return;
     }
   }; // =========================================
-  // --> Listen all DOM changes
-  // --------------------------
-
-  /**
-   * Observes the DOM for Node or Atrribute Changes
-   * @private
-   */
-
-  function domObserver() {
-    var callback = function callback(mutationList, observer) {
-      // Use traditional 'for loops' for IE 11
-      var _iterator = _createForOfIteratorHelper(mutationList),
-          _step;
-
-      try {
-        for (_iterator.s(); !(_step = _iterator.n()).done;) {
-          var mutation = _step.value;
-
-          if (mutation.type === 'childList') {
-            for (var _callback in executeOnNodeChanged) {
-              executeOnNodeChanged[_callback]();
-            }
-          } else if (mutation.type === 'attributes') {
-            for (var _callback2 in executeOnAttrChanged) {
-              executeOnAttrChanged[_callback2]();
-            }
-          }
-        }
-      } catch (err) {
-        _iterator.e(err);
-      } finally {
-        _iterator.f();
-      }
-    };
-
-    var config = {
-      attributes: true,
-      childList: true,
-      subtree: true
-    };
-    var observer = new MutationObserver(callback);
-    return observer.observe(document.body, config);
-  } // =========================================
   // --> DomReady and INIT
   // --------------------------
 
@@ -513,7 +457,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
    * Initialization, cam be called externally to reinitialized after dom loaded
    * @return {Void}
    */
-
 
   $this.init = function () {
     Array.from(document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])')).forEach(function (element, index) {
@@ -531,7 +474,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     document.removeEventListener('DOMContentLoaded', domIsReady);
     window.removeEventListener('load', domIsReady);
     $this.init();
-    domObserver();
     return;
   }
   /**
@@ -558,6 +500,197 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
 /***/ }),
 
+/***/ "./src/DomObserver.js":
+/*!****************************!*\
+  !*** ./src/DomObserver.js ***!
+  \****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ DomObserver)
+/* harmony export */ });
+function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+/**
+* @author Antuan Suarez
+    MIT License
+
+    Copyright (c) [2022] [Antuan Suarez] https://github.com/knighttower
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+*/
+
+/**
+ * @class Detect DOM changes
+ * @param {String|Object} selector
+ * @return {Funtion}
+ */
+var DomObserver = /*#__PURE__*/function () {
+  /**
+   * Constructor
+   * @param {Function} onNodeChange Callback when any node changes/ add/deleted/modified
+   * @param {Function} onAttrChange Callback when any attribute changes
+   * @return {Void}
+   */
+  function DomObserver() {
+    _classCallCheck(this, DomObserver);
+
+    /**
+     * Holds memory of registered callbacks
+     */
+    this.executeOnNodeChanged = [];
+    /**
+     * Holds memory of registered callbacks
+     * @private
+     */
+
+    this.executeOnAttrChanged = [];
+    this.domObserver();
+  }
+  /**
+   * When node change
+   * @param {Function} callback Callback when any node changes/ add/deleted/modified
+   * @return {Void}
+   */
+
+
+  _createClass(DomObserver, [{
+    key: "addOnNodeChange",
+    value: function addOnNodeChange(callback) {
+      if (callback) {
+        this.executeOnNodeChanged.push(callback);
+      }
+
+      return;
+    }
+    /**
+     * Add function callback when an attribute change is detected
+     * @param {Function} callback Callback when any attribute changes
+     * @return {Void}
+     */
+
+  }, {
+    key: "addOnAttrChange",
+    value: function addOnAttrChange(callback) {
+      if (callback) {
+        this.executeOnAttrChanged.push(callback);
+      }
+
+      return;
+    }
+    /**
+     * Remove from node change
+     * @param {Function} callback
+     * @return {Void}
+     */
+
+  }, {
+    key: "removeOnNodeChange",
+    value: function removeOnNodeChange(callback) {
+      if (callback) {
+        this.executeOnNodeChanged = this.executeOnNodeChanged.filter(function (e) {
+          return e !== callback;
+        });
+      }
+
+      return;
+    }
+    /**
+     * Remvoe from attr change
+     * @param {Function} callback
+     * @return {Void}
+     */
+
+  }, {
+    key: "removeOnAttrChange",
+    value: function removeOnAttrChange(callback) {
+      if (callback) {
+        this.executeOnAttrChanged = this.executeOnAttrChanged.filter(function (e) {
+          return e !== callback;
+        });
+      }
+
+      return;
+    }
+    /**
+     * Obsever
+     * @private
+     * @return {MutationObserver}
+     */
+
+  }, {
+    key: "domObserver",
+    value: function domObserver() {
+      var callback = function callback(mutationList, observer) {
+        // Use traditional 'for loops' for IE 11
+        var _iterator = _createForOfIteratorHelper(mutationList),
+            _step;
+
+        try {
+          for (_iterator.s(); !(_step = _iterator.n()).done;) {
+            var mutation = _step.value;
+
+            if (mutation.type === 'childList') {
+              for (var _callback in this.executeOnNodeChanged) {
+                this.executeOnNodeChanged[_callback]();
+              }
+            } else if (mutation.type === 'attributes') {
+              for (var _callback2 in this.executeOnAttrChanged) {
+                this.executeOnAttrChanged[_callback2]();
+              }
+            }
+          }
+        } catch (err) {
+          _iterator.e(err);
+        } finally {
+          _iterator.f();
+        }
+      };
+
+      var config = {
+        attributes: true,
+        childList: true,
+        subtree: true
+      };
+      var observer = new MutationObserver(callback);
+      return observer.observe(document.body, config);
+    }
+  }]);
+
+  return DomObserver;
+}();
+
+
+
+/***/ }),
+
 /***/ "./src/ElementHelper.js":
 /*!******************************!*\
   !*** ./src/ElementHelper.js ***!
@@ -568,6 +701,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ ElementHelper)
 /* harmony export */ });
+/* harmony import */ var _DomObserver_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DomObserver.js */ "./src/DomObserver.js");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -602,10 +736,18 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 */
 
 /**
+ * Import the DOM helpers
+ */
+// -----------------------------------------
+ // To avoid too many instances of the obsever, it will init outside
+
+var $domObserver = new _DomObserver_js__WEBPACK_IMPORTED_MODULE_0__["default"]();
+/**
  * @class Adds some extra functionality to interact with a DOM element
  * @param {String|Object} selector
  * @return {Object}
  */
+
 var ElementHelper = /*#__PURE__*/function () {
   /**
    * Constructor
@@ -631,7 +773,30 @@ var ElementHelper = /*#__PURE__*/function () {
 
   _createClass(ElementHelper, [{
     key: "isVisible",
-    value: function isVisible() {}
+    value: function isVisible() {
+      var _$this$domElement;
+
+      var $this = this;
+
+      if (!((_$this$domElement = $this.domElement) !== null && _$this$domElement !== void 0 && _$this$domElement.outerHTML)) {
+        var callback = function callback() {
+          var _$this$domElement2;
+
+          console.log(33);
+
+          if ((_$this$domElement2 = $this.domElement) !== null && _$this$domElement2 !== void 0 && _$this$domElement2.outerHTML) {
+            $domObserver.removeOnNodeChange(callback);
+          }
+
+          return;
+        };
+
+        $domObserver.addOnNodeChange(callback);
+        return false;
+      }
+
+      return true;
+    }
     /**
      * Conver string into valid JSON
      * @param {String} string
@@ -1402,8 +1567,9 @@ var _Vue = Vue,
 
 var app = createApp({});
 app.component('hello', _hello_vue__WEBPACK_IMPORTED_MODULE_2__["default"]);
-app.mount('#app');
-setTimeout(function () {}, '1000');
+setTimeout(function () {
+  app.mount('#app');
+}, '1000');
 })();
 
 /******/ })()

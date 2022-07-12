@@ -26,6 +26,7 @@
  * Import the Element DOM helper
  */
 // -----------------------------------------
+import DomObserver from './DomObserver.js';
 import ElementHelper from './ElementHelper.js';
 
 // =========================================
@@ -78,16 +79,10 @@ import ElementHelper from './ElementHelper.js';
     const domQueriesUnMatch = {};
 
     /**
-     * Holds memory of registered callbacks
+     * Observes the DOM for changes and executes callbacks
      * @private
      */
-    const executeOnNodeChanged = {};
-
-    /**
-     * Holds memory of registered callbacks
-     * @private
-     */
-    const executeOnAttrChanged = {};
+    const $domObserver = new DomObserver();
 
     /**
      * queries possible sizes
@@ -263,27 +258,30 @@ import ElementHelper from './ElementHelper.js';
                     placeholder.name = 'adaptive';
                     placeholder.value = this.props.adaptiveId;
 
-                    if (target.domElement?.outerHTML) {
+                    if (target.isVisible()) {
                         this.props.domElement.insertAdjacentElement('beforebegin', placeholder);
                         target.domElement.insertAdjacentElement(position, this.props.domElement);
                     } else {
                         // This will create a loop up until the Element/Node is found
                         let self = this;
-                        executeOnNodeChanged[self.props.adaptiveId] = () => {
+                        let callback = () => {
+                            console.log(44);
                             let target = new ElementHelper(selector);
-                            if (target.domElement?.outerHTML) {
-                                delete executeOnNodeChanged[self.props.adaptiveId];
+                            if (target.isVisible()) {
+                                $domObserver.removeOnNodeChange(callback);
                                 self.props.domElement.insertAdjacentElement('beforebegin', placeholder);
                                 target.domElement.insertAdjacentElement(position, self.props.domElement);
                             }
                         };
+
+                        $domObserver.addOnNodeChange(callback);
                     }
 
                     return;
                 },
                 () => {
                     let target = new ElementHelper(`[name="adaptive"][value="${this.props.adaptiveId}"`);
-                    if (target.domElement?.outerHTML) {
+                    if (target.isVisible()) {
                         target.domElement.insertAdjacentElement('afterend', this.props.domElement);
                         target.domElement.remove();
                     }
@@ -354,34 +352,6 @@ import ElementHelper from './ElementHelper.js';
     };
 
     // =========================================
-    // --> Listen all DOM changes
-    // --------------------------
-    /**
-     * Observes the DOM for Node or Atrribute Changes
-     * @private
-     */
-    function domObserver() {
-        const callback = function(mutationList, observer) {
-            // Use traditional 'for loops' for IE 11
-            for (const mutation of mutationList) {
-                if (mutation.type === 'childList') {
-                    for (let callback in executeOnNodeChanged) {
-                        executeOnNodeChanged[callback]();
-                    }
-                } else if (mutation.type === 'attributes') {
-                    for (let callback in executeOnAttrChanged) {
-                        executeOnAttrChanged[callback]();
-                    }
-                }
-            }
-        };
-        const config = { attributes: true, childList: true, subtree: true };
-        const observer = new MutationObserver(callback);
-
-        return observer.observe(document.body, config);
-    }
-
-    // =========================================
     // --> DomReady and INIT
     // --------------------------
     /**
@@ -407,7 +377,6 @@ import ElementHelper from './ElementHelper.js';
         document.removeEventListener('DOMContentLoaded', domIsReady);
         window.removeEventListener('load', domIsReady);
         $this.init();
-        domObserver();
 
         return;
     }

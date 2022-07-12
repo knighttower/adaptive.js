@@ -498,7 +498,13 @@ app.mount('#app');
             break;
         }
 
+        var placeholder = document.createElement('param');
+        placeholder.name = 'adaptive';
+        placeholder.value = _this4.props.adaptiveId;
+
         if ((_target$domElement = target.domElement) !== null && _target$domElement !== void 0 && _target$domElement.outerHTML) {
+          _this4.props.domElement.insertAdjacentElement('beforebegin', placeholder);
+
           target.domElement.insertAdjacentElement(position, _this4.props.domElement);
         } else {
           // This will create a loop up until the Element/Node is found
@@ -511,13 +517,23 @@ app.mount('#app');
 
             if ((_target$domElement2 = target.domElement) !== null && _target$domElement2 !== void 0 && _target$domElement2.outerHTML) {
               delete executeOnNodeChanged[self.props.adaptiveId];
+              self.props.domElement.insertAdjacentElement('beforebegin', placeholder);
               target.domElement.insertAdjacentElement(position, self.props.domElement);
             }
           };
         }
 
         return;
-      }, function () {});
+      }, function () {
+        var _target$domElement3;
+
+        var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"]("[name=\"adaptive\"][value=\"".concat(_this4.props.adaptiveId, "\""));
+
+        if ((_target$domElement3 = target.domElement) !== null && _target$domElement3 !== void 0 && _target$domElement3.outerHTML) {
+          target.domElement.insertAdjacentElement('afterend', _this4.props.domElement);
+          target.domElement.remove();
+        }
+      });
     }
   };
 

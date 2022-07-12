@@ -218,7 +218,12 @@ app.mount('#app');
                             position = 'afterend';
                             break;
                     }
+                    let placeholder = document.createElement('param');
+                    placeholder.name = 'adaptive';
+                    placeholder.value = this.props.adaptiveId;
+
                     if (target.domElement?.outerHTML) {
+                        this.props.domElement.insertAdjacentElement('beforebegin', placeholder);
                         target.domElement.insertAdjacentElement(position, this.props.domElement);
                     } else {
                         // This will create a loop up until the Element/Node is found
@@ -227,6 +232,7 @@ app.mount('#app');
                             let target = new ElementHelper(selector);
                             if (target.domElement?.outerHTML) {
                                 delete executeOnNodeChanged[self.props.adaptiveId];
+                                self.props.domElement.insertAdjacentElement('beforebegin', placeholder);
                                 target.domElement.insertAdjacentElement(position, self.props.domElement);
                             }
                         };
@@ -234,7 +240,13 @@ app.mount('#app');
 
                     return;
                 },
-                () => {}
+                () => {
+                    let target = new ElementHelper(`[name="adaptive"][value="${this.props.adaptiveId}"`);
+                    if (target.domElement?.outerHTML) {
+                        target.domElement.insertAdjacentElement('afterend', this.props.domElement);
+                        target.domElement.remove();
+                    }
+                }
             );
         },
     };

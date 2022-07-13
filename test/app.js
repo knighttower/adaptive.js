@@ -1,5 +1,4 @@
 /******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
 
 /***/ "./node_modules/babel-loader/lib/index.js??clonedRuleSet-5.use[0]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./src/hello.vue?vue&type=script&lang=js":
@@ -8,6 +7,7 @@
   \***************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -33,6 +33,7 @@ __webpack_require__.r(__webpack_exports__);
   \*******************************************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "render": () => (/* binding */ render)
@@ -64,8 +65,10 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   \*************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _DomObserver_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DomObserver.js */ "./src/DomObserver.js");
+/* harmony import */ var _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_DomObserver_js__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ElementHelper.js */ "./src/ElementHelper.js");
 /* module decorator */ module = __webpack_require__.hmd(module);
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
@@ -150,12 +153,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
    */
 
   var domQueriesUnMatch = {};
-  /**
-   * Observes the DOM for changes and executes callbacks
-   * @private
-   */
-
-  var $domObserver = new _DomObserver_js__WEBPACK_IMPORTED_MODULE_0__["default"]();
   /**
    * queries possible sizes
    * @private
@@ -355,25 +352,21 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         placeholder.value = _this4.props.adaptiveId;
 
         if (target.isVisible()) {
-          _this4.props.domElement.insertAdjacentElement('beforebegin', placeholder);
+          _this4.props.domElement.insertAdjacentElement('beforebegin', placeholder); // target.domElement.insertAdjacentElement(position, this.props.domElement);
 
-          target.domElement.insertAdjacentElement(position, _this4.props.domElement);
         } else {
           // This will create a loop up until the Element/Node is found
           var self = _this4;
-
-          var callback = function callback() {
-            console.log(44);
+          _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default().addOnNodeChange(self.props.adaptiveId, function () {
             var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"](selector);
 
             if (target.isVisible()) {
-              $domObserver.removeOnNodeChange(callback);
-              self.props.domElement.insertAdjacentElement('beforebegin', placeholder);
-              target.domElement.insertAdjacentElement(position, self.props.domElement);
-            }
-          };
+              console.log(self.props.domElement);
+              self.props.domElement.insertAdjacentElement('beforebegin', placeholder); // target.domElement.insertAdjacentElement(position, self.props.domElement);
 
-          $domObserver.addOnNodeChange(callback);
+              _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default().removeOnNodeChange(self.props.adaptiveId);
+            }
+          });
         }
 
         return;
@@ -504,23 +497,16 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 /*!****************************!*\
   !*** ./src/DomObserver.js ***!
   \****************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+/***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ DomObserver)
-/* harmony export */ });
-function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
+/* module decorator */ module = __webpack_require__.nmd(module);
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _createForOfIteratorHelper(o, allowArrayLike) { var it = typeof Symbol !== "undefined" && o[Symbol.iterator] || o["@@iterator"]; if (!it) { if (Array.isArray(o) || (it = _unsupportedIterableToArray(o)) || allowArrayLike && o && typeof o.length === "number") { if (it) o = it; var i = 0; var F = function F() {}; return { s: F, n: function n() { if (i >= o.length) return { done: true }; return { done: false, value: o[i++] }; }, e: function e(_e) { throw _e; }, f: F }; } throw new TypeError("Invalid attempt to iterate non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); } var normalCompletion = true, didErr = false, err; return { s: function s() { it = it.call(o); }, n: function n() { var step = it.next(); normalCompletion = step.done; return step; }, e: function e(_e2) { didErr = true; err = _e2; }, f: function f() { try { if (!normalCompletion && it["return"] != null) it["return"](); } finally { if (didErr) throw err; } } }; }
 
 function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
 function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 /**
 * @author Antuan Suarez
@@ -549,145 +535,145 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 
 /**
  * @class Detect DOM changes
- * @param {String|Object} selector
- * @return {Funtion}
+ * @param {window} selector
+ * @param {Funtion}
+ * @return DomObserver
  */
-var DomObserver = /*#__PURE__*/function () {
+(function (root, factory) {
+  'use strict';
+
+  if (( false ? 0 : _typeof(module)) === 'object' && ( false ? 0 : _typeof(exports)) === 'object') {
+    module.exports = factory(root);
+  } else if (true) {
+    !(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+		(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+		__WEBPACK_AMD_DEFINE_FACTORY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+  } else {}
+})(typeof window !== 'undefined' ? window : this, function (window) {
+  'use strict';
   /**
-   * Constructor
-   * @param {Function} onNodeChange Callback when any node changes/ add/deleted/modified
-   * @param {Function} onAttrChange Callback when any attribute changes
-   * @return {Void}
+   * Register this library into the window
+   * @private
+   * @return {Object}
    */
-  function DomObserver() {
-    _classCallCheck(this, DomObserver);
 
-    /**
-     * Holds memory of registered callbacks
-     */
-    this.executeOnNodeChanged = [];
-    /**
-     * Holds memory of registered callbacks
-     * @private
-     */
+  var $this = window.DomObserver = window.DomObserver || {};
+  /**
+   * Holds memory of registered functions
+   * @private
+   */
 
-    this.executeOnAttrChanged = [];
-    this.domObserver();
-  }
+  var executeOnNodeChanged = {};
+  /**
+   * Holds memory of registered functions
+   * @private
+   */
+
+  var executeOnAttrChanged = {};
   /**
    * When node change
+   * @param {String} id
    * @param {Function} callback Callback when any node changes/ add/deleted/modified
    * @return {Void}
    */
 
-
-  _createClass(DomObserver, [{
-    key: "addOnNodeChange",
-    value: function addOnNodeChange(callback) {
-      if (callback) {
-        this.executeOnNodeChanged.push(callback);
-      }
-
-      return;
+  $this.addOnNodeChange = function (id, callback) {
+    if (callback) {
+      executeOnNodeChanged[id] = callback;
     }
-    /**
-     * Add function callback when an attribute change is detected
-     * @param {Function} callback Callback when any attribute changes
-     * @return {Void}
-     */
 
-  }, {
-    key: "addOnAttrChange",
-    value: function addOnAttrChange(callback) {
-      if (callback) {
-        this.executeOnAttrChanged.push(callback);
-      }
+    return;
+  };
+  /**
+   * Add function callback when an attribute change is detected
+   * @param {String} id
+   * @param {Function} callback Callback when any attribute changes
+   * @return {Void}
+   */
 
-      return;
+
+  $this.addOnAttrChange = function (id, callback) {
+    if (callback) {
+      executeOnAttrChanged[id] = callback;
     }
-    /**
-     * Remove from node change
-     * @param {Function} callback
-     * @return {Void}
-     */
 
-  }, {
-    key: "removeOnNodeChange",
-    value: function removeOnNodeChange(callback) {
-      if (callback) {
-        this.executeOnNodeChanged = this.executeOnNodeChanged.filter(function (e) {
-          return e !== callback;
-        });
-      }
+    return;
+  };
+  /**
+   * Remove from node change
+   * @param {String} id
+   * @return {Void}
+   */
 
-      return;
+
+  $this.removeOnNodeChange = function (id) {
+    if (id) {
+      delete executeOnNodeChanged[id];
     }
-    /**
-     * Remvoe from attr change
-     * @param {Function} callback
-     * @return {Void}
-     */
 
-  }, {
-    key: "removeOnAttrChange",
-    value: function removeOnAttrChange(callback) {
-      if (callback) {
-        this.executeOnAttrChanged = this.executeOnAttrChanged.filter(function (e) {
-          return e !== callback;
-        });
-      }
+    return;
+  };
+  /**
+   * Remove from attr change
+   * @param {String} id
+   * @return {Void}
+   */
 
-      return;
+
+  $this.removeOnAttrChange = function (id) {
+    if (id) {
+      delete executeOnAttrChanged[id];
     }
-    /**
-     * Obsever
-     * @private
-     * @return {MutationObserver}
-     */
 
-  }, {
-    key: "domObserver",
-    value: function domObserver() {
-      var callback = function callback(mutationList, observer) {
-        // Use traditional 'for loops' for IE 11
-        var _iterator = _createForOfIteratorHelper(mutationList),
-            _step;
+    return;
+  };
+  /**
+   * Obsever
+   * @private
+   * @return {MutationObserver}
+   */
 
-        try {
-          for (_iterator.s(); !(_step = _iterator.n()).done;) {
-            var mutation = _step.value;
 
-            if (mutation.type === 'childList') {
-              for (var _callback in this.executeOnNodeChanged) {
-                this.executeOnNodeChanged[_callback]();
-              }
-            } else if (mutation.type === 'attributes') {
-              for (var _callback2 in this.executeOnAttrChanged) {
-                this.executeOnAttrChanged[_callback2]();
-              }
+  (function () {
+    var callback = function callback(mutationList, observer) {
+      // Use traditional 'for loops' for IE 11
+      var _iterator = _createForOfIteratorHelper(mutationList),
+          _step;
+
+      try {
+        for (_iterator.s(); !(_step = _iterator.n()).done;) {
+          var mutation = _step.value;
+
+          if (mutation.type === 'childList') {
+            for (var id in executeOnNodeChanged) {
+              executeOnNodeChanged[id]();
+            }
+          } else if (mutation.type === 'attributes') {
+            for (var _id in executeOnAttrChanged) {
+              executeOnAttrChanged[_id]();
             }
           }
-        } catch (err) {
-          _iterator.e(err);
-        } finally {
-          _iterator.f();
         }
-      };
+      } catch (err) {
+        _iterator.e(err);
+      } finally {
+        _iterator.f();
+      }
+    };
 
-      var config = {
-        attributes: true,
-        childList: true,
-        subtree: true
-      };
-      var observer = new MutationObserver(callback);
-      return observer.observe(document.body, config);
-    }
-  }]);
+    var config = {
+      attributes: true,
+      childList: true,
+      subtree: true
+    };
+    var observer = new MutationObserver(callback);
+    return observer.observe(document.body, config);
+  })();
 
-  return DomObserver;
-}();
-
-
+  return $this;
+});
 
 /***/ }),
 
@@ -697,11 +683,11 @@ var DomObserver = /*#__PURE__*/function () {
   \******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ ElementHelper)
 /* harmony export */ });
-/* harmony import */ var _DomObserver_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DomObserver.js */ "./src/DomObserver.js");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -736,18 +722,10 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 */
 
 /**
- * Import the DOM helpers
- */
-// -----------------------------------------
- // To avoid too many instances of the obsever, it will init outside
-
-var $domObserver = new _DomObserver_js__WEBPACK_IMPORTED_MODULE_0__["default"]();
-/**
  * @class Adds some extra functionality to interact with a DOM element
  * @param {String|Object} selector
  * @return {Object}
  */
-
 var ElementHelper = /*#__PURE__*/function () {
   /**
    * Constructor
@@ -756,6 +734,8 @@ var ElementHelper = /*#__PURE__*/function () {
    */
   function ElementHelper(selector) {
     _classCallCheck(this, ElementHelper);
+
+    this.selector = selector;
 
     if (_typeof(selector) === 'object') {
       this.domElement = selector;
@@ -777,21 +757,21 @@ var ElementHelper = /*#__PURE__*/function () {
       var _$this$domElement;
 
       var $this = this;
+      var callbackId = Date.now() + Math.floor(Math.random() * 1000);
 
       if (!((_$this$domElement = $this.domElement) !== null && _$this$domElement !== void 0 && _$this$domElement.outerHTML)) {
-        var callback = function callback() {
-          var _$this$domElement2;
+        DomObserver.addOnNodeChange(callbackId, function () {
+          var _element$domElement;
 
-          console.log(33);
+          var element = new ElementHelper($this.selector);
 
-          if ((_$this$domElement2 = $this.domElement) !== null && _$this$domElement2 !== void 0 && _$this$domElement2.outerHTML) {
-            $domObserver.removeOnNodeChange(callback);
+          if ((_element$domElement = element.domElement) !== null && _element$domElement !== void 0 && _element$domElement.outerHTML) {
+            $this = element;
+            DomObserver.removeOnNodeChange(callbackId);
           }
 
           return;
-        };
-
-        $domObserver.addOnNodeChange(callback);
+        });
         return false;
       }
 
@@ -917,6 +897,7 @@ var ElementHelper = /*#__PURE__*/function () {
   \*****************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -940,6 +921,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, "\n.greeting {\n  color: red;\n  font-w
   \******************************************************************************/
 /***/ ((module) => {
 
+"use strict";
 
 
 /*
@@ -1015,6 +997,7 @@ module.exports = function (cssWithMappingToString) {
   \**********************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -1044,6 +1027,7 @@ var update = _node_modules_laravel_mix_node_modules_style_loader_dist_runtime_in
   \*****************************************************************************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
+"use strict";
 
 
 var isOldIE = function isOldIE() {
@@ -1322,6 +1306,7 @@ module.exports = function (list, options) {
   \******************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
+"use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 // runtime helper for setting properties on components
@@ -1343,6 +1328,7 @@ exports["default"] = (sfc, props) => {
   \***********************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -1373,6 +1359,7 @@ if (false) {}
   \***********************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_hello_vue_vue_type_script_lang_js__WEBPACK_IMPORTED_MODULE_0__["default"])
@@ -1388,6 +1375,7 @@ __webpack_require__.r(__webpack_exports__);
   \*****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "render": () => (/* reexport safe */ _node_modules_babel_loader_lib_index_js_clonedRuleSet_5_use_0_node_modules_vue_loader_dist_templateLoader_js_ruleSet_1_rules_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_hello_vue_vue_type_template_id_be4ac86e__WEBPACK_IMPORTED_MODULE_0__.render)
@@ -1403,6 +1391,7 @@ __webpack_require__.r(__webpack_exports__);
   \*******************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _node_modules_laravel_mix_node_modules_style_loader_dist_cjs_js_node_modules_laravel_mix_node_modules_css_loader_dist_cjs_js_clonedRuleSet_8_use_1_node_modules_vue_loader_dist_stylePostLoader_js_node_modules_postcss_loader_dist_cjs_js_clonedRuleSet_8_use_2_node_modules_vue_loader_dist_index_js_ruleSet_0_use_0_hello_vue_vue_type_style_index_0_id_be4ac86e_lang_css__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../node_modules/laravel-mix/node_modules/style-loader/dist/cjs.js!../node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!../node_modules/vue-loader/dist/stylePostLoader.js!../node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!../node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./hello.vue?vue&type=style&index=0&id=be4ac86e&lang=css */ "./node_modules/laravel-mix/node_modules/style-loader/dist/cjs.js!./node_modules/laravel-mix/node_modules/css-loader/dist/cjs.js??clonedRuleSet-8.use[1]!./node_modules/vue-loader/dist/stylePostLoader.js!./node_modules/postcss-loader/dist/cjs.js??clonedRuleSet-8.use[2]!./node_modules/vue-loader/dist/index.js??ruleSet[0].use[0]!./src/hello.vue?vue&type=style&index=0&id=be4ac86e&lang=css");
 
@@ -1415,6 +1404,7 @@ __webpack_require__.r(__webpack_exports__);
   \**********************/
 /***/ ((module) => {
 
+"use strict";
 module.exports = Vue;
 
 /***/ }),
@@ -1425,6 +1415,7 @@ module.exports = Vue;
   \*****************************/
 /***/ ((module) => {
 
+"use strict";
 module.exports = undefined;
 
 /***/ })
@@ -1449,7 +1440,7 @@ module.exports = undefined;
 /******/ 		};
 /******/ 	
 /******/ 		// Execute the module function
-/******/ 		__webpack_modules__[moduleId](module, module.exports, __webpack_require__);
+/******/ 		__webpack_modules__[moduleId].call(module.exports, module, module.exports, __webpack_require__);
 /******/ 	
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
@@ -1519,6 +1510,15 @@ module.exports = undefined;
 /******/ 		};
 /******/ 	})();
 /******/ 	
+/******/ 	/* webpack/runtime/node module decorator */
+/******/ 	(() => {
+/******/ 		__webpack_require__.nmd = (module) => {
+/******/ 			module.paths = [];
+/******/ 			if (!module.children) module.children = [];
+/******/ 			return module;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/nonce */
 /******/ 	(() => {
 /******/ 		__webpack_require__.nc = undefined;
@@ -1526,8 +1526,9 @@ module.exports = undefined;
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
+"use strict";
 /*!********************!*\
   !*** ./src/app.js ***!
   \********************/

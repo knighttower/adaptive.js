@@ -79,12 +79,6 @@ import ElementHelper from './ElementHelper.js';
     const domQueriesUnMatch = {};
 
     /**
-     * Observes the DOM for changes and executes callbacks
-     * @private
-     */
-    const $domObserver = new DomObserver();
-
-    /**
      * queries possible sizes
      * @private
      */
@@ -260,21 +254,21 @@ import ElementHelper from './ElementHelper.js';
 
                     if (target.isVisible()) {
                         this.props.domElement.insertAdjacentElement('beforebegin', placeholder);
-                        target.domElement.insertAdjacentElement(position, this.props.domElement);
+                        // target.domElement.insertAdjacentElement(position, this.props.domElement);
                     } else {
                         // This will create a loop up until the Element/Node is found
                         let self = this;
-                        let callback = () => {
-                            console.log(44);
+
+                        DomObserver.addOnNodeChange(self.props.adaptiveId, () => {
                             let target = new ElementHelper(selector);
                             if (target.isVisible()) {
-                                $domObserver.removeOnNodeChange(callback);
-                                self.props.domElement.insertAdjacentElement('beforebegin', placeholder);
-                                target.domElement.insertAdjacentElement(position, self.props.domElement);
-                            }
-                        };
+                                console.log(self.props.domElement);
 
-                        $domObserver.addOnNodeChange(callback);
+                                self.props.domElement.insertAdjacentElement('beforebegin', placeholder);
+                                // target.domElement.insertAdjacentElement(position, self.props.domElement);
+                                DomObserver.removeOnNodeChange(self.props.adaptiveId);
+                            }
+                        });
                     }
 
                     return;

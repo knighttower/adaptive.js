@@ -25,95 +25,107 @@
 
 /**
  * @class Detect DOM changes
- * @param {String|Object} selector
- * @return {Funtion}
+ * @param {window} selector
+ * @param {Funtion}
+ * @return DomObserver
  */
-export default class DomObserver {
-    /**
-     * Constructor
-     * @param {Function} onNodeChange Callback when any node changes/ add/deleted/modified
-     * @param {Function} onAttrChange Callback when any attribute changes
-     * @return {Void}
-     */
-    constructor() {
-        /**
-         * Holds memory of registered callbacks
-         */
-        this.executeOnNodeChanged = [];
-
-        /**
-         * Holds memory of registered callbacks
-         * @private
-         */
-        this.executeOnAttrChanged = [];
-
-        this.domObserver();
+(function(root, factory) {
+    'use strict';
+    if (typeof module === 'object' && typeof exports === 'object') {
+        module.exports = factory(root);
+    } else if (typeof define === 'function' && define.amd) {
+        define(factory);
+    } else {
+        factory(root);
     }
+})(typeof window !== 'undefined' ? window : this, function(window) {
+    'use strict';
+
+    /**
+     * Register this library into the window
+     * @private
+     * @return {Object}
+     */
+    const $this = (window.DomObserver = window.DomObserver || {});
+
+    /**
+     * Holds memory of registered functions
+     * @private
+     */
+    const executeOnNodeChanged = {};
+
+    /**
+     * Holds memory of registered functions
+     * @private
+     */
+    const executeOnAttrChanged = {};
 
     /**
      * When node change
+     * @param {String} id
      * @param {Function} callback Callback when any node changes/ add/deleted/modified
      * @return {Void}
      */
-    addOnNodeChange(callback) {
+    $this.addOnNodeChange = (id, callback) => {
         if (callback) {
-            this.executeOnNodeChanged.push(callback);
+            executeOnNodeChanged[id] = callback;
         }
         return;
-    }
+    };
 
     /**
      * Add function callback when an attribute change is detected
+     * @param {String} id
      * @param {Function} callback Callback when any attribute changes
      * @return {Void}
      */
-    addOnAttrChange(callback) {
+    $this.addOnAttrChange = (id, callback) => {
         if (callback) {
-            this.executeOnAttrChanged.push(callback);
+            executeOnAttrChanged[id] = callback;
         }
         return;
-    }
+    };
 
     /**
      * Remove from node change
-     * @param {Function} callback
+     * @param {String} id
      * @return {Void}
      */
-    removeOnNodeChange(callback) {
-        if (callback) {
-            this.executeOnNodeChanged = this.executeOnNodeChanged.filter((e) => e !== callback);
+    $this.removeOnNodeChange = (id) => {
+        if (id) {
+            delete executeOnNodeChanged[id];
         }
         return;
-    }
+    };
 
     /**
-     * Remvoe from attr change
-     * @param {Function} callback
+     * Remove from attr change
+     * @param {String} id
      * @return {Void}
      */
-    removeOnAttrChange(callback) {
-        if (callback) {
-            this.executeOnAttrChanged = this.executeOnAttrChanged.filter((e) => e !== callback);
+    $this.removeOnAttrChange = (id) => {
+        if (id) {
+            delete executeOnAttrChanged[id];
         }
         return;
-    }
+    };
 
     /**
      * Obsever
      * @private
      * @return {MutationObserver}
      */
-    domObserver() {
+    (() => {
         const callback = function(mutationList, observer) {
             // Use traditional 'for loops' for IE 11
             for (const mutation of mutationList) {
                 if (mutation.type === 'childList') {
-                    for (let callback in this.executeOnNodeChanged) {
-                        this.executeOnNodeChanged[callback]();
+                    for (let id in executeOnNodeChanged) {
+                        executeOnNodeChanged[id]();
                     }
                 } else if (mutation.type === 'attributes') {
-                    for (let callback in this.executeOnAttrChanged) {
-                        this.executeOnAttrChanged[callback]();
+                    for (let id in executeOnAttrChanged) {
+                        executeOnAttrChanged[id]();
                     }
                 }
             }
@@ -122,5 +134,7 @@ export default class DomObserver {
         const observer = new MutationObserver(callback);
 
         return observer.observe(document.body, config);
-    }
-}
+    })();
+
+    return $this;
+});

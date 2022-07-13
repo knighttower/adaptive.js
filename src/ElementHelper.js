@@ -23,14 +23,6 @@
     SOFTWARE.
 */
 /**
- * Import the DOM helpers
- */
-// -----------------------------------------
-import DomObserver from './DomObserver.js';
-// To avoid too many instances of the obsever, it will init outside
-const $domObserver = new DomObserver();
-
-/**
  * @class Adds some extra functionality to interact with a DOM element
  * @param {String|Object} selector
  * @return {Object}
@@ -42,6 +34,7 @@ export default class ElementHelper {
      * @return {Object}
      */
     constructor(selector) {
+        this.selector = selector;
         if (typeof selector === 'object') {
             this.domElement = selector;
         } else if (String(selector).includes('//')) {
@@ -57,16 +50,18 @@ export default class ElementHelper {
      */
     isVisible() {
         let $this = this;
+        let callbackId = Date.now() + Math.floor(Math.random() * 1000);
         if (!$this.domElement?.outerHTML) {
-            let callback = () => {
-                console.log(33);
-                if ($this.domElement?.outerHTML) {
-                    $domObserver.removeOnNodeChange(callback);
+            DomObserver.addOnNodeChange(callbackId, () => {
+                let element = new ElementHelper($this.selector);
+
+                if (element.domElement?.outerHTML) {
+                    $this = element;
+                    DomObserver.removeOnNodeChange(callbackId);
                 }
 
                 return;
-            };
-            $domObserver.addOnNodeChange(callback);
+            });
 
             return false;
         }

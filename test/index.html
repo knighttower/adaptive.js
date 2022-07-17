@@ -4,10 +4,14 @@
     </head>
     <body>
         <section id="app">
-            <div id="hello" class="static-hello" data-adaptive="{'addClass':{'tablet':'hello','desktop':'dos-tres hellothere'}}">
+            <div id="hello" class="static-hello" data-adaptive="{'addClass':{'tablet':'hello','desktop':'dos-tres hellothere'}, 'teleport':{
+                'tablet': {
+                    'to':'.lazy'
+                }
+            }}">
                 static hello
             </div>
-            <div class="after-static-hello">
+            <div class="after-static-hello" data-adaptive="{'addClass':{'tablet':'hello','desktop':'dos-tres hellothere'}}">
                 after static hello
             </div>
             <hello></hello>

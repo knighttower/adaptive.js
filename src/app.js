@@ -23,6 +23,7 @@
     SOFTWARE.
 */
 import Adaptive from './Adaptive.js';
+
 const { createApp } = Vue;
 import { initial } from 'lodash';
 
@@ -31,7 +32,7 @@ import hello from './hello.vue';
 const app = createApp({});
 
 app.component('hello', hello);
-
+// app.mount('#app');
 setTimeout(() => {
     app.mount('#app');
-}, '1000');
+}, '2000');

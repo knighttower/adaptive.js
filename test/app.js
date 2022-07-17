@@ -15,11 +15,13 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      greeting: 'Hello World!'
+      greeting: 'Hello World!',
+      show: false
     };
   },
   methods: {
     clickFunction: function clickFunction() {
+      this.show = true;
       this.greeting = Math.floor(Math.random() * 10);
     }
   }
@@ -45,10 +47,14 @@ var _hoisted_1 = {
   "class": "sample"
 };
 var _hoisted_2 = {
+  key: 0,
+  "class": "lazy"
+};
+var _hoisted_3 = {
   "class": "greeting"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.greeting), 1
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [$data.show ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_2, "lazy load")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.greeting), 1
   /* TEXT */
   ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     onClick: _cache[0] || (_cache[0] = function () {
@@ -67,9 +73,11 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _DomObserver_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DomObserver.js */ "./src/DomObserver.js");
-/* harmony import */ var _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_DomObserver_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ElementHelper.js */ "./src/ElementHelper.js");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "lodash");
+/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _DomObserver_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DomObserver.js */ "./src/DomObserver.js");
+/* harmony import */ var _DomObserver_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_DomObserver_js__WEBPACK_IMPORTED_MODULE_1__);
+/* harmony import */ var _ElementHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ElementHelper.js */ "./src/ElementHelper.js");
 /* module decorator */ module = __webpack_require__.hmd(module);
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
@@ -102,6 +110,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
  * Import the Element DOM helper
  */
 // -----------------------------------------
+
 
  // =========================================
 // --> ADAPTIVE JS
@@ -153,6 +162,18 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
    */
 
   var domQueriesUnMatch = {};
+  /**
+   * Holds memory of registered domobserver callbacks
+   * @private
+   */
+
+  var domObserver = [];
+  /**
+   * Flag for domready
+   * @private
+   */
+
+  var domReady = false;
   /**
    * queries possible sizes
    * @private
@@ -216,7 +237,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
    * @public
    */
 
-  $this.customQueries = {};
+  $this.customQueries = {}; // =========================================
+  // --> Utility
+  // --------------------------
+
   /**
    * Get all the available queries
    * @private
@@ -234,7 +258,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
 
   $this.registerElement = function (elementOrSelector) {
-    var helper = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"](elementOrSelector); // Register only unique non indexed elements
+    var helper = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"](elementOrSelector); // Register only unique non indexed elements
 
     if (!helper.getAttribute('data-adaptive-id')) {
       var uniqueId = helper.getHash();
@@ -249,7 +273,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     }
 
     return;
-  };
+  }; // =========================================
+  // --> Instance Protototypes
+  // --------------------------
+
   /**
    * Creates a new Adaptive object per element
    * @private
@@ -320,6 +347,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     teleport: function teleport(queries) {
       var _this4 = this;
 
+      var placeholder = document.createElement('param');
+      placeholder.name = 'adaptive';
+      placeholder.value = this.props.adaptiveId;
+      this.props.domElement.insertAdjacentElement('beforebegin', placeholder);
       return new QueryHandler(queries, function ($directive) {
         // Defaults to "to" target if only the selector is passed
         if (typeof $directive === 'string') {
@@ -330,7 +361,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
         var direction = Object.keys($directive)[0];
         var selector = $directive[direction];
-        var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"](selector);
+        var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"](selector);
         var position = 'beforeend';
 
         switch (target) {
@@ -347,35 +378,29 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
             break;
         }
 
-        var placeholder = document.createElement('param');
-        placeholder.name = 'adaptive';
-        placeholder.value = _this4.props.adaptiveId;
-
-        if (target.isVisible()) {
-          _this4.props.domElement.insertAdjacentElement('beforebegin', placeholder); // target.domElement.insertAdjacentElement(position, this.props.domElement);
-
+        if (target.isInDom()) {
+          target.domElement.insertAdjacentElement(position, _this4.props.domElement);
         } else {
           // This will create a loop up until the Element/Node is found
           var self = _this4;
-          _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default().addOnNodeChange(self.props.adaptiveId, function () {
-            var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"](selector);
+          domObserver.push(self.props.adaptiveId);
+          _DomObserver_js__WEBPACK_IMPORTED_MODULE_1___default().addOnNodeChange(self.props.adaptiveId, function () {
+            var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"](selector);
 
-            if (target.isVisible()) {
-              console.log(self.props.domElement);
-              self.props.domElement.insertAdjacentElement('beforebegin', placeholder); // target.domElement.insertAdjacentElement(position, self.props.domElement);
-
-              _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default().removeOnNodeChange(self.props.adaptiveId);
+            if (target.isInDom()) {
+              target.domElement.insertAdjacentElement(position, self.props.domElement);
+              _DomObserver_js__WEBPACK_IMPORTED_MODULE_1___default().removeOnNodeChange(self.props.adaptiveId);
+              delete domObserver[self.props.adaptiveId];
             }
           });
         }
 
         return;
       }, function () {
-        var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"]("[name=\"adaptive\"][value=\"".concat(_this4.props.adaptiveId, "\""));
+        var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"]("[name=\"adaptive\"][value=\"".concat(_this4.props.adaptiveId, "\""));
 
-        if (target.isVisible()) {
-          target.domElement.insertAdjacentElement('afterend', _this4.props.domElement);
-          target.domElement.remove();
+        if (target.isInDom()) {
+          target.domElement.insertAdjacentElement('afterend', _this4.props.domElement); // target.domElement.remove();
         }
       });
     }
@@ -442,6 +467,28 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
       return;
     }
+  };
+  /**
+   * Full reset, handle with care
+   * @private
+   * @return {Void}
+   */
+
+  $this.reset = function () {
+    Object.keys(domElements).forEach(function (key) {
+      return delete domElements[key];
+    });
+    Object.keys(domQueriesMatch).forEach(function (key) {
+      return delete domQueriesMatch[key];
+    });
+    Object.keys(domQueriesUnMatch).forEach(function (key) {
+      return delete domQueriesUnMatch[key];
+    });
+    domObserver.forEach(function (callback) {
+      _DomObserver_js__WEBPACK_IMPORTED_MODULE_1___default().removeOnNodeChange(callback);
+      _DomObserver_js__WEBPACK_IMPORTED_MODULE_1___default().removeOnAttrChange(callback);
+    });
+    return;
   }; // =========================================
   // --> DomReady and INIT
   // --------------------------
@@ -451,10 +498,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
    * @return {Void}
    */
 
+
   $this.init = function () {
-    Array.from(document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])')).forEach(function (element, index) {
-      $this.registerElement(element);
-    });
+    if (domReady) {
+      Array.from(document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])')).forEach(function (element, index) {
+        $this.registerElement(element);
+      });
+    }
+
     return;
   };
   /**
@@ -466,7 +517,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
   function domIsReady() {
     document.removeEventListener('DOMContentLoaded', domIsReady);
     window.removeEventListener('load', domIsReady);
-    $this.init();
+    domReady = true;
     return;
   }
   /**
@@ -630,6 +681,21 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     return;
   };
   /**
+   * Deep cleanup
+   * @return {Void}
+   */
+
+
+  $this.cleanup = function () {
+    Object.keys(executeOnNodeChanged).forEach(function (key) {
+      return delete executeOnNodeChanged[key];
+    });
+    Object.keys(executeOnAttrChanged).forEach(function (key) {
+      return delete executeOnAttrChanged[key];
+    });
+    return;
+  };
+  /**
    * Obsever
    * @private
    * @return {MutationObserver}
@@ -744,16 +810,34 @@ var ElementHelper = /*#__PURE__*/function () {
     } else {
       this.domElement = document.querySelector(selector);
     }
-  }
+  } // =========================================
+  // --> Private
+  // --------------------------
+
   /**
-   * Check if the element exists or is visible. It will keep querying
-   * @return {Boolean}
+   * Conver string into valid JSON
+   * @private
+   * @param {String} string
+   * @return {String}
    */
 
 
   _createClass(ElementHelper, [{
-    key: "isVisible",
-    value: function isVisible() {
+    key: "_convertString",
+    value: function _convertString(string) {
+      return String(string.replace(/'/g, '"'));
+    } // =========================================
+    // --> Public
+    // --------------------------
+
+    /**
+     * Check if the element exists or is visible. It will keep querying
+     * @return {Boolean}
+     */
+
+  }, {
+    key: "isInDom",
+    value: function isInDom() {
       var _$this$domElement;
 
       var $this = this;
@@ -776,17 +860,6 @@ var ElementHelper = /*#__PURE__*/function () {
       }
 
       return true;
-    }
-    /**
-     * Conver string into valid JSON
-     * @param {String} string
-     * @return {String}
-     */
-
-  }, {
-    key: "_convertString",
-    value: function _convertString(string) {
-      return String(string.replace(/'/g, '"'));
     }
     /**
      * Find element by Xpath string
@@ -1567,10 +1640,11 @@ var _Vue = Vue,
 
 
 var app = createApp({});
-app.component('hello', _hello_vue__WEBPACK_IMPORTED_MODULE_2__["default"]);
+app.component('hello', _hello_vue__WEBPACK_IMPORTED_MODULE_2__["default"]); // app.mount('#app');
+
 setTimeout(function () {
   app.mount('#app');
-}, '1000');
+}, '2000');
 })();
 
 /******/ })()

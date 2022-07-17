@@ -1,5 +1,6 @@
 <template>
   <div class="sample">
+    <div v-if="show" class="lazy">lazy load</div>
     <p class="greeting">{{ greeting }}</p>
     <button @click="clickFunction">change word</button>  
   </div>
@@ -8,11 +9,13 @@
 export default {
   data() {
     return {
-      greeting: 'Hello World!'
+      greeting: 'Hello World!',
+      show: false
     }
   },
   methods:{
     clickFunction() {
+      this.show = true;
       this.greeting = Math.floor(Math.random() * 10) ;
     }
   }

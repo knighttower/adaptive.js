@@ -111,6 +111,16 @@
     };
 
     /**
+     * Deep cleanup
+     * @return {Void}
+     */
+    $this.cleanup = () => {
+        Object.keys(executeOnNodeChanged).forEach((key) => delete executeOnNodeChanged[key]);
+        Object.keys(executeOnAttrChanged).forEach((key) => delete executeOnAttrChanged[key]);
+        return;
+    };
+
+    /**
      * Obsever
      * @private
      * @return {MutationObserver}

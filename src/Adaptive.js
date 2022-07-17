@@ -26,6 +26,7 @@
  * Import the Element DOM helper
  */
 // -----------------------------------------
+import { inRange } from 'lodash';
 import DomObserver from './DomObserver.js';
 import ElementHelper from './ElementHelper.js';
 
@@ -79,6 +80,18 @@ import ElementHelper from './ElementHelper.js';
     const domQueriesUnMatch = {};
 
     /**
+     * Holds memory of registered domobserver callbacks
+     * @private
+     */
+    const domObserver = [];
+
+    /**
+     * Flag for domready
+     * @private
+     */
+    var domReady = false;
+
+    /**
      * queries possible sizes
      * @private
      */
@@ -122,6 +135,10 @@ import ElementHelper from './ElementHelper.js';
      */
     $this.customQueries = {};
 
+    // =========================================
+    // --> Utility
+    // --------------------------
+
     /**
      * Get all the available queries
      * @private
@@ -154,6 +171,10 @@ import ElementHelper from './ElementHelper.js';
 
         return;
     };
+
+    // =========================================
+    // --> Instance Protototypes
+    // --------------------------
 
     /**
      * Creates a new Adaptive object per element
@@ -226,6 +247,11 @@ import ElementHelper from './ElementHelper.js';
             );
         },
         teleport: function(queries) {
+            let placeholder = document.createElement('param');
+            placeholder.name = 'adaptive';
+            placeholder.value = this.props.adaptiveId;
+            this.props.domElement.insertAdjacentElement('beforebegin', placeholder);
+
             return new QueryHandler(
                 queries,
                 ($directive) => {
@@ -248,25 +274,20 @@ import ElementHelper from './ElementHelper.js';
                             position = 'afterend';
                             break;
                     }
-                    let placeholder = document.createElement('param');
-                    placeholder.name = 'adaptive';
-                    placeholder.value = this.props.adaptiveId;
 
-                    if (target.isVisible()) {
-                        this.props.domElement.insertAdjacentElement('beforebegin', placeholder);
-                        // target.domElement.insertAdjacentElement(position, this.props.domElement);
+                    if (target.isInDom()) {
+                        target.domElement.insertAdjacentElement(position, this.props.domElement);
                     } else {
                         // This will create a loop up until the Element/Node is found
                         let self = this;
 
+                        domObserver.push(self.props.adaptiveId);
                         DomObserver.addOnNodeChange(self.props.adaptiveId, () => {
                             let target = new ElementHelper(selector);
-                            if (target.isVisible()) {
-                                console.log(self.props.domElement);
-
-                                self.props.domElement.insertAdjacentElement('beforebegin', placeholder);
-                                // target.domElement.insertAdjacentElement(position, self.props.domElement);
+                            if (target.isInDom()) {
+                                target.domElement.insertAdjacentElement(position, self.props.domElement);
                                 DomObserver.removeOnNodeChange(self.props.adaptiveId);
+                                delete domObserver[self.props.adaptiveId];
                             }
                         });
                     }
@@ -275,9 +296,9 @@ import ElementHelper from './ElementHelper.js';
                 },
                 () => {
                     let target = new ElementHelper(`[name="adaptive"][value="${this.props.adaptiveId}"`);
-                    if (target.isVisible()) {
+                    if (target.isInDom()) {
                         target.domElement.insertAdjacentElement('afterend', this.props.domElement);
-                        target.domElement.remove();
+                        // target.domElement.remove();
                     }
                 }
             );
@@ -345,6 +366,23 @@ import ElementHelper from './ElementHelper.js';
         },
     };
 
+    /**
+     * Full reset, handle with care
+     * @private
+     * @return {Void}
+     */
+    $this.reset = () => {
+        Object.keys(domElements).forEach((key) => delete domElements[key]);
+        Object.keys(domQueriesMatch).forEach((key) => delete domQueriesMatch[key]);
+        Object.keys(domQueriesUnMatch).forEach((key) => delete domQueriesUnMatch[key]);
+        domObserver.forEach((callback) => {
+            DomObserver.removeOnNodeChange(callback);
+            DomObserver.removeOnAttrChange(callback);
+        });
+
+        return;
+    };
+
     // =========================================
     // --> DomReady and INIT
     // --------------------------
@@ -353,12 +391,14 @@ import ElementHelper from './ElementHelper.js';
      * @return {Void}
      */
     $this.init = () => {
-        Array.from(document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])')).forEach(function(
-            element,
-            index
-        ) {
-            $this.registerElement(element);
-        });
+        if (domReady) {
+            Array.from(document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])')).forEach(function(
+                element,
+                index
+            ) {
+                $this.registerElement(element);
+            });
+        }
 
         return;
     };
@@ -370,7 +410,7 @@ import ElementHelper from './ElementHelper.js';
     function domIsReady() {
         document.removeEventListener('DOMContentLoaded', domIsReady);
         window.removeEventListener('load', domIsReady);
-        $this.init();
+        domReady = true;
 
         return;
     }

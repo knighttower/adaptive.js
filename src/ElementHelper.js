@@ -44,11 +44,29 @@ export default class ElementHelper {
         }
     }
 
+    // =========================================
+    // --> Private
+    // --------------------------
+
+    /**
+     * Conver string into valid JSON
+     * @private
+     * @param {String} string
+     * @return {String}
+     */
+    _convertString(string) {
+        return String(string.replace(/'/g, '"'));
+    }
+
+    // =========================================
+    // --> Public
+    // --------------------------
+
     /**
      * Check if the element exists or is visible. It will keep querying
      * @return {Boolean}
      */
-    isVisible() {
+    isInDom() {
         let $this = this;
         let callbackId = Date.now() + Math.floor(Math.random() * 1000);
         if (!$this.domElement?.outerHTML) {
@@ -67,15 +85,6 @@ export default class ElementHelper {
         }
 
         return true;
-    }
-
-    /**
-     * Conver string into valid JSON
-     * @param {String} string
-     * @return {String}
-     */
-    _convertString(string) {
-        return String(string.replace(/'/g, '"'));
     }
 
     /**

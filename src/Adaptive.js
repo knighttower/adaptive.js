@@ -26,7 +26,7 @@
  * Import the Element DOM helper
  */
 // -----------------------------------------
-import { inRange } from 'lodash';
+
 import DomObserver from './DomObserver.js';
 import ElementHelper from './ElementHelper.js';
 
@@ -42,16 +42,7 @@ import ElementHelper from './ElementHelper.js';
  * @return {Object}
  * @example Add a data attribute with valid JSON like this --> data-adaptive="{'addClass':{'tablet':'hello','desktop':'dos-tres hellothere'},'teleport':{'tablet':{'to':'.sample'}}}"
  */
-(function(root, factory) {
-    'use strict';
-    if (typeof module === 'object' && typeof exports === 'object') {
-        module.exports = factory(root);
-    } else if (typeof define === 'function' && define.amd) {
-        define(factory);
-    } else {
-        factory(root);
-    }
-})(typeof window !== 'undefined' ? window : this, function(window) {
+export default (function(window) {
     'use strict';
 
     /**
@@ -59,7 +50,7 @@ import ElementHelper from './ElementHelper.js';
      * @private
      * @return {Object}
      */
-    const $this = (window.Adaptive = window.Adaptive || {});
+    const $this = {};
 
     /**
      * All the elements that will be part of the grid
@@ -386,40 +377,26 @@ import ElementHelper from './ElementHelper.js';
     // =========================================
     // --> DomReady and INIT
     // --------------------------
+
+    /**
+     * Real init for the app
+     * @private
+     */
+    function _init() {
+        Array.from(document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])')).forEach(function(
+            element,
+            index
+        ) {
+            $this.registerElement(element);
+        });
+        return;
+    }
+
     /**
      * Initialization, cam be called externally to reinitialized after dom loaded
      * @return {Void}
      */
     $this.init = () => {
-        if (domReady) {
-            Array.from(document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])')).forEach(function(
-                element,
-                index
-            ) {
-                $this.registerElement(element);
-            });
-        }
-
-        return;
-    };
-
-    /**
-     * When ready trigger the initialization
-     * @private
-     */
-    function domIsReady() {
-        document.removeEventListener('DOMContentLoaded', domIsReady);
-        window.removeEventListener('load', domIsReady);
-        domReady = true;
-
-        return;
-    }
-
-    /**
-     * DOM ready or wait for load
-     * @private
-     */
-    (() => {
         if (
             document.readyState === 'complete' ||
             (document.readyState !== 'loading' && !document.documentElement.doScroll)
@@ -433,7 +410,19 @@ import ElementHelper from './ElementHelper.js';
         }
 
         return;
-    })();
+    };
 
-    return $this;
-});
+    /**
+     * When ready trigger the initialization
+     * @private
+     */
+    function domIsReady() {
+        document.removeEventListener('DOMContentLoaded', domIsReady);
+        window.removeEventListener('load', domIsReady);
+        _init();
+
+        return;
+    }
+
+    return (window.Adaptive = $this);
+})(typeof window !== 'undefined' ? window : this);

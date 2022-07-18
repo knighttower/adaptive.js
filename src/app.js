@@ -35,4 +35,5 @@ app.component('hello', hello);
 // app.mount('#app');
 setTimeout(() => {
     app.mount('#app');
+    Adaptive.init();
 }, '2000');

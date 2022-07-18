@@ -69,18 +69,16 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 /*!*************************!*\
   !*** ./src/Adaptive.js ***!
   \*************************/
-/***/ ((module, __webpack_exports__, __webpack_require__) => {
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "lodash");
-/* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _DomObserver_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./DomObserver.js */ "./src/DomObserver.js");
-/* harmony import */ var _DomObserver_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_DomObserver_js__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _ElementHelper_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./ElementHelper.js */ "./src/ElementHelper.js");
-/* module decorator */ module = __webpack_require__.hmd(module);
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
-
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _DomObserver_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DomObserver.js */ "./src/DomObserver.js");
+/* harmony import */ var _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_DomObserver_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ElementHelper.js */ "./src/ElementHelper.js");
 /**
 * //@author Antuan Suarez
     MIT License
@@ -111,7 +109,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
  */
 // -----------------------------------------
 
-
  // =========================================
 // --> ADAPTIVE JS
 // --------------------------
@@ -125,17 +122,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
  * @example Add a data attribute with valid JSON like this --> data-adaptive="{'addClass':{'tablet':'hello','desktop':'dos-tres hellothere'},'teleport':{'tablet':{'to':'.sample'}}}"
  */
 
-(function (root, factory) {
-  'use strict';
-
-  if (( false ? 0 : _typeof(module)) === 'object' && (typeof exports === "undefined" ? "undefined" : _typeof(exports)) === 'object') {
-    module.exports = factory(root);
-  } else if (typeof define === 'function' && __webpack_require__.amdO) {
-    define(factory);
-  } else {
-    factory(root);
-  }
-})(typeof window !== 'undefined' ? window : undefined, function (window) {
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((function (window) {
   'use strict';
   /**
    * Register this library into the window
@@ -143,7 +130,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
    * @return {Object}
    */
 
-  var $this = window.Adaptive = window.Adaptive || {};
+  var $this = {};
   /**
    * All the elements that will be part of the grid
    * @private
@@ -258,7 +245,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
 
   $this.registerElement = function (elementOrSelector) {
-    var helper = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"](elementOrSelector); // Register only unique non indexed elements
+    var helper = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"](elementOrSelector); // Register only unique non indexed elements
 
     if (!helper.getAttribute('data-adaptive-id')) {
       var uniqueId = helper.getHash();
@@ -361,7 +348,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
         var direction = Object.keys($directive)[0];
         var selector = $directive[direction];
-        var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"](selector);
+        var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"](selector);
         var position = 'beforeend';
 
         switch (target) {
@@ -384,12 +371,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
           // This will create a loop up until the Element/Node is found
           var self = _this4;
           domObserver.push(self.props.adaptiveId);
-          _DomObserver_js__WEBPACK_IMPORTED_MODULE_1___default().addOnNodeChange(self.props.adaptiveId, function () {
-            var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"](selector);
+          _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default().addOnNodeChange(self.props.adaptiveId, function () {
+            var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"](selector);
 
             if (target.isInDom()) {
               target.domElement.insertAdjacentElement(position, self.props.domElement);
-              _DomObserver_js__WEBPACK_IMPORTED_MODULE_1___default().removeOnNodeChange(self.props.adaptiveId);
+              _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default().removeOnNodeChange(self.props.adaptiveId);
               delete domObserver[self.props.adaptiveId];
             }
           });
@@ -397,7 +384,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
         return;
       }, function () {
-        var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_2__["default"]("[name=\"adaptive\"][value=\"".concat(_this4.props.adaptiveId, "\""));
+        var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"]("[name=\"adaptive\"][value=\"".concat(_this4.props.adaptiveId, "\""));
 
         if (target.isInDom()) {
           target.domElement.insertAdjacentElement('afterend', _this4.props.domElement); // target.domElement.remove();
@@ -485,8 +472,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
       return delete domQueriesUnMatch[key];
     });
     domObserver.forEach(function (callback) {
-      _DomObserver_js__WEBPACK_IMPORTED_MODULE_1___default().removeOnNodeChange(callback);
-      _DomObserver_js__WEBPACK_IMPORTED_MODULE_1___default().removeOnAttrChange(callback);
+      _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default().removeOnNodeChange(callback);
+      _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default().removeOnAttrChange(callback);
     });
     return;
   }; // =========================================
@@ -494,16 +481,31 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
   // --------------------------
 
   /**
+   * Real init for the app
+   * @private
+   */
+
+
+  function _init() {
+    Array.from(document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])')).forEach(function (element, index) {
+      $this.registerElement(element);
+    });
+    return;
+  }
+  /**
    * Initialization, cam be called externally to reinitialized after dom loaded
    * @return {Void}
    */
 
 
   $this.init = function () {
-    if (domReady) {
-      Array.from(document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])')).forEach(function (element, index) {
-        $this.registerElement(element);
-      });
+    if (document.readyState === 'complete' || document.readyState !== 'loading' && !document.documentElement.doScroll) {
+      return domIsReady();
+    } else {
+      // Use the handy event callback
+      document.addEventListener('DOMContentLoaded', domIsReady); // A fallback to window.onload, that will always work
+
+      window.addEventListener('load', domIsReady);
     }
 
     return;
@@ -517,30 +519,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
   function domIsReady() {
     document.removeEventListener('DOMContentLoaded', domIsReady);
     window.removeEventListener('load', domIsReady);
-    domReady = true;
+
+    _init();
+
     return;
   }
-  /**
-   * DOM ready or wait for load
-   * @private
-   */
 
-
-  (function () {
-    if (document.readyState === 'complete' || document.readyState !== 'loading' && !document.documentElement.doScroll) {
-      return domIsReady();
-    } else {
-      // Use the handy event callback
-      document.addEventListener('DOMContentLoaded', domIsReady); // A fallback to window.onload, that will always work
-
-      window.addEventListener('load', domIsReady);
-    }
-
-    return;
-  })();
-
-  return $this;
-});
+  return window.Adaptive = $this;
+})(typeof window !== 'undefined' ? window : undefined));
 
 /***/ }),
 
@@ -1523,11 +1509,6 @@ module.exports = undefined;
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/amd options */
-/******/ 	(() => {
-/******/ 		__webpack_require__.amdO = {};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	(() => {
 /******/ 		// getDefaultExport function for compatibility with non-harmony modules
@@ -1549,21 +1530,6 @@ module.exports = undefined;
 /******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
 /******/ 				}
 /******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/harmony module decorator */
-/******/ 	(() => {
-/******/ 		__webpack_require__.hmd = (module) => {
-/******/ 			module = Object.create(module);
-/******/ 			if (!module.children) module.children = [];
-/******/ 			Object.defineProperty(module, 'exports', {
-/******/ 				enumerable: true,
-/******/ 				set: () => {
-/******/ 					throw new Error('ES Modules may not assign module.exports or exports.*, Use ESM export syntax, instead: ' + module.id);
-/******/ 				}
-/******/ 			});
-/******/ 			return module;
 /******/ 		};
 /******/ 	})();
 /******/ 	
@@ -1644,6 +1610,7 @@ app.component('hello', _hello_vue__WEBPACK_IMPORTED_MODULE_2__["default"]); // a
 
 setTimeout(function () {
   app.mount('#app');
+  _Adaptive_js__WEBPACK_IMPORTED_MODULE_0__["default"].init();
 }, '2000');
 })();
 

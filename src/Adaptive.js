@@ -23,6 +23,9 @@
     SOFTWARE.
 */
 /**
+ * Inspired by http://wicky.nillia.ms/enquire.js
+ */
+/**
  * Import the Element DOM helper
  */
 // -----------------------------------------
@@ -50,7 +53,7 @@ export default (function(window) {
      * @private
      * @return {Object}
      */
-    const $this = {};
+    const Adaptive = {};
 
     /**
      * All the elements that will be part of the grid
@@ -77,54 +80,63 @@ export default (function(window) {
     const domObserver = [];
 
     /**
-     * Flag for domready
+     * Flag for isMounted
      * @private
      */
-    var domReady = false;
+    var isMounted = false;
+
+    var useVue = false;
+    var Vue = null;
 
     /**
      * queries possible sizes
      * @private
      */
-    const _screens = {
-        '320': ['1', '379'],
-        '480': ['380', '519'],
-        '520': ['520', '599'] /* up to : mobiles */,
-        '600': ['600', '699'] /* up to : mid-size-tables */,
-        '700': ['700', '799'] /* up to : tablets / ipad */,
-        '800': ['800', '919'] /* transition in between tablets and desktop */,
-        '920': ['920', '999'] /* from here on for desktops */,
-        '1000': ['1000', '1199'],
-        '1200': ['1200', '1439'],
-        '1440': ['1440', '1599'],
-        '1600': ['1600', '1700'],
+    const screens = {
+        '320': [1, 379],
+        '480': [380, 519],
+        '520': [520, 599] /* up to : mobiles */,
+        '600': [600, 699] /* up to : mid-size-tables */,
+        '700': [700, 799] /* up to : tablets / ipad */,
+        '800': [800, 919] /* transition in between tablets and desktop */,
+        '920': [920, 999] /* from here on for desktops */,
+        '1000': [1000, 1199],
+        '1200': [1200, 1439],
+        '1440': [1440, 1599],
+        '1600': [1600, 1700],
     };
 
     /**
      * break the 3 major device types
      * @private
      */
-    const _devices = {
-        mobile: ['1', '599'] /* Actual phones */,
-        tablet: ['600', '799'] /* tablets in portrait or below */,
-        'odd-device': ['800', '1024'] /* small Laptops and Ipads in landscape */,
-        desktop: ['1025', '1440'] /* Most common resolutions below 1920 */,
+    const devices = {
+        mobile: [1, 599] /* Actual phones */,
+        tablet: [600, 799] /* tablets in portrait or below */,
+        'odd-device': [800, 1024] /* small Laptops and Ipads in landscape */,
+        desktop: [1025, 1440] /* Most common resolutions below 1920 */,
     };
 
     /**
      * break the 3 major device types
      * @private
      */
-    const _broadMediaQueries = {
-        'non-desktop': ['100', '1024'],
-        fullscreen: ['1441', '6000'] /* Large monitos and fullscreen in 1920 res */,
+    const broadMediaQueries = {
+        'non-desktop': [100, 1024],
+        fullscreen: [1441, 6000] /* Large monitos and fullscreen in 1920 res */,
     };
 
     /**
      * To register additional custom queries add the key:[min, max]
-     * @public
+     * @private
      */
-    $this.customQueries = {};
+    const customMinMaxQueries = {};
+
+    /**
+     * To register additional custom queries add the key:'Query Expression'
+     * @private
+     */
+    const customExpressionQueries = {};
 
     // =========================================
     // --> Utility
@@ -135,16 +147,25 @@ export default (function(window) {
      * @private
      * @return {Object}
      */
-    $this.getAllQueries = () => {
-        return Object.assign({}, _screens, _devices, _broadMediaQueries, $this.customQueries);
+    Adaptive.getAllQueries = () => {
+        return Object.assign({}, screens, devices, broadMediaQueries, customMinMaxQueries, customExpressionQueries);
+    };
+
+    Adaptive.getMinMaxQueries = () => {
+        return Object.assign({}, screens, devices, broadMediaQueries, customMinMaxQueries);
+    };
+
+    Adaptive.getExpQueries = () => {
+        return Object.assign({}, customExpressionQueries);
     };
 
     /**
      * Register an element
      * @param {String|Object} elementOrSelector
+     * @param {Object} data Optional used directly to add the directives, but is mostly for VUe
      * @return {Void}
      */
-    $this.registerElement = (elementOrSelector) => {
+    Adaptive.registerElement = (elementOrSelector, data) => {
         let helper = new ElementHelper(elementOrSelector);
         // Register only unique non indexed elements
         if (!helper.getAttribute('data-adaptive-id')) {
@@ -156,11 +177,40 @@ export default (function(window) {
                 helper: helper,
                 domElement: helper.domElement,
                 xpath: helper.getXpathTo(),
-                settings: helper.getAttribute('data-adaptive'),
+                settings: data || helper.getAttribute('data-adaptive'),
             });
         }
 
         return;
+    };
+
+    /**
+     * Register A custom Query Min, Max
+     * @param {String} id Identifier
+     * @param {Number} min Number only, no units attached as it only handles pixels here
+     * @param {Number} max Number only, no units attached as it only handles pixels here
+     * @return {Void}
+     */
+    Adaptive.addQueryMinMax = function(id, min, max) {
+        if (!customMinMaxQueries[id]) {
+            if (!min || !max) {
+                throw new Exception('Min or Max must be passed (id, min, max)', 1);
+            }
+            customMinMaxQueries[id] = [min, max];
+        }
+    };
+
+    /**
+     * Register A custom Query Expression
+     * @param {String} id Identifier
+     * @param {String} query Media query, example "screen and (max-width: 500em) and (orientation: landscape)"
+     * @param {Number} max Number only, no units attached as it only handles pixels here
+     * @return {Void}
+     */
+    Adaptive.addQueryExpression = function(id, query) {
+        if (!customExpressionQueries[id]) {
+            customExpressionQueries[id] = query;
+        }
     };
 
     // =========================================
@@ -307,11 +357,14 @@ export default (function(window) {
     function QueryHandler(queries, matchCallback, unMatchCallback) {
         for (let query in queries) {
             let values = queries[query];
-            let defaulQuery = $this.getAllQueries()[query];
+            let queryPreset = Adaptive.getMinMaxQueries()[query];
+            let customExpression = Adaptive.getExpQueries()[query];
             let queryExpression = query;
 
-            if (defaulQuery) {
-                queryExpression = `(min-width: ${defaulQuery[0]}px) and (max-width: ${defaulQuery[1]}px)`;
+            if (queryPreset) {
+                queryExpression = `(min-width: ${queryPreset[0]}px) and (max-width: ${queryPreset[1]}px)`;
+            } else if (customExpression) {
+                queryExpression = customExpression;
             }
 
             this.queryIsRegistered = Boolean(domQueriesMatch[queryExpression]);
@@ -362,7 +415,7 @@ export default (function(window) {
      * @private
      * @return {Void}
      */
-    $this.reset = () => {
+    Adaptive.reset = () => {
         Object.keys(domElements).forEach((key) => delete domElements[key]);
         Object.keys(domQueriesMatch).forEach((key) => delete domQueriesMatch[key]);
         Object.keys(domQueriesUnMatch).forEach((key) => delete domQueriesUnMatch[key]);
@@ -370,6 +423,7 @@ export default (function(window) {
             DomObserver.removeOnNodeChange(callback);
             DomObserver.removeOnAttrChange(callback);
         });
+        isMounted = false;
 
         return;
     };
@@ -383,20 +437,67 @@ export default (function(window) {
      * @private
      */
     function _init() {
+        isMounted = true;
         Array.from(document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])')).forEach(function(
             element,
             index
         ) {
-            $this.registerElement(element);
+            Adaptive.registerElement(element);
         });
         return;
     }
+
+    Adaptive.useVue = (Vue) => {
+        if (typeof Vue === 'object' && typeof Vue.mixin === 'function') {
+            useVue = true;
+            let installer = {
+                install: (app, options) => {
+                    // For Options API
+                    app.config.globalProperties.$Adaptive = Adaptive;
+                    // For composition API
+                    app.provide('Adpative', Adaptive);
+                },
+            };
+
+            let directive = {
+                mounted: (element, binding, vnode, prevVnode) => {
+                    Adaptive.registerElement(element, binding.value);
+                },
+            };
+            /**
+             * Adaptive used as vue.$Adaptive
+             * @private
+             */
+            Vue.use(installer);
+            /**
+             * Adaptive used as v-adaptive
+             * @private
+             */
+            Vue.directive('Adaptive', directive);
+            /**
+             * Adaptive used for non Vue elements register with data-adaptive attr
+             * Hybrid mode
+             * @private
+             */
+            Vue.mixin({
+                mounted: () => {
+                    return Adaptive.init();
+                },
+            });
+        }
+
+        return Vue;
+    };
 
     /**
      * Initialization, cam be called externally to reinitialized after dom loaded
      * @return {Void}
      */
-    $this.init = () => {
+    Adaptive.init = () => {
+        if (isMounted) {
+            return false;
+        }
+
         if (
             document.readyState === 'complete' ||
             (document.readyState !== 'loading' && !document.documentElement.doScroll)
@@ -424,5 +525,5 @@ export default (function(window) {
         return;
     }
 
-    return (window.Adaptive = $this);
+    return (window.Adaptive = Adaptive);
 })(typeof window !== 'undefined' ? window : this);

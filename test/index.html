@@ -4,25 +4,32 @@
     </head>
     <body>
         <section id="app">
-            <div id="hello" class="static-hello" data-adaptive="{'addClass':{'tablet':'hello','desktop':'dos-tres hellothere'}, 'teleport':{
+            <!-- Example adding classes and being teleported to a div inside "hello" that would be visible at a later time -->
+            <div id="hello" ref="hello" class="static-hello" data-adaptive="{'addClass':{'tablet':'hello','desktop':'dos-tres hellothere'}, 'teleport':{
                 'tablet': {
                     'to':'.lazy'
                 }
             }}">
                 static hello
             </div>
+            <br/><br/>
+
+            <!-- Example of only adding classes per breakdown -->
             <div class="after-static-hello" data-adaptive="{'addClass':{'tablet':'hello','desktop':'dos-tres hellothere'}}">
                 after static hello
             </div>
+            <br/><br/>
+
+            <!-- Example Vue compoenent -->
             <hello></hello>
+            <br/><br/>
+
+            <!-- Example of using custom queries -->
+            <div data-adaptive="{'addClass':{'kitty':'miau'}}">Custom Min Max query</div>
+
         </section>
 
         <!-- JS -->
-        <script
-			  src="//code.jquery.com/jquery-3.6.0.min.js"
-			  integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-			  crossorigin="anonymous"></script>
-        <script src="//cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
         <script src="//cdn.jsdelivr.net/npm/vue@3.2.37/dist/vue.global.min.js"></script>
         <script src="/app.js"></script>
         

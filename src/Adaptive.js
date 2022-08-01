@@ -30,8 +30,8 @@
  */
 // -----------------------------------------
 
-import DomObserver from './DomObserver.js';
 import ElementHelper from './ElementHelper.js';
+import AdaptiveElement from './AdaptiveElement.js';
 
 // =========================================
 // --> ADAPTIVE JS
@@ -54,24 +54,11 @@ export default (function(window) {
      * @return {Object}
      */
     const Adaptive = {};
-
     /**
      * All the elements that will be part of the grid
      * @private
      */
     const domElements = {};
-
-    /**
-     * Holds memory of registered queries to match
-     * @private
-     */
-    const domQueriesMatch = {};
-
-    /**
-     * Holds memory of registered queries to Unmatch
-     * @private
-     */
-    const domQueriesUnMatch = {};
 
     /**
      * Holds memory of registered domobserver callbacks
@@ -85,8 +72,11 @@ export default (function(window) {
      */
     var isMounted = false;
 
+    /**
+     * Flag for using Vue
+     * @private
+     */
     var useVue = false;
-    var Vue = null;
 
     /**
      * queries possible sizes
@@ -172,16 +162,17 @@ export default (function(window) {
             let uniqueId = helper.getHash();
             helper.domElement.setAttribute('data-adaptive-id', uniqueId);
 
-            domElements[uniqueId] = new AdaptiveElement({
-                adaptiveId: uniqueId,
-                helper: helper,
-                domElement: helper.domElement,
-                xpath: helper.getXpathTo(),
-                settings: data || helper.getAttribute('data-adaptive'),
-            });
+            domElements[uniqueId] = new AdaptiveElement(
+                {
+                    adaptiveId: uniqueId,
+                    helper: helper,
+                    domElement: helper.domElement,
+                    xpath: helper.getXpathTo(),
+                    settings: data || helper.getAttribute('data-adaptive'),
+                },
+                Adaptive
+            );
         }
-
-        return;
     };
 
     /**
@@ -218,214 +209,15 @@ export default (function(window) {
     // --------------------------
 
     /**
-     * Creates a new Adaptive object per element
-     * @private
-     * @param {Object} props
-     * @return {Object}
-     */
-    function AdaptiveElement(props) {
-        this.props = props;
-        for (let directive in props.settings) {
-            this[directive](props.settings[directive]);
-        }
-    }
-
-    /**
-     * Add Adaptive prototype
-     * @private
-     */
-    AdaptiveElement.prototype = {
-        addClass: function(queries) {
-            return new QueryHandler(
-                queries,
-                ($classes) => {
-                    $classes = $classes.split(' ');
-                    $classes.forEach(($class) => {
-                        this.props.domElement.classList.add($class);
-                    });
-                    return;
-                },
-                ($classes) => {
-                    $classes = $classes.split(' ');
-                    $classes.forEach(($class) => {
-                        this.props.domElement.classList.remove($class);
-                    });
-                    return;
-                }
-            );
-        },
-        removeClass: function(queries) {
-            return new QueryHandler(
-                queries,
-                ($classes) => {
-                    $classes = $classes.split(' ');
-                    $classes.forEach(($class) => {
-                        this.props.domElement.classList.remove($class);
-                    });
-                    return;
-                },
-                ($classes) => {
-                    $classes = $classes.split(' ');
-                    $classes.forEach(($class) => {
-                        this.props.domElement.classList.add($class);
-                    });
-                    return;
-                }
-            );
-        },
-        addStyle: function(queries) {
-            // Save the original style in memory to not discard them
-            this.props.originalStyle = this.props.domElement.getAttribute('style');
-
-            return new QueryHandler(
-                queries,
-                ($styles) => {
-                    return (this.props.domElement.style.cssText += $styles);
-                },
-                () => {
-                    return (this.props.domElement.style.cssText = this.props.originalStyle);
-                }
-            );
-        },
-        teleport: function(queries) {
-            let placeholder = document.createElement('param');
-            placeholder.name = 'adaptive';
-            placeholder.value = this.props.adaptiveId;
-            this.props.domElement.insertAdjacentElement('beforebegin', placeholder);
-
-            return new QueryHandler(
-                queries,
-                ($directive) => {
-                    // Defaults to "to" target if only the selector is passed
-                    if (typeof $directive === 'string') {
-                        $directive = { to: $directive };
-                    }
-                    let direction = Object.keys($directive)[0];
-                    let selector = $directive[direction];
-                    let target = new ElementHelper(selector);
-                    let position = 'beforeend';
-                    switch (target) {
-                        case 'to':
-                            // default
-                            break;
-                        case 'before':
-                            position = 'beforebegin';
-                            break;
-                        case 'after':
-                            position = 'afterend';
-                            break;
-                    }
-
-                    if (target.isInDom()) {
-                        target.domElement.insertAdjacentElement(position, this.props.domElement);
-                    } else {
-                        // This will create a loop up until the Element/Node is found
-                        let self = this;
-
-                        domObserver.push(self.props.adaptiveId);
-                        DomObserver.addOnNodeChange(self.props.adaptiveId, () => {
-                            let target = new ElementHelper(selector);
-                            if (target.isInDom()) {
-                                target.domElement.insertAdjacentElement(position, self.props.domElement);
-                                DomObserver.removeOnNodeChange(self.props.adaptiveId);
-                                delete domObserver[self.props.adaptiveId];
-                            }
-                        });
-                    }
-
-                    return;
-                },
-                () => {
-                    let target = new ElementHelper(`[name="adaptive"][value="${this.props.adaptiveId}"`);
-                    if (target.isInDom()) {
-                        target.domElement.insertAdjacentElement('afterend', this.props.domElement);
-                        // target.domElement.remove();
-                    }
-                }
-            );
-        },
-    };
-
-    /**
-     * Handle all queries functions
-     * @private
-     * @param {String} queries Media query
-     * @param {Function} matchCallback Callback
-     * @param {Function} unMatchCallback Callback
-     * @return {Object}
-     */
-    function QueryHandler(queries, matchCallback, unMatchCallback) {
-        for (let query in queries) {
-            let values = queries[query];
-            let queryPreset = Adaptive.getMinMaxQueries()[query];
-            let customExpression = Adaptive.getExpQueries()[query];
-            let queryExpression = query;
-
-            if (queryPreset) {
-                queryExpression = `(min-width: ${queryPreset[0]}px) and (max-width: ${queryPreset[1]}px)`;
-            } else if (customExpression) {
-                queryExpression = customExpression;
-            }
-
-            this.queryIsRegistered = Boolean(domQueriesMatch[queryExpression]);
-
-            if (!this.queryIsRegistered) {
-                domQueriesMatch[queryExpression] = [];
-                domQueriesUnMatch[queryExpression] = [];
-            }
-
-            domQueriesMatch[queryExpression].push([matchCallback, values]);
-            domQueriesUnMatch[queryExpression].push([unMatchCallback, values]);
-
-            let matchQuery = window.matchMedia(queryExpression);
-            this.createListener(matchQuery);
-        }
-    }
-
-    /**
-     * Add Query prototype
-     * @private
-     */
-    QueryHandler.prototype = {
-        createListener: function(matchQuery) {
-            var $self = this;
-            $self.match(matchQuery);
-            if (!$self.queryIsRegistered) {
-                matchQuery.addListener($self.match);
-            }
-            return;
-        },
-        match: function(matchQuery) {
-            if (matchQuery.matches) {
-                domQueriesMatch[matchQuery.media].forEach(function(callback) {
-                    return callback[0](callback[1]);
-                });
-            } else {
-                domQueriesUnMatch[matchQuery.media].forEach(function(callback) {
-                    return callback[0](callback[1]);
-                });
-            }
-
-            return;
-        },
-    };
-
-    /**
      * Full reset, handle with care
      * @private
      * @return {Void}
      */
     Adaptive.reset = () => {
         Object.keys(domElements).forEach((key) => delete domElements[key]);
-        Object.keys(domQueriesMatch).forEach((key) => delete domQueriesMatch[key]);
-        Object.keys(domQueriesUnMatch).forEach((key) => delete domQueriesUnMatch[key]);
-        domObserver.forEach((callback) => {
-            DomObserver.removeOnNodeChange(callback);
-            DomObserver.removeOnAttrChange(callback);
-        });
+        DomObserver.clenup();
+        AdaptiveQH.reset();
         isMounted = false;
-
-        return;
     };
 
     // =========================================
@@ -444,6 +236,43 @@ export default (function(window) {
         ) {
             Adaptive.registerElement(element);
         });
+
+        AdaptiveQH.init();
+    }
+
+    /**
+     * Initialization, cam be called externally to reinitialized after dom loaded
+     * @return {Void}
+     */
+    Adaptive.init = () => {
+        if (isMounted) {
+            return false;
+        }
+
+        if (
+            document.readyState === 'complete' ||
+            (document.readyState !== 'loading' && !document.documentElement.doScroll)
+        ) {
+            return domIsReady();
+        } else {
+            // Use the handy event callback
+            document.addEventListener('DOMContentLoaded', domIsReady);
+            // A fallback to window.onload, that will always work
+            window.addEventListener('load', domIsReady);
+        }
+
+        return;
+    };
+
+    /**
+     * When ready trigger the initialization
+     * @private
+     */
+    function domIsReady() {
+        document.removeEventListener('DOMContentLoaded', domIsReady);
+        window.removeEventListener('load', domIsReady);
+        _init();
+
         return;
     }
 
@@ -488,42 +317,6 @@ export default (function(window) {
 
         return Vue;
     };
-
-    /**
-     * Initialization, cam be called externally to reinitialized after dom loaded
-     * @return {Void}
-     */
-    Adaptive.init = () => {
-        if (isMounted) {
-            return false;
-        }
-
-        if (
-            document.readyState === 'complete' ||
-            (document.readyState !== 'loading' && !document.documentElement.doScroll)
-        ) {
-            return domIsReady();
-        } else {
-            // Use the handy event callback
-            document.addEventListener('DOMContentLoaded', domIsReady);
-            // A fallback to window.onload, that will always work
-            window.addEventListener('load', domIsReady);
-        }
-
-        return;
-    };
-
-    /**
-     * When ready trigger the initialization
-     * @private
-     */
-    function domIsReady() {
-        document.removeEventListener('DOMContentLoaded', domIsReady);
-        window.removeEventListener('load', domIsReady);
-        _init();
-
-        return;
-    }
 
     return (window.Adaptive = Adaptive);
 })(typeof window !== 'undefined' ? window : this);

@@ -4,18 +4,14 @@
     </head>
     <body>
         <section id="app">
-            <!-- Example adding classes and being teleported to a div inside "hello" that would be visible at a later time -->
-            <div id="hello" ref="hello" class="static-hello" data-adaptive="{'addClass':{'tablet':'hello','desktop':'dos-tres hellothere'}, 'teleport':{
-                'tablet': {
-                    'to':'.lazy'
-                }
-            }}">
+            <!-- Example adding classes -->
+            <div id="hello" class="static-hello" data-adaptive="{'addClass':{'tablet':'hello','desktop':'this-is-a-class-for-desktop'}}">
                 static hello
             </div>
             <br/><br/>
 
-            <!-- Example of only adding classes per breakdown -->
-            <div class="after-static-hello" data-adaptive="{'addClass':{'tablet':'hello','desktop':'dos-tres hellothere'}}">
+            <!-- Example of only adding styles per breakdown -->
+            <div class="after-static-hello" data-adaptive="{'addStyle':{'tablet':'color: blue;','desktop':'color: green;'}}">
                 after static hello
             </div>
             <br/><br/>
@@ -26,6 +22,13 @@
 
             <!-- Example of using custom queries -->
             <div data-adaptive="{'addClass':{'kitty':'miau'}}">Custom Min Max query</div>
+
+            <br/><br/>
+            <div data-adaptive="{'teleport':{
+                'tablet': {
+                    'to':'.lazy'
+                }
+            }}"><span style="color:blue">Static element that will teleport at "tablet" size to a Vue driven element when visible</span></div>
 
         </section>
 

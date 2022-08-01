@@ -28,9 +28,11 @@ __webpack_require__.r(__webpack_exports__);
     });
   },
   methods: {
-    clickFunction: function clickFunction() {
-      this.show = true;
+    changeText: function changeText() {
       this.greeting = Math.floor(Math.random() * 10);
+    },
+    toggle: function toggle() {
+      this.show = !this.show;
     }
   }
 });
@@ -55,8 +57,7 @@ var _hoisted_1 = {
   "class": "sample"
 };
 var _hoisted_2 = {
-  key: 0,
-  "class": "lazy"
+  "class": "greeting"
 };
 
 var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
@@ -67,29 +68,29 @@ var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 /* HOISTED */
 );
 
-var _hoisted_5 = {
-  "class": "greeting"
-};
+var _hoisted_5 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+/* HOISTED */
+);
 
 var _hoisted_6 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
 /* HOISTED */
 );
 
-var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
-/* HOISTED */
-);
+var _hoisted_7 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Using Directive inside Vue component");
 
-var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
-/* HOISTED */
-);
+var _hoisted_8 = [_hoisted_7];
 
 var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
 /* HOISTED */
 );
 
-var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Using Directive inside Vue component");
+var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+/* HOISTED */
+);
 
-var _hoisted_11 = [_hoisted_10];
+var _hoisted_11 = {
+  ref: "six"
+};
 
 var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
 /* HOISTED */
@@ -100,24 +101,46 @@ var _hoisted_13 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 );
 
 var _hoisted_14 = {
-  ref: "six"
+  key: 0,
+  "class": "lazy"
 };
+
+var _hoisted_15 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+/* HOISTED */
+);
+
+var _hoisted_16 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+/* HOISTED */
+);
+
+var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+/* HOISTED */
+);
+
+var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+/* HOISTED */
+);
+
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _directive_adaptive = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveDirective)("adaptive");
 
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Example of a later insertion "), $data.show ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_2, "Using (observer) After load inside component")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_3, _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.greeting), 1
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.greeting), 1
   /* TEXT */
-  ), _hoisted_6, _hoisted_7, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  ), _hoisted_3, _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     onClick: _cache[0] || (_cache[0] = function () {
-      return $options.clickFunction && $options.clickFunction.apply($options, arguments);
+      return $options.changeText && $options.changeText.apply($options, arguments);
     })
-  }, "change to number and show another element"), _hoisted_8, _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Example of directive binding with Adaptive "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)(((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", null, _hoisted_11)), [[_directive_adaptive, {
+  }, "change to number and show another element"), _hoisted_5, _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Example of directive binding with Adaptive "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)(((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", null, _hoisted_8)), [[_directive_adaptive, {
     addClass: {
       desktop: 'cinco'
     }
-  }]]), _hoisted_12, _hoisted_13, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Example of use as a ref element with plugin style "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, "Using Ref element inside component for Vue Plugin mode and custom media query expression", 512
+  }]]), _hoisted_9, _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Example of use as a ref element with plugin style "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, "Using Ref element inside component for Vue Plugin mode and custom media query expression", 512
   /* NEED_PATCH */
-  )]);
+  ), _hoisted_12, _hoisted_13, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Example of a later insertion "), $data.show ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_14, "Using (observer) After load inside component")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), _hoisted_15, _hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    onClick: _cache[1] || (_cache[1] = function () {
+      return $options.toggle && $options.toggle.apply($options, arguments);
+    })
+  }, "Show hide Lazy element"), _hoisted_17, _hoisted_18]);
 }
 
 /***/ }),
@@ -133,9 +156,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _DomObserver_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DomObserver.js */ "./src/DomObserver.js");
-/* harmony import */ var _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_DomObserver_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ElementHelper.js */ "./src/ElementHelper.js");
+/* harmony import */ var _ElementHelper_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ElementHelper.js */ "./src/ElementHelper.js");
+/* harmony import */ var _AdaptiveElement_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AdaptiveElement.js */ "./src/AdaptiveElement.js");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 /**
@@ -201,18 +223,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
   var domElements = {};
   /**
-   * Holds memory of registered queries to match
-   * @private
-   */
-
-  var domQueriesMatch = {};
-  /**
-   * Holds memory of registered queries to Unmatch
-   * @private
-   */
-
-  var domQueriesUnMatch = {};
-  /**
    * Holds memory of registered domobserver callbacks
    * @private
    */
@@ -224,8 +234,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
    */
 
   var isMounted = false;
+  /**
+   * Flag for using Vue
+   * @private
+   */
+
   var useVue = false;
-  var Vue = null;
   /**
    * queries possible sizes
    * @private
@@ -325,21 +339,19 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
 
   Adaptive.registerElement = function (elementOrSelector, data) {
-    var helper = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"](elementOrSelector); // Register only unique non indexed elements
+    var helper = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_0__["default"](elementOrSelector); // Register only unique non indexed elements
 
     if (!helper.getAttribute('data-adaptive-id')) {
       var uniqueId = helper.getHash();
       helper.domElement.setAttribute('data-adaptive-id', uniqueId);
-      domElements[uniqueId] = new AdaptiveElement({
+      domElements[uniqueId] = new _AdaptiveElement_js__WEBPACK_IMPORTED_MODULE_1__["default"]({
         adaptiveId: uniqueId,
         helper: helper,
         domElement: helper.domElement,
         xpath: helper.getXpathTo(),
         settings: data || helper.getAttribute('data-adaptive')
-      });
+      }, Adaptive);
     }
-
-    return;
   };
   /**
    * Register A custom Query Min, Max
@@ -377,221 +389,19 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
   // --------------------------
 
   /**
-   * Creates a new Adaptive object per element
-   * @private
-   * @param {Object} props
-   * @return {Object}
-   */
-
-
-  function AdaptiveElement(props) {
-    this.props = props;
-
-    for (var directive in props.settings) {
-      this[directive](props.settings[directive]);
-    }
-  }
-  /**
-   * Add Adaptive prototype
-   * @private
-   */
-
-
-  AdaptiveElement.prototype = {
-    addClass: function addClass(queries) {
-      var _this = this;
-
-      return new QueryHandler(queries, function ($classes) {
-        $classes = $classes.split(' ');
-        $classes.forEach(function ($class) {
-          _this.props.domElement.classList.add($class);
-        });
-        return;
-      }, function ($classes) {
-        $classes = $classes.split(' ');
-        $classes.forEach(function ($class) {
-          _this.props.domElement.classList.remove($class);
-        });
-        return;
-      });
-    },
-    removeClass: function removeClass(queries) {
-      var _this2 = this;
-
-      return new QueryHandler(queries, function ($classes) {
-        $classes = $classes.split(' ');
-        $classes.forEach(function ($class) {
-          _this2.props.domElement.classList.remove($class);
-        });
-        return;
-      }, function ($classes) {
-        $classes = $classes.split(' ');
-        $classes.forEach(function ($class) {
-          _this2.props.domElement.classList.add($class);
-        });
-        return;
-      });
-    },
-    addStyle: function addStyle(queries) {
-      var _this3 = this;
-
-      // Save the original style in memory to not discard them
-      this.props.originalStyle = this.props.domElement.getAttribute('style');
-      return new QueryHandler(queries, function ($styles) {
-        return _this3.props.domElement.style.cssText += $styles;
-      }, function () {
-        return _this3.props.domElement.style.cssText = _this3.props.originalStyle;
-      });
-    },
-    teleport: function teleport(queries) {
-      var _this4 = this;
-
-      var placeholder = document.createElement('param');
-      placeholder.name = 'adaptive';
-      placeholder.value = this.props.adaptiveId;
-      this.props.domElement.insertAdjacentElement('beforebegin', placeholder);
-      return new QueryHandler(queries, function ($directive) {
-        // Defaults to "to" target if only the selector is passed
-        if (typeof $directive === 'string') {
-          $directive = {
-            to: $directive
-          };
-        }
-
-        var direction = Object.keys($directive)[0];
-        var selector = $directive[direction];
-        var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"](selector);
-        var position = 'beforeend';
-
-        switch (target) {
-          case 'to':
-            // default
-            break;
-
-          case 'before':
-            position = 'beforebegin';
-            break;
-
-          case 'after':
-            position = 'afterend';
-            break;
-        }
-
-        if (target.isInDom()) {
-          target.domElement.insertAdjacentElement(position, _this4.props.domElement);
-        } else {
-          // This will create a loop up until the Element/Node is found
-          var self = _this4;
-          domObserver.push(self.props.adaptiveId);
-          _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default().addOnNodeChange(self.props.adaptiveId, function () {
-            var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"](selector);
-
-            if (target.isInDom()) {
-              target.domElement.insertAdjacentElement(position, self.props.domElement);
-              _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default().removeOnNodeChange(self.props.adaptiveId);
-              delete domObserver[self.props.adaptiveId];
-            }
-          });
-        }
-
-        return;
-      }, function () {
-        var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"]("[name=\"adaptive\"][value=\"".concat(_this4.props.adaptiveId, "\""));
-
-        if (target.isInDom()) {
-          target.domElement.insertAdjacentElement('afterend', _this4.props.domElement); // target.domElement.remove();
-        }
-      });
-    }
-  };
-  /**
-   * Handle all queries functions
-   * @private
-   * @param {String} queries Media query
-   * @param {Function} matchCallback Callback
-   * @param {Function} unMatchCallback Callback
-   * @return {Object}
-   */
-
-  function QueryHandler(queries, matchCallback, unMatchCallback) {
-    for (var query in queries) {
-      var values = queries[query];
-      var queryPreset = Adaptive.getMinMaxQueries()[query];
-      var customExpression = Adaptive.getExpQueries()[query];
-      var queryExpression = query;
-
-      if (queryPreset) {
-        queryExpression = "(min-width: ".concat(queryPreset[0], "px) and (max-width: ").concat(queryPreset[1], "px)");
-      } else if (customExpression) {
-        queryExpression = customExpression;
-      }
-
-      this.queryIsRegistered = Boolean(domQueriesMatch[queryExpression]);
-
-      if (!this.queryIsRegistered) {
-        domQueriesMatch[queryExpression] = [];
-        domQueriesUnMatch[queryExpression] = [];
-      }
-
-      domQueriesMatch[queryExpression].push([matchCallback, values]);
-      domQueriesUnMatch[queryExpression].push([unMatchCallback, values]);
-      var matchQuery = window.matchMedia(queryExpression);
-      this.createListener(matchQuery);
-    }
-  }
-  /**
-   * Add Query prototype
-   * @private
-   */
-
-
-  QueryHandler.prototype = {
-    createListener: function createListener(matchQuery) {
-      var $self = this;
-      $self.match(matchQuery);
-
-      if (!$self.queryIsRegistered) {
-        matchQuery.addListener($self.match);
-      }
-
-      return;
-    },
-    match: function match(matchQuery) {
-      if (matchQuery.matches) {
-        domQueriesMatch[matchQuery.media].forEach(function (callback) {
-          return callback[0](callback[1]);
-        });
-      } else {
-        domQueriesUnMatch[matchQuery.media].forEach(function (callback) {
-          return callback[0](callback[1]);
-        });
-      }
-
-      return;
-    }
-  };
-  /**
    * Full reset, handle with care
    * @private
    * @return {Void}
    */
 
+
   Adaptive.reset = function () {
     Object.keys(domElements).forEach(function (key) {
       return delete domElements[key];
     });
-    Object.keys(domQueriesMatch).forEach(function (key) {
-      return delete domQueriesMatch[key];
-    });
-    Object.keys(domQueriesUnMatch).forEach(function (key) {
-      return delete domQueriesUnMatch[key];
-    });
-    domObserver.forEach(function (callback) {
-      _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default().removeOnNodeChange(callback);
-      _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default().removeOnAttrChange(callback);
-    });
+    DomObserver.clenup();
+    AdaptiveQH.reset();
     isMounted = false;
-    return;
   }; // =========================================
   // --> DomReady and INIT
   // --------------------------
@@ -607,6 +417,42 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     Array.from(document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])')).forEach(function (element, index) {
       Adaptive.registerElement(element);
     });
+    AdaptiveQH.init();
+  }
+  /**
+   * Initialization, cam be called externally to reinitialized after dom loaded
+   * @return {Void}
+   */
+
+
+  Adaptive.init = function () {
+    if (isMounted) {
+      return false;
+    }
+
+    if (document.readyState === 'complete' || document.readyState !== 'loading' && !document.documentElement.doScroll) {
+      return domIsReady();
+    } else {
+      // Use the handy event callback
+      document.addEventListener('DOMContentLoaded', domIsReady); // A fallback to window.onload, that will always work
+
+      window.addEventListener('load', domIsReady);
+    }
+
+    return;
+  };
+  /**
+   * When ready trigger the initialization
+   * @private
+   */
+
+
+  function domIsReady() {
+    document.removeEventListener('DOMContentLoaded', domIsReady);
+    window.removeEventListener('load', domIsReady);
+
+    _init();
+
     return;
   }
 
@@ -653,45 +499,207 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
     return Vue;
   };
-  /**
-   * Initialization, cam be called externally to reinitialized after dom loaded
-   * @return {Void}
-   */
-
-
-  Adaptive.init = function () {
-    if (isMounted) {
-      return false;
-    }
-
-    if (document.readyState === 'complete' || document.readyState !== 'loading' && !document.documentElement.doScroll) {
-      return domIsReady();
-    } else {
-      // Use the handy event callback
-      document.addEventListener('DOMContentLoaded', domIsReady); // A fallback to window.onload, that will always work
-
-      window.addEventListener('load', domIsReady);
-    }
-
-    return;
-  };
-  /**
-   * When ready trigger the initialization
-   * @private
-   */
-
-
-  function domIsReady() {
-    document.removeEventListener('DOMContentLoaded', domIsReady);
-    window.removeEventListener('load', domIsReady);
-
-    _init();
-
-    return;
-  }
 
   return window.Adaptive = Adaptive;
 })(typeof window !== 'undefined' ? window : undefined));
+
+/***/ }),
+
+/***/ "./src/AdaptiveElement.js":
+/*!********************************!*\
+  !*** ./src/AdaptiveElement.js ***!
+  \********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ AdaptiveElement)
+/* harmony export */ });
+/* harmony import */ var _DomObserver_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DomObserver.js */ "./src/DomObserver.js");
+/* harmony import */ var _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_DomObserver_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ElementHelper.js */ "./src/ElementHelper.js");
+/* harmony import */ var _QueryHandler_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./QueryHandler.js */ "./src/QueryHandler.js");
+/* harmony import */ var _QueryHandler_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_QueryHandler_js__WEBPACK_IMPORTED_MODULE_2__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+/**
+* @author Antuan Suarez
+    MIT License
+
+    Copyright (c) [2022] [Antuan Suarez] https://github.com/knighttower
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+*/
+
+
+
+/**
+ * @class Adds some extra functionality to interact with a DOM element
+ * @param {Object} props
+ * @param {Object} Adaptive Instance of
+ * @return {Object}
+ */
+
+var AdaptiveElement = /*#__PURE__*/function () {
+  /**
+   * Constructor
+   * @param {String|Object} selector
+   * @return {Object}
+   */
+  function AdaptiveElement(props, Adaptive) {
+    _classCallCheck(this, AdaptiveElement);
+
+    this.props = props;
+    this.Adaptive = Adaptive;
+    this.domObserver = [];
+
+    for (var directive in props.settings) {
+      this[directive](props.settings[directive]);
+    }
+  }
+
+  _createClass(AdaptiveElement, [{
+    key: "addClass",
+    value: function addClass(queries) {
+      var _this = this;
+
+      return _QueryHandler_js__WEBPACK_IMPORTED_MODULE_2___default().add(queries, function ($classes) {
+        $classes = $classes.split(' ');
+        $classes.forEach(function ($class) {
+          _this.props.domElement.classList.add($class);
+        });
+        return;
+      }, function ($classes) {
+        $classes = $classes.split(' ');
+        $classes.forEach(function ($class) {
+          _this.props.domElement.classList.remove($class);
+        });
+        return;
+      }, this.Adaptive);
+    }
+  }, {
+    key: "removeClass",
+    value: function removeClass(queries) {
+      var _this2 = this;
+
+      return _QueryHandler_js__WEBPACK_IMPORTED_MODULE_2___default().add(queries, function ($classes) {
+        $classes = $classes.split(' ');
+        $classes.forEach(function ($class) {
+          _this2.props.domElement.classList.remove($class);
+        });
+        return;
+      }, function ($classes) {
+        $classes = $classes.split(' ');
+        $classes.forEach(function ($class) {
+          _this2.props.domElement.classList.add($class);
+        });
+        return;
+      }, this.Adaptive);
+    }
+  }, {
+    key: "addStyle",
+    value: function addStyle(queries) {
+      var _this3 = this;
+
+      // Save the original style in memory to not discard them
+      this.props.originalStyle = this.props.domElement.getAttribute('style');
+      return _QueryHandler_js__WEBPACK_IMPORTED_MODULE_2___default().add(queries, function ($styles) {
+        return _this3.props.domElement.style.cssText += $styles;
+      }, function () {
+        return _this3.props.domElement.style.cssText = _this3.props.originalStyle;
+      }, this.Adaptive);
+    }
+  }, {
+    key: "teleport",
+    value: function teleport(queries) {
+      var _this4 = this;
+
+      var placeholder = document.createElement('param');
+      placeholder.name = 'adaptive';
+      placeholder.value = this.props.adaptiveId;
+      this.props.domElement.insertAdjacentElement('beforebegin', placeholder);
+      return _QueryHandler_js__WEBPACK_IMPORTED_MODULE_2___default().add(queries, function ($directive) {
+        // Defaults to "to" target if only the selector is passed
+        if (typeof $directive === 'string') {
+          $directive = {
+            to: $directive
+          };
+        }
+
+        var direction = Object.keys($directive)[0];
+        var selector = $directive[direction];
+        var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"](selector);
+        var position = 'beforeend';
+
+        switch (target) {
+          case 'to':
+            // default
+            break;
+
+          case 'before':
+            position = 'beforebegin';
+            break;
+
+          case 'after':
+            position = 'afterend';
+            break;
+        }
+
+        if (target.isInDom()) {
+          target.domElement.insertAdjacentElement(position, _this4.props.domElement);
+        } else {
+          // This will create a loop up until the Element/Node is found
+          var self = _this4;
+
+          _this4.domObserver.push(self.props.adaptiveId);
+
+          _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default().addOnNodeChange(self.props.adaptiveId, function () {
+            var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"](selector);
+
+            if (target.isInDom()) {
+              target.domElement.insertAdjacentElement(position, self.props.domElement);
+              _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default().removeOnNodeChange(self.props.adaptiveId);
+              delete self.domObserver[self.props.adaptiveId];
+            }
+          });
+        }
+
+        return;
+      }, function () {
+        var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"]("[name=\"adaptive\"][value=\"".concat(_this4.props.adaptiveId, "\""));
+
+        if (target.isInDom()) {
+          target.domElement.insertAdjacentElement('afterend', _this4.props.domElement); // target.domElement.remove();
+        }
+      }, this.Adaptive);
+    }
+  }]);
+
+  return AdaptiveElement;
+}();
+
+
 
 /***/ }),
 
@@ -1112,6 +1120,180 @@ var ElementHelper = /*#__PURE__*/function () {
 
 
 
+
+/***/ }),
+
+/***/ "./src/QueryHandler.js":
+/*!*****************************!*\
+  !*** ./src/QueryHandler.js ***!
+  \*****************************/
+/***/ (function(module, exports, __webpack_require__) {
+
+/* module decorator */ module = __webpack_require__.nmd(module);
+var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
+/**
+* @author Antuan Suarez
+    MIT License
+
+    Copyright (c) [2022] [Antuan Suarez] https://github.com/knighttower
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+*/
+
+/**
+ * @class Detect DOM changes
+ * @param {window} selector
+ * @param {Funtion}
+ * @return QueryHandler
+ */
+(function (root, factory) {
+  'use strict';
+
+  if (( false ? 0 : _typeof(module)) === 'object' && ( false ? 0 : _typeof(exports)) === 'object') {
+    module.exports = factory(root);
+  } else if (true) {
+    !(__WEBPACK_AMD_DEFINE_FACTORY__ = (factory),
+		__WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ?
+		(__WEBPACK_AMD_DEFINE_FACTORY__.call(exports, __webpack_require__, exports, module)) :
+		__WEBPACK_AMD_DEFINE_FACTORY__),
+		__WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+  } else {}
+})(typeof window !== 'undefined' ? window : this, function (window) {
+  'use strict';
+  /**
+   * Query Handler Class Object
+   * @private
+   * @return {Object}
+   */
+
+  var $this = {};
+  /**
+   * Holds memory of registered queries expressions
+   * @private
+   */
+
+  var registeredQueries = {};
+  /**
+   * Holds memory of registered queries to match
+   * @private
+   */
+
+  var domQueriesMatch = {};
+  /**
+   * Holds memory of registered queries to Unmatch
+   * @private
+   */
+
+  var domQueriesUnMatch = {}; // =========================================
+  // --> PUBLIC
+  // --------------------------
+
+  /**
+   * Register a query
+   * @param {String} queries Media query
+   * @param {Function} matchCallback Callback
+   * @param {Function} unMatchCallback Callback
+   * @return {Void}
+   */
+
+  $this.add = function (queries, matchCallback, unMatchCallback, Adaptive) {
+    for (var query in queries) {
+      var values = queries[query];
+      var queryPreset = Adaptive.getMinMaxQueries()[query];
+      var customExpression = Adaptive.getExpQueries()[query];
+      var queryExpression = query;
+
+      if (queryPreset) {
+        queryExpression = "(min-width: ".concat(queryPreset[0], "px) and (max-width: ").concat(queryPreset[1], "px)");
+      } else if (customExpression) {
+        queryExpression = customExpression;
+      }
+
+      var isRegistered = Boolean(domQueriesMatch[queryExpression]);
+
+      if (!isRegistered) {
+        domQueriesMatch[queryExpression] = [];
+        domQueriesUnMatch[queryExpression] = [];
+      }
+
+      domQueriesMatch[queryExpression].push([matchCallback, values]);
+      domQueriesUnMatch[queryExpression].push([unMatchCallback, values]);
+    }
+  };
+  /**
+   * Initialization of the class functionality
+   * @return {Void}
+   */
+
+
+  $this.init = function () {
+    registerQueryListeners();
+  };
+
+  $this.reset = function () {
+    Object.keys(registeredQueries).forEach(function (queryExpression) {
+      window.matchMedia(queryExpression).removeEventListener('change', registeredQueries[queryExpression]);
+      delete registeredQueries[queryExpression];
+    });
+    Object.keys(domQueriesMatch).forEach(function (key) {
+      return delete domQueriesMatch[key];
+    });
+    Object.keys(domQueriesUnMatch).forEach(function (key) {
+      return delete domQueriesUnMatch[key];
+    });
+  }; // =========================================
+  // --> PRIVATE
+  // --------------------------
+
+  /**
+   * @private
+   */
+
+
+  function registerQueryListeners() {
+    Object.keys(domQueriesMatch).forEach(function (queryExpression) {
+      var isRegistered = Boolean(registeredQueries[queryExpression]);
+
+      if (!isRegistered) {
+        var matchQuery = window.matchMedia(queryExpression);
+
+        var callback = function callback(mq) {
+          if (mq.matches) {
+            domQueriesMatch[mq.media].forEach(function (callback) {
+              return callback[0](callback[1]);
+            });
+          } else {
+            domQueriesUnMatch[mq.media].forEach(function (callback) {
+              return callback[0](callback[1]);
+            });
+          }
+        };
+
+        registeredQueries[queryExpression] = callback;
+        return matchQuery.addEventListener('change', callback);
+      }
+    });
+  }
+
+  return window.AdaptiveQH = $this;
+});
 
 /***/ }),
 

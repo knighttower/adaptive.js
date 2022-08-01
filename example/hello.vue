@@ -1,12 +1,9 @@
 <template>
     <div class="sample">
-        <!-- Example of a later insertion -->
-        <div v-if="show" class="lazy">Using (observer) After load inside component</div>
-        <br /><br />
         <p class="greeting">{{ greeting }}</p>
 
         <br /><br />
-        <button @click="clickFunction">change to number and show another element</button>
+        <button @click="changeText">change to number and show another element</button>
         <br /><br />
 
         <!-- Example of directive binding with Adaptive -->
@@ -15,6 +12,13 @@
 
         <!-- Example of use as a ref element with plugin style -->
         <div ref="six">Using Ref element inside component for Vue Plugin mode and custom media query expression</div>
+
+        <br /><br />
+        <!-- Example of a later insertion -->
+        <div v-if="show" class="lazy">Using (observer) After load inside component</div>
+        <br /><br />
+        <button @click="toggle">Show hide Lazy element</button>
+        <br /><br />
     </div>
 </template>
 <script>
@@ -30,9 +34,11 @@ export default {
         this.$Adaptive.registerElement(this.$refs.six, { addClass: { dog: 'seven' } });
     },
     methods: {
-        clickFunction() {
-            this.show = true;
+        changeText() {
             this.greeting = Math.floor(Math.random() * 10);
+        },
+        toggle() {
+            this.show = !this.show;
         },
     },
 };

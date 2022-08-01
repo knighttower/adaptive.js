@@ -19,6 +19,7 @@
         <br /><br />
         <button @click="toggle">Show hide Lazy element</button>
         <br /><br />
+        <div v-teleport-to="'#hello'">Getting teleport from the component to "static Hello"</div>
     </div>
 </template>
 <script>

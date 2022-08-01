@@ -121,8 +121,13 @@ var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 /* HOISTED */
 );
 
+var _hoisted_19 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)("Getting teleport from the component to \"static Hello\"");
+
+var _hoisted_20 = [_hoisted_19];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _directive_adaptive = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveDirective)("adaptive");
+
+  var _directive_teleport_to = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveDirective)("teleport-to");
 
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("p", _hoisted_2, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.greeting), 1
   /* TEXT */
@@ -140,7 +145,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[1] || (_cache[1] = function () {
       return $options.toggle && $options.toggle.apply($options, arguments);
     })
-  }, "Show hide Lazy element"), _hoisted_17, _hoisted_18]);
+  }, "Show hide Lazy element"), _hoisted_17, _hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)(((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", null, _hoisted_20)), [[_directive_teleport_to, '#hello']])]);
 }
 
 /***/ }),
@@ -158,6 +163,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _ElementHelper_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ElementHelper.js */ "./src/ElementHelper.js");
 /* harmony import */ var _AdaptiveElement_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AdaptiveElement.js */ "./src/AdaptiveElement.js");
+/* harmony import */ var _Teleport_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Teleport.js */ "./src/Teleport.js");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 /**
@@ -193,6 +199,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
  * Import the Element DOM helper
  */
 // -----------------------------------------
+
 
  // =========================================
 // --> ADAPTIVE JS
@@ -349,8 +356,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         helper: helper,
         domElement: helper.domElement,
         xpath: helper.getXpathTo(),
-        settings: data || helper.getAttribute('data-adaptive')
+        settings: data || helper.getAttribute('data-adaptive'),
+        useVue: useVue
       }, Adaptive);
+      return uniqueId;
     }
   };
   /**
@@ -467,11 +476,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
           app.provide('Adpative', Adaptive);
         }
       };
-      var directive = {
-        mounted: function mounted(element, binding, vnode, prevVnode) {
-          Adaptive.registerElement(element, binding.value);
-        }
-      };
       /**
        * Adaptive used as vue.$Adaptive
        * @private
@@ -483,7 +487,21 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
        * @private
        */
 
-      Vue.directive('Adaptive', directive);
+      Vue.directive('Adaptive', {
+        mounted: function mounted(element, binding, vnode, prevVnode) {
+          Adaptive.registerElement(element, binding.value);
+        }
+      });
+      /**
+       * Adaptive used as v-teleport-to
+       * @private
+       */
+
+      Vue.directive('teleport-to', {
+        mounted: function mounted(element, binding, vnode, prevVnode) {
+          return new _Teleport_js__WEBPACK_IMPORTED_MODULE_2__["default"](element).beam(binding.value);
+        }
+      });
       /**
        * Adaptive used for non Vue elements register with data-adaptive attr
        * Hybrid mode
@@ -516,11 +534,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ AdaptiveElement)
 /* harmony export */ });
-/* harmony import */ var _DomObserver_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DomObserver.js */ "./src/DomObserver.js");
-/* harmony import */ var _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_DomObserver_js__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ElementHelper.js */ "./src/ElementHelper.js");
-/* harmony import */ var _QueryHandler_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./QueryHandler.js */ "./src/QueryHandler.js");
-/* harmony import */ var _QueryHandler_js__WEBPACK_IMPORTED_MODULE_2___default = /*#__PURE__*/__webpack_require__.n(_QueryHandler_js__WEBPACK_IMPORTED_MODULE_2__);
+/* harmony import */ var _Teleport_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Teleport.js */ "./src/Teleport.js");
+/* harmony import */ var _QueryHandler_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./QueryHandler.js */ "./src/QueryHandler.js");
+/* harmony import */ var _QueryHandler_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_QueryHandler_js__WEBPACK_IMPORTED_MODULE_1__);
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -553,7 +569,6 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 */
 
 
-
 /**
  * @class Adds some extra functionality to interact with a DOM element
  * @param {Object} props
@@ -572,7 +587,6 @@ var AdaptiveElement = /*#__PURE__*/function () {
 
     this.props = props;
     this.Adaptive = Adaptive;
-    this.domObserver = [];
 
     for (var directive in props.settings) {
       this[directive](props.settings[directive]);
@@ -584,7 +598,7 @@ var AdaptiveElement = /*#__PURE__*/function () {
     value: function addClass(queries) {
       var _this = this;
 
-      return _QueryHandler_js__WEBPACK_IMPORTED_MODULE_2___default().add(queries, function ($classes) {
+      return _QueryHandler_js__WEBPACK_IMPORTED_MODULE_1___default().add(queries, function ($classes) {
         $classes = $classes.split(' ');
         $classes.forEach(function ($class) {
           _this.props.domElement.classList.add($class);
@@ -603,7 +617,7 @@ var AdaptiveElement = /*#__PURE__*/function () {
     value: function removeClass(queries) {
       var _this2 = this;
 
-      return _QueryHandler_js__WEBPACK_IMPORTED_MODULE_2___default().add(queries, function ($classes) {
+      return _QueryHandler_js__WEBPACK_IMPORTED_MODULE_1___default().add(queries, function ($classes) {
         $classes = $classes.split(' ');
         $classes.forEach(function ($class) {
           _this2.props.domElement.classList.remove($class);
@@ -624,7 +638,7 @@ var AdaptiveElement = /*#__PURE__*/function () {
 
       // Save the original style in memory to not discard them
       this.props.originalStyle = this.props.domElement.getAttribute('style');
-      return _QueryHandler_js__WEBPACK_IMPORTED_MODULE_2___default().add(queries, function ($styles) {
+      return _QueryHandler_js__WEBPACK_IMPORTED_MODULE_1___default().add(queries, function ($styles) {
         return _this3.props.domElement.style.cssText += $styles;
       }, function () {
         return _this3.props.domElement.style.cssText = _this3.props.originalStyle;
@@ -633,65 +647,11 @@ var AdaptiveElement = /*#__PURE__*/function () {
   }, {
     key: "teleport",
     value: function teleport(queries) {
-      var _this4 = this;
-
-      var placeholder = document.createElement('param');
-      placeholder.name = 'adaptive';
-      placeholder.value = this.props.adaptiveId;
-      this.props.domElement.insertAdjacentElement('beforebegin', placeholder);
-      return _QueryHandler_js__WEBPACK_IMPORTED_MODULE_2___default().add(queries, function ($directive) {
-        // Defaults to "to" target if only the selector is passed
-        if (typeof $directive === 'string') {
-          $directive = {
-            to: $directive
-          };
-        }
-
-        var direction = Object.keys($directive)[0];
-        var selector = $directive[direction];
-        var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"](selector);
-        var position = 'beforeend';
-
-        switch (target) {
-          case 'to':
-            // default
-            break;
-
-          case 'before':
-            position = 'beforebegin';
-            break;
-
-          case 'after':
-            position = 'afterend';
-            break;
-        }
-
-        if (target.isInDom()) {
-          target.domElement.insertAdjacentElement(position, _this4.props.domElement);
-        } else {
-          // This will create a loop up until the Element/Node is found
-          var self = _this4;
-
-          _this4.domObserver.push(self.props.adaptiveId);
-
-          _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default().addOnNodeChange(self.props.adaptiveId, function () {
-            var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"](selector);
-
-            if (target.isInDom()) {
-              target.domElement.insertAdjacentElement(position, self.props.domElement);
-              _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default().removeOnNodeChange(self.props.adaptiveId);
-              delete self.domObserver[self.props.adaptiveId];
-            }
-          });
-        }
-
-        return;
+      var $element = new _Teleport_js__WEBPACK_IMPORTED_MODULE_0__["default"](this.props, this.props.settings);
+      return _QueryHandler_js__WEBPACK_IMPORTED_MODULE_1___default().add(queries, function ($directive) {
+        return $element.beam($directive);
       }, function () {
-        var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"]("[name=\"adaptive\"][value=\"".concat(_this4.props.adaptiveId, "\""));
-
-        if (target.isInDom()) {
-          target.domElement.insertAdjacentElement('afterend', _this4.props.domElement); // target.domElement.remove();
-        }
+        return $element.back();
       }, this.Adaptive);
     }
   }]);
@@ -1245,6 +1205,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
 
   $this.init = function () {
     registerQueryListeners();
+    onLoad();
   };
 
   $this.reset = function () {
@@ -1267,6 +1228,22 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
    */
 
 
+  function onLoad() {
+    Object.keys(domQueriesMatch).forEach(function (queryExpression) {
+      var mq = window.matchMedia(queryExpression);
+
+      if (mq.matches) {
+        domQueriesMatch[mq.media].forEach(function (callback) {
+          return callback[0](callback[1]);
+        });
+      }
+    });
+  }
+  /**
+   * @private
+   */
+
+
   function registerQueryListeners() {
     Object.keys(domQueriesMatch).forEach(function (queryExpression) {
       var isRegistered = Boolean(registeredQueries[queryExpression]);
@@ -1275,12 +1252,12 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
         var matchQuery = window.matchMedia(queryExpression);
 
         var callback = function callback(mq) {
-          if (mq.matches) {
-            domQueriesMatch[mq.media].forEach(function (callback) {
+          if (!mq.matches) {
+            domQueriesUnMatch[mq.media].forEach(function (callback) {
               return callback[0](callback[1]);
             });
           } else {
-            domQueriesUnMatch[mq.media].forEach(function (callback) {
+            domQueriesMatch[mq.media].forEach(function (callback) {
               return callback[0](callback[1]);
             });
           }
@@ -1294,6 +1271,154 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
 
   return window.AdaptiveQH = $this;
 });
+
+/***/ }),
+
+/***/ "./src/Teleport.js":
+/*!*************************!*\
+  !*** ./src/Teleport.js ***!
+  \*************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ Teleport)
+/* harmony export */ });
+/* harmony import */ var _DomObserver_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DomObserver.js */ "./src/DomObserver.js");
+/* harmony import */ var _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_DomObserver_js__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ElementHelper.js */ "./src/ElementHelper.js");
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+/**
+* @author Antuan Suarez
+    MIT License
+
+    Copyright (c) [2022] [Antuan Suarez] https://github.com/knighttower
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+*/
+
+
+
+var Teleport = /*#__PURE__*/function () {
+  /**
+   * Constructor
+   * @param {String|Object} selector
+   * @return {Object}
+   */
+  function Teleport(props) {
+    _classCallCheck(this, Teleport);
+
+    if (!props.adaptiveId) {
+      var element = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"](props);
+      var uniqueId = null;
+
+      if (!element.getAttribute('data-adaptive-id')) {
+        uniqueId = element.getHash();
+        element.domElement.setAttribute('data-adaptive-id', uniqueId);
+      } else {
+        uniqueId = element.getAttribute('data-adaptive-id');
+      }
+
+      props = {
+        adaptiveId: uniqueId,
+        helper: element,
+        domElement: element.domElement,
+        xpath: element.getXpathTo()
+      };
+    }
+
+    this.props = props;
+    var placeholder = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"]("[name=\"adaptive\"][value=\"".concat(this.props.adaptiveId, "\""));
+
+    if (!placeholder.isInDom()) {
+      placeholder = document.createElement('param');
+      placeholder.name = 'adaptive';
+      placeholder.value = this.props.adaptiveId;
+      this.props.domElement.insertAdjacentElement('beforebegin', placeholder);
+    }
+  }
+
+  _createClass(Teleport, [{
+    key: "beam",
+    value: function beam($directive) {
+      // Defaults to "to" target if only the selector is passed
+      if (typeof $directive === 'string') {
+        $directive = {
+          to: $directive
+        };
+      }
+
+      var direction = Object.keys($directive)[0];
+      var selector = $directive[direction];
+      var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"](selector);
+      var position = 'beforeend';
+
+      switch (direction) {
+        case 'to':
+          // default
+          break;
+
+        case 'before':
+          position = 'beforebegin';
+          break;
+
+        case 'after':
+          position = 'afterend';
+          break;
+      }
+
+      if (target.isInDom()) {
+        target.domElement.insertAdjacentElement(position, this.props.domElement);
+      } else {
+        // This will create a loop up until the Element/Node is found
+        var self = this;
+        _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default().addOnNodeChange(self.props.adaptiveId, function () {
+          var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"](selector);
+
+          if (target.isInDom()) {
+            target.domElement.insertAdjacentElement(position, self.props.domElement);
+            _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default().removeOnNodeChange(self.props.adaptiveId);
+          }
+        });
+      }
+    }
+  }, {
+    key: "back",
+    value: function back() {
+      var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"]("[name=\"adaptive\"][value=\"".concat(this.props.adaptiveId, "\""));
+
+      if (target.isInDom()) {
+        target.domElement.insertAdjacentElement('afterend', this.props.domElement); // target.domElement.remove();
+      }
+    }
+  }]);
+
+  return Teleport;
+}();
+
+
 
 /***/ }),
 

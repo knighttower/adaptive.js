@@ -106,6 +106,7 @@
      */
     $this.init = () => {
         registerQueryListeners();
+        onLoad();
     };
 
     $this.reset = () => {
@@ -124,18 +125,32 @@
     /**
      * @private
      */
+    function onLoad() {
+        Object.keys(domQueriesMatch).forEach((queryExpression) => {
+            let mq = window.matchMedia(queryExpression);
+            if (mq.matches) {
+                domQueriesMatch[mq.media].forEach(function(callback) {
+                    return callback[0](callback[1]);
+                });
+            }
+        });
+    }
+
+    /**
+     * @private
+     */
     function registerQueryListeners() {
         Object.keys(domQueriesMatch).forEach((queryExpression) => {
             let isRegistered = Boolean(registeredQueries[queryExpression]);
             if (!isRegistered) {
                 let matchQuery = window.matchMedia(queryExpression);
                 let callback = (mq) => {
-                    if (mq.matches) {
-                        domQueriesMatch[mq.media].forEach(function(callback) {
+                    if (!mq.matches) {
+                        domQueriesUnMatch[mq.media].forEach(function(callback) {
                             return callback[0](callback[1]);
                         });
                     } else {
-                        domQueriesUnMatch[mq.media].forEach(function(callback) {
+                        domQueriesMatch[mq.media].forEach(function(callback) {
                             return callback[0](callback[1]);
                         });
                     }

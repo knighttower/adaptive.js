@@ -32,6 +32,7 @@
 
 import ElementHelper from './ElementHelper.js';
 import AdaptiveElement from './AdaptiveElement.js';
+import Teleport from './Teleport.js';
 
 // =========================================
 // --> ADAPTIVE JS
@@ -169,9 +170,12 @@ export default (function(window) {
                     domElement: helper.domElement,
                     xpath: helper.getXpathTo(),
                     settings: data || helper.getAttribute('data-adaptive'),
+                    useVue: useVue,
                 },
                 Adaptive
             );
+
+            return uniqueId;
         }
     };
 
@@ -288,11 +292,6 @@ export default (function(window) {
                 },
             };
 
-            let directive = {
-                mounted: (element, binding, vnode, prevVnode) => {
-                    Adaptive.registerElement(element, binding.value);
-                },
-            };
             /**
              * Adaptive used as vue.$Adaptive
              * @private
@@ -302,7 +301,22 @@ export default (function(window) {
              * Adaptive used as v-adaptive
              * @private
              */
-            Vue.directive('Adaptive', directive);
+            Vue.directive('Adaptive', {
+                mounted: (element, binding, vnode, prevVnode) => {
+                    Adaptive.registerElement(element, binding.value);
+                },
+            });
+
+            /**
+             * Adaptive used as v-teleport-to
+             * @private
+             */
+            Vue.directive('teleport-to', {
+                mounted: (element, binding, vnode, prevVnode) => {
+                    return new Teleport(element).beam(binding.value);
+                },
+            });
+
             /**
              * Adaptive used for non Vue elements register with data-adaptive attr
              * Hybrid mode

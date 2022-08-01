@@ -23,8 +23,7 @@
     SOFTWARE.
 */
 
-import DomObserver from './DomObserver.js';
-import ElementHelper from './ElementHelper.js';
+import Teleport from './Teleport.js';
 import QueryHandler from './QueryHandler.js';
 
 /**
@@ -42,7 +41,6 @@ export default class AdaptiveElement {
     constructor(props, Adaptive) {
         this.props = props;
         this.Adaptive = Adaptive;
-        this.domObserver = [];
 
         for (let directive in props.settings) {
             this[directive](props.settings[directive]);
@@ -108,59 +106,15 @@ export default class AdaptiveElement {
     }
 
     teleport(queries) {
-        let placeholder = document.createElement('param');
-        placeholder.name = 'adaptive';
-        placeholder.value = this.props.adaptiveId;
-        this.props.domElement.insertAdjacentElement('beforebegin', placeholder);
+        let $element = new Teleport(this.props, this.props.settings);
 
         return QueryHandler.add(
             queries,
             ($directive) => {
-                // Defaults to "to" target if only the selector is passed
-                if (typeof $directive === 'string') {
-                    $directive = { to: $directive };
-                }
-                let direction = Object.keys($directive)[0];
-                let selector = $directive[direction];
-                let target = new ElementHelper(selector);
-                let position = 'beforeend';
-                switch (target) {
-                    case 'to':
-                        // default
-                        break;
-                    case 'before':
-                        position = 'beforebegin';
-                        break;
-                    case 'after':
-                        position = 'afterend';
-                        break;
-                }
-
-                if (target.isInDom()) {
-                    target.domElement.insertAdjacentElement(position, this.props.domElement);
-                } else {
-                    // This will create a loop up until the Element/Node is found
-                    let self = this;
-
-                    this.domObserver.push(self.props.adaptiveId);
-                    DomObserver.addOnNodeChange(self.props.adaptiveId, () => {
-                        let target = new ElementHelper(selector);
-                        if (target.isInDom()) {
-                            target.domElement.insertAdjacentElement(position, self.props.domElement);
-                            DomObserver.removeOnNodeChange(self.props.adaptiveId);
-                            delete self.domObserver[self.props.adaptiveId];
-                        }
-                    });
-                }
-
-                return;
+                return $element.beam($directive);
             },
             () => {
-                let target = new ElementHelper(`[name="adaptive"][value="${this.props.adaptiveId}"`);
-                if (target.isInDom()) {
-                    target.domElement.insertAdjacentElement('afterend', this.props.domElement);
-                    // target.domElement.remove();
-                }
+                return $element.back();
             },
             this.Adaptive
         );

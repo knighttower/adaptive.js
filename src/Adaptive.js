@@ -219,7 +219,7 @@ export default (function(window) {
      */
     Adaptive.reset = () => {
         Object.keys(domElements).forEach((key) => delete domElements[key]);
-        DomObserver.clenup();
+        DomObserver.cleanup();
         AdaptiveQH.reset();
         isMounted = false;
     };
@@ -301,7 +301,7 @@ export default (function(window) {
              * Adaptive used as v-adaptive
              * @private
              */
-            Vue.directive('Adaptive', {
+            Vue.directive('adaptive', {
                 mounted: (element, binding, vnode, prevVnode) => {
                     Adaptive.registerElement(element, binding.value);
                 },

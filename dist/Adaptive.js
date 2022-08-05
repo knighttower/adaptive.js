@@ -514,11 +514,6 @@ var ElementHelper = /*#__PURE__*/function () {
     key: "getAttribute",
     value: function getAttribute(attr) {
       var attrData = this.domElement.getAttribute(attr);
-
-      if (String(attrData).includes('{') || String(attrData).includes('[')) {
-        attrData = JSON.parse(this._convertString(attrData));
-      }
-
       return attrData ? attrData : null;
     }
     /**
@@ -1238,7 +1233,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     Object.keys(domElements).forEach(function (key) {
       return delete domElements[key];
     });
-    DomObserver.clenup();
+    DomObserver.cleanup();
     AdaptiveQH.reset();
     isMounted = false;
   }; // =========================================

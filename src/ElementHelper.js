@@ -134,10 +134,6 @@ export default class ElementHelper {
      */
     getAttribute(attr) {
         let attrData = this.domElement.getAttribute(attr);
-        if (String(attrData).includes('{') || String(attrData).includes('[')) {
-            attrData = JSON.parse(this._convertString(attrData));
-        }
-
         return attrData ? attrData : null;
     }
 

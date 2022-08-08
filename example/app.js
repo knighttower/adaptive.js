@@ -31,7 +31,7 @@ const app = createApp({});
 //Optional | Add custom media query (min px, max px) settings (min max)
 Adaptive.addQueryMinMax('kitty', 900, 1400);
 // Optional | Add a custom media query expression (it accepts any valid media query)
-Adaptive.addQueryExpression('dog', '(min-width: 900px)');
+Adaptive.addQueryExpression('doggy', '(min-width: 900px)');
 // Needs to be instaciated right after the app and before the components
 Adaptive.useVue(app);
 // Do components and other stuff right after
@@ -40,4 +40,4 @@ app.component('hello', hello);
 // Testing the code if there is a delay on load and how the Adaptive would react
 setTimeout(() => {
     app.mount('#app');
-}, '1000');
+}, '1');

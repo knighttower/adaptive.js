@@ -23,7 +23,7 @@ __webpack_require__.r(__webpack_exports__);
     // Example using the ref and custom registered media query (see the app.js)
     this.$Adaptive.registerElement(this.$refs.six, {
       addClass: {
-        dog: 'seven'
+        doggy: 'seven'
       }
     });
   },
@@ -135,7 +135,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[0] || (_cache[0] = function () {
       return $options.changeText && $options.changeText.apply($options, arguments);
     })
-  }, "change to number and show another element"), _hoisted_5, _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Example of directive binding with Adaptive "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)(((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", null, _hoisted_8)), [[_directive_adaptive, {
+  }, "Test Vue component is working"), _hoisted_5, _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Example of directive binding with Adaptive "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)(((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", null, _hoisted_8)), [[_directive_adaptive, {
     addClass: {
       desktop: 'cinco'
     }
@@ -164,6 +164,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _ElementHelper_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ElementHelper.js */ "./src/ElementHelper.js");
 /* harmony import */ var _AdaptiveElement_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AdaptiveElement.js */ "./src/AdaptiveElement.js");
 /* harmony import */ var _Teleport_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Teleport.js */ "./src/Teleport.js");
+/* harmony import */ var _GetSettings_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./GetSettings.js */ "./src/GetSettings.js");
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 /**
@@ -199,6 +200,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
  * Import the Element DOM helper
  */
 // -----------------------------------------
+
 
 
  // =========================================
@@ -356,7 +358,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         helper: helper,
         domElement: helper.domElement,
         xpath: helper.getXpathTo(),
-        settings: data || helper.getAttribute('data-adaptive'),
+        settings: new _GetSettings_js__WEBPACK_IMPORTED_MODULE_3__["default"](data || helper.getAttribute('data-adaptive')),
         useVue: useVue
       }, Adaptive);
       return uniqueId;
@@ -651,7 +653,8 @@ var AdaptiveElement = /*#__PURE__*/function () {
       return _QueryHandler_js__WEBPACK_IMPORTED_MODULE_1___default().add(queries, function ($directive) {
         return $element.beam($directive);
       }, function () {
-        return $element.back();
+        $element.back();
+        return $element.cancel();
       }, this.Adaptive);
     }
   }]);
@@ -930,31 +933,16 @@ var ElementHelper = /*#__PURE__*/function () {
       this.domElement = document.querySelector(selector);
     }
   } // =========================================
-  // --> Private
+  // --> Public
   // --------------------------
 
   /**
-   * Conver string into valid JSON
-   * @private
-   * @param {String} string
-   * @return {String}
+   * Check if the element exists or is visible. It will keep querying
+   * @return {Boolean}
    */
 
 
   _createClass(ElementHelper, [{
-    key: "_convertString",
-    value: function _convertString(string) {
-      return String(string.replace(/'/g, '"'));
-    } // =========================================
-    // --> Public
-    // --------------------------
-
-    /**
-     * Check if the element exists or is visible. It will keep querying
-     * @return {Boolean}
-     */
-
-  }, {
     key: "isInDom",
     value: function isInDom() {
       var _$this$domElement;
@@ -1078,6 +1066,111 @@ var ElementHelper = /*#__PURE__*/function () {
 
 /***/ }),
 
+/***/ "./src/GetSettings.js":
+/*!****************************!*\
+  !*** ./src/GetSettings.js ***!
+  \****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* export default binding */ __WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
+/**
+* @author Antuan Suarez
+    MIT License
+
+    Copyright (c) [2022] [Antuan Suarez] https://github.com/knighttower
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+*/
+
+/**
+ * Handle getting the correct settings from the string attribute
+ * @private
+ * @param {String|Array|Object} settings
+ * @return {Object}
+ */
+/* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(settings) {
+  var type = _typeof(settings); // Matches the JSON objects as string
+
+
+  var regexType1 = /\{((.|\n)*?)\}\}/gm; // Matches object-style strings
+
+  var regexType2 = /\.(.*?)\(((.|\n)*?)\)/gm;
+  var regexType3 = /\[((.|\n)*?)\]/gm;
+
+  if (type === 'object' || type === 'array') {
+    return settings;
+  } // Make sure the settings is string
+
+
+  settings = String(settings);
+
+  if (settings.match(regexType1)) {
+    return JSON.parse(settings.replace(/'/g, '"'));
+  }
+
+  if (settings.match(regexType2) || settings.match(regexType3)) {
+    var setObject = {};
+    settings = settings.split(';');
+    settings.forEach(function (command) {
+      var classes, breakDownId, directive;
+
+      if (command.match(regexType3)) {
+        classes = getInBetween(command, '](', ')').trim();
+        breakDownId = getInBetween(command, '[', ']').trim();
+        directive = command.split('[')[0].trim();
+      } else {
+        classes = getInBetween(command, '(', ')').trim();
+        breakDownId = getInBetween(command, '.', '(').trim();
+        directive = command.split('.')[0].trim();
+      }
+
+      classes = classes.split(',').map(function (cl) {
+        return cl.trim();
+      }).join(' ');
+
+      if (!setObject[directive]) {
+        setObject[directive] = {};
+      }
+
+      setObject[directive][breakDownId] = classes;
+    });
+    return setObject;
+  }
+}
+
+function getInBetween(str, m1, m2) {
+  m1 = "\\".concat(m1.split('').join('\\'));
+  m2 = "\\".concat(m2.split('').join('\\'));
+  var getExp = "".concat(m1, "((.|\n)*?)").concat(m2);
+  var regex = new RegExp(getExp, 'gm');
+  str = str.match(regex)[0];
+  return str.replace(new RegExp(m1), '').replace(new RegExp(m2), '');
+}
+
+/***/ }),
+
 /***/ "./src/QueryHandler.js":
 /*!*****************************!*\
   !*** ./src/QueryHandler.js ***!
@@ -1171,9 +1264,14 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
   $this.add = function (queries, matchCallback, unMatchCallback, Adaptive) {
     for (var query in queries) {
       var values = queries[query];
-      var queryPreset = Adaptive.getMinMaxQueries()[query];
-      var customExpression = Adaptive.getExpQueries()[query];
       var queryExpression = query;
+      var queryPreset = void 0,
+          customExpression = void 0;
+
+      if (Adaptive && Adaptive === window.Adaptive) {
+        queryPreset = Adaptive.getMinMaxQueries()[query];
+        customExpression = Adaptive.getExpQueries()[query];
+      }
 
       if (queryPreset) {
         queryExpression = "(min-width: ".concat(queryPreset[0], "px) and (max-width: ").concat(queryPreset[1], "px)");
@@ -1389,7 +1487,7 @@ var Teleport = /*#__PURE__*/function () {
       } else {
         // This will create a loop up until the Element/Node is found
         var self = this;
-        _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default().addOnNodeChange(self.props.adaptiveId, function () {
+        _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default().addOnNodeChange(this.props.adaptiveId, function () {
           var target = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"](selector);
 
           if (target.isInDom()) {
@@ -1407,6 +1505,11 @@ var Teleport = /*#__PURE__*/function () {
       if (target.isInDom()) {
         target.domElement.insertAdjacentElement('afterend', this.props.domElement); // target.domElement.remove();
       }
+    }
+  }, {
+    key: "cancel",
+    value: function cancel() {
+      _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default().removeOnNodeChange(this.props.adaptiveId);
     }
   }]);
 
@@ -2062,7 +2165,7 @@ var app = createApp({}); //Optional | Add custom media query (min px, max px) se
 
 _src_Adaptive_js__WEBPACK_IMPORTED_MODULE_0__["default"].addQueryMinMax('kitty', 900, 1400); // Optional | Add a custom media query expression (it accepts any valid media query)
 
-_src_Adaptive_js__WEBPACK_IMPORTED_MODULE_0__["default"].addQueryExpression('dog', '(min-width: 900px)'); // Needs to be instaciated right after the app and before the components
+_src_Adaptive_js__WEBPACK_IMPORTED_MODULE_0__["default"].addQueryExpression('doggy', '(min-width: 900px)'); // Needs to be instaciated right after the app and before the components
 
 _src_Adaptive_js__WEBPACK_IMPORTED_MODULE_0__["default"].useVue(app); // Do components and other stuff right after
 
@@ -2070,7 +2173,7 @@ app.component('hello', _hello_vue__WEBPACK_IMPORTED_MODULE_1__["default"]); // T
 
 setTimeout(function () {
   app.mount('#app');
-}, '1000');
+}, '1');
 })();
 
 /******/ })()

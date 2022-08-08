@@ -3,7 +3,7 @@
         <p class="greeting">{{ greeting }}</p>
 
         <br /><br />
-        <button @click="changeText">change to number and show another element</button>
+        <button @click="changeText">Test Vue component is working</button>
         <br /><br />
 
         <!-- Example of directive binding with Adaptive -->
@@ -32,7 +32,7 @@ export default {
     },
     mounted: function() {
         // Example using the ref and custom registered media query (see the app.js)
-        this.$Adaptive.registerElement(this.$refs.six, { addClass: { dog: 'seven' } });
+        this.$Adaptive.registerElement(this.$refs.six, { addClass: { doggy: 'seven' } });
     },
     methods: {
         changeText() {

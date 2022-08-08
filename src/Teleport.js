@@ -89,8 +89,9 @@ export default class Teleport {
             // This will create a loop up until the Element/Node is found
             let self = this;
 
-            DomObserver.addOnNodeChange(self.props.adaptiveId, () => {
+            DomObserver.addOnNodeChange(this.props.adaptiveId, () => {
                 let target = new ElementHelper(selector);
+
                 if (target.isInDom()) {
                     target.domElement.insertAdjacentElement(position, self.props.domElement);
                     DomObserver.removeOnNodeChange(self.props.adaptiveId);
@@ -105,5 +106,9 @@ export default class Teleport {
             target.domElement.insertAdjacentElement('afterend', this.props.domElement);
             // target.domElement.remove();
         }
+    }
+
+    cancel() {
+        DomObserver.removeOnNodeChange(this.props.adaptiveId);
     }
 }

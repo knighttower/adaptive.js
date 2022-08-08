@@ -78,9 +78,13 @@
     $this.add = function(queries, matchCallback, unMatchCallback, Adaptive) {
         for (let query in queries) {
             let values = queries[query];
-            let queryPreset = Adaptive.getMinMaxQueries()[query];
-            let customExpression = Adaptive.getExpQueries()[query];
             let queryExpression = query;
+            let queryPreset, customExpression;
+
+            if (Adaptive && Adaptive === window.Adaptive) {
+                queryPreset = Adaptive.getMinMaxQueries()[query];
+                customExpression = Adaptive.getExpQueries()[query];
+            }
 
             if (queryPreset) {
                 queryExpression = `(min-width: ${queryPreset[0]}px) and (max-width: ${queryPreset[1]}px)`;

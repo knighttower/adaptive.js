@@ -114,7 +114,8 @@ export default class AdaptiveElement {
                 return $element.beam($directive);
             },
             () => {
-                return $element.back();
+                $element.back();
+                return $element.cancel();
             },
             this.Adaptive
         );

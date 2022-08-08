@@ -45,20 +45,6 @@ export default class ElementHelper {
     }
 
     // =========================================
-    // --> Private
-    // --------------------------
-
-    /**
-     * Conver string into valid JSON
-     * @private
-     * @param {String} string
-     * @return {String}
-     */
-    _convertString(string) {
-        return String(string.replace(/'/g, '"'));
-    }
-
-    // =========================================
     // --> Public
     // --------------------------
 

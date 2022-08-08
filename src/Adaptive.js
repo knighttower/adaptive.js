@@ -33,6 +33,7 @@
 import ElementHelper from './ElementHelper.js';
 import AdaptiveElement from './AdaptiveElement.js';
 import Teleport from './Teleport.js';
+import GetSettings from './GetSettings.js';
 
 // =========================================
 // --> ADAPTIVE JS
@@ -169,7 +170,7 @@ export default (function(window) {
                     helper: helper,
                     domElement: helper.domElement,
                     xpath: helper.getXpathTo(),
-                    settings: data || helper.getAttribute('data-adaptive'),
+                    settings: new GetSettings(data || helper.getAttribute('data-adaptive')),
                     useVue: useVue,
                 },
                 Adaptive

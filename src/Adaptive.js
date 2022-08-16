@@ -159,18 +159,35 @@ export default (function(window) {
      */
     Adaptive.registerElement = (elementOrSelector, data) => {
         let helper = new ElementHelper(elementOrSelector);
+        if (helper.isInDom()) {
+            return registerThis(helper, data);
+        } else {
+            helper.whenInDom().then(function(element) {
+                return registerThis(element, data);
+            });
+        }
+    };
+
+    /**
+     * Register an element
+     * @private
+     * @param {String|Object} elementOrSelector
+     * @param {Object} data Optional used directly to add the directives, but is mostly for VUe
+     * @return {Void}
+     */
+    function registerThis(element, data) {
         // Register only unique non indexed elements
-        if (!helper.getAttribute('data-adaptive-id')) {
-            let uniqueId = helper.getHash();
-            helper.domElement.setAttribute('data-adaptive-id', uniqueId);
+        if (!element.getAttribute('data-adaptive-id')) {
+            let uniqueId = element.getHash();
+            element.domElement.setAttribute('data-adaptive-id', uniqueId);
 
             domElements[uniqueId] = new AdaptiveElement(
                 {
                     adaptiveId: uniqueId,
-                    helper: helper,
-                    domElement: helper.domElement,
-                    xpath: helper.getXpathTo(),
-                    settings: new GetSettings(data || helper.getAttribute('data-adaptive')),
+                    helper: element,
+                    domElement: element.domElement,
+                    xpath: element.getXpathTo(),
+                    settings: new GetSettings(data || element.getAttribute('data-adaptive')),
                     useVue: useVue,
                 },
                 Adaptive
@@ -178,7 +195,7 @@ export default (function(window) {
 
             return uniqueId;
         }
-    };
+    }
 
     /**
      * Register A custom Query Min, Max

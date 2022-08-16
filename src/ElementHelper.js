@@ -53,24 +53,34 @@ export default class ElementHelper {
      * @return {Boolean}
      */
     isInDom() {
-        let $this = this;
-        let callbackId = Date.now() + Math.floor(Math.random() * 1000);
-        if (!$this.domElement?.outerHTML) {
-            DomObserver.addOnNodeChange(callbackId, () => {
-                let element = new ElementHelper($this.selector);
-
-                if (element.domElement?.outerHTML) {
-                    $this = element;
-                    DomObserver.removeOnNodeChange(callbackId);
-                }
-
-                return;
-            });
-
+        if (!this.domElement?.outerHTML) {
             return false;
         }
-
         return true;
+    }
+
+    /**
+     * Wait for element exists or is visible. It will keep querying
+     * @return {Promise}
+     */
+    whenInDom() {
+        let $this = this;
+        let callbackId = Date.now() + Math.floor(Math.random() * 1000);
+
+        return new Promise(function(resolveThis) {
+            if (!$this.isInDom()) {
+                DomObserver.addOnNodeChange(callbackId, () => {
+                    let element = new ElementHelper($this.selector);
+                    if (element.isInDom()) {
+                        $this = element;
+                        resolveThis($this);
+                        DomObserver.removeOnNodeChange(callbackId);
+                    }
+                });
+            } else {
+                resolveThis($this);
+            }
+        });
     }
 
     /**

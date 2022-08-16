@@ -133,6 +133,26 @@ var AdaptiveElement = /*#__PURE__*/function () {
         return $element.cancel();
       }, this.Adaptive);
     }
+  }, {
+    key: "execute",
+    value: function execute(queries) {
+      var $element = this;
+      var attrs = {
+        adaptiveId: $element.props.uniqueId,
+        helper: $element.props.helper,
+        domElement: $element.props.domElement,
+        xpath: $element.props.xpath
+      };
+      return _QueryHandler_js__WEBPACK_IMPORTED_MODULE_1___default().add(queries, function ($callback) {
+        if ($callback && typeof $callback === 'function') {
+          return $callback(attrs);
+        }
+      }, function ($callback) {
+        if ($callback && typeof $callback === 'function') {
+          return $callback(attrs);
+        }
+      }, this.Adaptive);
+    }
   }]);
 
   return AdaptiveElement;
@@ -421,28 +441,39 @@ var ElementHelper = /*#__PURE__*/function () {
   _createClass(ElementHelper, [{
     key: "isInDom",
     value: function isInDom() {
-      var _$this$domElement;
+      var _this$domElement;
 
-      var $this = this;
-      var callbackId = Date.now() + Math.floor(Math.random() * 1000);
-
-      if (!((_$this$domElement = $this.domElement) !== null && _$this$domElement !== void 0 && _$this$domElement.outerHTML)) {
-        DomObserver.addOnNodeChange(callbackId, function () {
-          var _element$domElement;
-
-          var element = new ElementHelper($this.selector);
-
-          if ((_element$domElement = element.domElement) !== null && _element$domElement !== void 0 && _element$domElement.outerHTML) {
-            $this = element;
-            DomObserver.removeOnNodeChange(callbackId);
-          }
-
-          return;
-        });
+      if (!((_this$domElement = this.domElement) !== null && _this$domElement !== void 0 && _this$domElement.outerHTML)) {
         return false;
       }
 
       return true;
+    }
+    /**
+     * Wait for element exists or is visible. It will keep querying
+     * @return {Promise}
+     */
+
+  }, {
+    key: "whenInDom",
+    value: function whenInDom() {
+      var $this = this;
+      var callbackId = Date.now() + Math.floor(Math.random() * 1000);
+      return new Promise(function (resolveThis) {
+        if (!$this.isInDom()) {
+          DomObserver.addOnNodeChange(callbackId, function () {
+            var element = new ElementHelper($this.selector);
+
+            if (element.isInDom()) {
+              $this = element;
+              resolveThis($this);
+              DomObserver.removeOnNodeChange(callbackId);
+            }
+          });
+        } else {
+          resolveThis($this);
+        }
+      });
     }
     /**
      * Find element by Xpath string
@@ -1274,22 +1305,41 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
 
   Adaptive.registerElement = function (elementOrSelector, data) {
-    var helper = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_0__["default"](elementOrSelector); // Register only unique non indexed elements
+    var helper = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_0__["default"](elementOrSelector);
 
-    if (!helper.getAttribute('data-adaptive-id')) {
-      var uniqueId = helper.getHash();
-      helper.domElement.setAttribute('data-adaptive-id', uniqueId);
+    if (helper.isInDom()) {
+      return registerThis(helper, data);
+    } else {
+      helper.whenInDom().then(function (element) {
+        return registerThis(element, data);
+      });
+    }
+  };
+  /**
+   * Register an element
+   * @private
+   * @param {String|Object} elementOrSelector
+   * @param {Object} data Optional used directly to add the directives, but is mostly for VUe
+   * @return {Void}
+   */
+
+
+  function registerThis(element, data) {
+    // Register only unique non indexed elements
+    if (!element.getAttribute('data-adaptive-id')) {
+      var uniqueId = element.getHash();
+      element.domElement.setAttribute('data-adaptive-id', uniqueId);
       domElements[uniqueId] = new _AdaptiveElement_js__WEBPACK_IMPORTED_MODULE_1__["default"]({
         adaptiveId: uniqueId,
-        helper: helper,
-        domElement: helper.domElement,
-        xpath: helper.getXpathTo(),
-        settings: new _GetSettings_js__WEBPACK_IMPORTED_MODULE_3__["default"](data || helper.getAttribute('data-adaptive')),
+        helper: element,
+        domElement: element.domElement,
+        xpath: element.getXpathTo(),
+        settings: new _GetSettings_js__WEBPACK_IMPORTED_MODULE_3__["default"](data || element.getAttribute('data-adaptive')),
         useVue: useVue
       }, Adaptive);
       return uniqueId;
     }
-  };
+  }
   /**
    * Register A custom Query Min, Max
    * @param {String} id Identifier

@@ -20,6 +20,8 @@
         <button @click="toggle">Show hide Lazy element</button>
         <br /><br />
         <div v-teleport-to="'#hello'">Getting teleport from the component to "static Hello"</div>
+        <br /><br />
+        <div ref="callmeback">Has a callback function at a defined breakdown</div>
     </div>
 </template>
 <script>
@@ -33,6 +35,14 @@ export default {
     mounted: function() {
         // Example using the ref and custom registered media query (see the app.js)
         this.$Adaptive.registerElement(this.$refs.six, { addClass: { doggy: 'seven' } });
+
+        this.$Adaptive.registerElement(this.$refs.callmeback, {
+            execute: {
+                mobile: function(element) {
+                    console.log('This is a callback at mobile breakdown');
+                },
+            },
+        });
     },
     methods: {
         changeText() {

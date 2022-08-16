@@ -120,4 +120,28 @@ export default class AdaptiveElement {
             this.Adaptive
         );
     }
+
+    execute(queries) {
+        let $element = this;
+        let attrs = {
+            adaptiveId: $element.props.uniqueId,
+            helper: $element.props.helper,
+            domElement: $element.props.domElement,
+            xpath: $element.props.xpath,
+        };
+        return QueryHandler.add(
+            queries,
+            ($callback) => {
+                if ($callback && typeof $callback === 'function') {
+                    return $callback(attrs);
+                }
+            },
+            ($callback) => {
+                if ($callback && typeof $callback === 'function') {
+                    return $callback(attrs);
+                }
+            },
+            this.Adaptive
+        );
+    }
 }

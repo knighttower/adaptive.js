@@ -20,7 +20,7 @@
             <hello></hello>
             <br/><br/>
 
-            <!-- Example of using Sting like directives -->
+            <!-- Example of using String like directives -->
             <div data-adaptive="addClass.tablet(laura, miau); 
             addClass.mobile(red, green); 
             addClass.desktop(uno, dos)">String like directives</div>
@@ -35,6 +35,9 @@
                     'to':'.lazy'
                 }
             }}"><span style="color:blue">Static element that will teleport at "tablet" size to a Vue driven element when visible</span></div>
+            
+            <br/><br/>
+            <div data-adaptive="teleport.desktop.before(#hello)"><span style="color:rgb(0, 255, 213)">Static element that will teleport at "desktop" right above "static hello"</span></div>
 
         </section>
 

@@ -641,19 +641,25 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     var setObject = {};
     settings = settings.split(';');
     settings.forEach(function (command) {
-      var classes, breakDownId, directive;
+      var values, breakDownId, directive, properties;
+      command = command.trim();
 
       if (command.match(regexType3)) {
-        classes = getInBetween(command, '](', ')').trim();
+        values = getInBetween(command, '](', ')').trim();
         breakDownId = getInBetween(command, '[', ']').trim();
         directive = command.split('[')[0].trim();
       } else {
-        classes = getInBetween(command, '(', ')').trim();
-        breakDownId = getInBetween(command, '.', '(').trim();
-        directive = command.split('.')[0].trim();
+        var _properties$;
+
+        values = getInBetween(command, '(', ')').trim();
+        command = command.replace(getMatchBlock(command, '(', ')'), '');
+        properties = command.split('.');
+        directive = properties[0];
+        breakDownId = properties[1];
+        properties[2] = (_properties$ = properties[2]) !== null && _properties$ !== void 0 ? _properties$ : null;
       }
 
-      classes = classes.split(',').map(function (cl) {
+      values = values.split(',').map(function (cl) {
         return cl.trim();
       }).join(' ');
 
@@ -661,19 +667,35 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         setObject[directive] = {};
       }
 
-      setObject[directive][breakDownId] = classes;
+      if (properties && properties[2]) {
+        setObject[directive][breakDownId] = {};
+        setObject[directive][breakDownId][properties[2]] = values;
+      } else {
+        setObject[directive][breakDownId] = values;
+      }
     });
     return setObject;
   }
 }
 
-function getInBetween(str, m1, m2) {
-  m1 = "\\".concat(m1.split('').join('\\'));
-  m2 = "\\".concat(m2.split('').join('\\'));
-  var getExp = "".concat(m1, "((.|\n)*?)").concat(m2);
-  var regex = new RegExp(getExp, 'gm');
-  str = str.match(regex)[0];
-  return str.replace(new RegExp(m1), '').replace(new RegExp(m2), '');
+function getInBetween(str, p1, p2) {
+  str = getMatchBlock(str, p1, p2);
+  return str.replace(new RegExp(setExpString(p1)), '').replace(new RegExp(setExpString(p2)), '');
+}
+
+function getMatchBlock(str, p1, p2) {
+  p1 = setExpString(p1);
+  p2 = setExpString(p2);
+  var regex = new RegExp(setLookUpExp(p1, p2), 'gm');
+  return str.match(regex)[0];
+}
+
+function setExpString(exp) {
+  return "\\".concat(exp.split('').join('\\'));
+}
+
+function setLookUpExp(p1, p2) {
+  return "".concat(p1, "((.|\n)*?)").concat(p2);
 }
 
 /***/ }),

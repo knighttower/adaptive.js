@@ -1,7 +1,29 @@
 {
 	"name": "adaptive.js",
 	"version": "1.0.0",
-	"private": true,
+	"main": "./src",
+	"license": "MIT",
+	"description": "Stand-alone or with Vue Hybrid mode Js helper library to help with adaptive layouts",
+	"homepage": "https://github.com/knighttower/adaptive.js",
+	"author": {
+		"name": "knighttower",
+		"url": "https://github.com/knighttower"
+	  },
+	"keywords": [
+	"media query",
+	"media queries",
+	"matchMedia",
+	"adaptive",
+	"responsive",
+	"teleport",
+	"DOM observer",
+	"DOM selector",
+	"Utility"
+	],
+	"repository": {
+	"type": "git",
+	"url": "git://github.com/knighttower/adaptive.js.git"
+	},
 	"scripts": {
 		"dev": "npm run development",
 		"development": "npm run size && mix",
@@ -21,9 +43,7 @@
 		"enquire.js": "^2.1.6",
 		"eslint": "^6.8.0",
 		"eslint-plugin-vue": "^6.1.2",
-		"jquery": "^3.5.1",
 		"laravel-mix": "^6.0.43",
-		"lodash": "4.17.21",
 		"prettier": "1.19.1",
 		"pretty-quick": "^1.11.1",
 		"vue": "3.2.37",

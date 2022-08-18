@@ -52,19 +52,23 @@ export default function(settings) {
         settings = settings.split(';');
 
         settings.forEach((command) => {
-            let classes, breakDownId, directive;
+            let values, breakDownId, directive, properties;
+            command = command.trim();
 
             if (command.match(regexType3)) {
-                classes = getInBetween(command, '](', ')').trim();
+                values = getInBetween(command, '](', ')').trim();
                 breakDownId = getInBetween(command, '[', ']').trim();
                 directive = command.split('[')[0].trim();
             } else {
-                classes = getInBetween(command, '(', ')').trim();
-                breakDownId = getInBetween(command, '.', '(').trim();
-                directive = command.split('.')[0].trim();
+                values = getInBetween(command, '(', ')').trim();
+                command = command.replace(getMatchBlock(command, '(', ')'), '');
+                properties = command.split('.');
+                directive = properties[0];
+                breakDownId = properties[1];
+                properties[2] = properties[2] ?? null;
             }
 
-            classes = classes
+            values = values
                 .split(',')
                 .map((cl) => cl.trim())
                 .join(' ');
@@ -73,18 +77,36 @@ export default function(settings) {
                 setObject[directive] = {};
             }
 
-            setObject[directive][breakDownId] = classes;
+            if (properties && properties[2]) {
+                setObject[directive][breakDownId] = {};
+                setObject[directive][breakDownId][properties[2]] = values;
+            } else {
+                setObject[directive][breakDownId] = values;
+            }
         });
 
         return setObject;
     }
 }
 
-function getInBetween(str, m1, m2) {
-    m1 = `\\${m1.split('').join('\\')}`;
-    m2 = `\\${m2.split('').join('\\')}`;
-    let getExp = `${m1}((.|\n)*?)${m2}`;
-    let regex = new RegExp(getExp, 'gm');
-    str = str.match(regex)[0];
-    return str.replace(new RegExp(m1), '').replace(new RegExp(m2), '');
+function getInBetween(str, p1, p2) {
+    str = getMatchBlock(str, p1, p2);
+
+    return str.replace(new RegExp(setExpString(p1)), '').replace(new RegExp(setExpString(p2)), '');
+}
+
+function getMatchBlock(str, p1, p2) {
+    p1 = setExpString(p1);
+    p2 = setExpString(p2);
+    let regex = new RegExp(setLookUpExp(p1, p2), 'gm');
+
+    return str.match(regex)[0];
+}
+
+function setExpString(exp) {
+    return `\\${exp.split('').join('\\')}`;
+}
+
+function setLookUpExp(p1, p2) {
+    return `${p1}((.|\n)*?)${p2}`;
 }

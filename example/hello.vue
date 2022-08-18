@@ -19,7 +19,7 @@
         <br /><br />
         <button @click="toggle">Show hide Lazy element</button>
         <br /><br />
-        <div v-teleport-to="'#hello'">Getting teleport from the component to "static Hello"</div>
+        <div v-teleport-to="'#hello'">Getting teleported (teleport) from the component to "static Hello"</div>
         <br /><br />
         <div ref="callmeback">Has a callback function at a defined breakdown</div>
     </div>

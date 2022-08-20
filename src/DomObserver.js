@@ -55,12 +55,6 @@
     const executeOnNodeChanged = {};
 
     /**
-     * Holds memory of registered functions
-     * @private
-     */
-    const executeOnAttrChanged = {};
-
-    /**
      * When node change
      * @param {String} id
      * @param {Function} callback Callback when any node changes/ add/deleted/modified
@@ -69,19 +63,6 @@
     $this.addOnNodeChange = (id, callback) => {
         if (callback) {
             executeOnNodeChanged[id] = callback;
-        }
-        return;
-    };
-
-    /**
-     * Add function callback when an attribute change is detected
-     * @param {String} id
-     * @param {Function} callback Callback when any attribute changes
-     * @return {Void}
-     */
-    $this.addOnAttrChange = (id, callback) => {
-        if (callback) {
-            executeOnAttrChanged[id] = callback;
         }
         return;
     };
@@ -99,24 +80,11 @@
     };
 
     /**
-     * Remove from attr change
-     * @param {String} id
-     * @return {Void}
-     */
-    $this.removeOnAttrChange = (id) => {
-        if (id) {
-            delete executeOnAttrChanged[id];
-        }
-        return;
-    };
-
-    /**
      * Deep cleanup
      * @return {Void}
      */
     $this.cleanup = () => {
         Object.keys(executeOnNodeChanged).forEach((key) => delete executeOnNodeChanged[key]);
-        Object.keys(executeOnAttrChanged).forEach((key) => delete executeOnAttrChanged[key]);
         return;
     };
 
@@ -127,15 +95,10 @@
      */
     (() => {
         const callback = function(mutationList, observer) {
-            // Use traditional 'for loops' for IE 11
             for (const mutation of mutationList) {
                 if (mutation.type === 'childList') {
                     for (let id in executeOnNodeChanged) {
                         executeOnNodeChanged[id]();
-                    }
-                } else if (mutation.type === 'attributes') {
-                    for (let id in executeOnAttrChanged) {
-                        executeOnAttrChanged[id]();
                     }
                 }
             }

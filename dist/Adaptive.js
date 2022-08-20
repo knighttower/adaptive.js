@@ -125,7 +125,7 @@ var AdaptiveElement = /*#__PURE__*/function () {
   }, {
     key: "teleport",
     value: function teleport(queries) {
-      var $element = new _Teleport_js__WEBPACK_IMPORTED_MODULE_0__["default"](this.props, this.props.settings);
+      var $element = new _Teleport_js__WEBPACK_IMPORTED_MODULE_0__["default"](this.props);
       return _QueryHandler_js__WEBPACK_IMPORTED_MODULE_1___default().add(queries, function ($directive) {
         return $element.beam($directive);
       }, function () {
@@ -236,12 +236,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
   var executeOnNodeChanged = {};
   /**
-   * Holds memory of registered functions
-   * @private
-   */
-
-  var executeOnAttrChanged = {};
-  /**
    * When node change
    * @param {String} id
    * @param {Function} callback Callback when any node changes/ add/deleted/modified
@@ -251,21 +245,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
   $this.addOnNodeChange = function (id, callback) {
     if (callback) {
       executeOnNodeChanged[id] = callback;
-    }
-
-    return;
-  };
-  /**
-   * Add function callback when an attribute change is detected
-   * @param {String} id
-   * @param {Function} callback Callback when any attribute changes
-   * @return {Void}
-   */
-
-
-  $this.addOnAttrChange = function (id, callback) {
-    if (callback) {
-      executeOnAttrChanged[id] = callback;
     }
 
     return;
@@ -285,20 +264,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     return;
   };
   /**
-   * Remove from attr change
-   * @param {String} id
-   * @return {Void}
-   */
-
-
-  $this.removeOnAttrChange = function (id) {
-    if (id) {
-      delete executeOnAttrChanged[id];
-    }
-
-    return;
-  };
-  /**
    * Deep cleanup
    * @return {Void}
    */
@@ -307,9 +272,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
   $this.cleanup = function () {
     Object.keys(executeOnNodeChanged).forEach(function (key) {
       return delete executeOnNodeChanged[key];
-    });
-    Object.keys(executeOnAttrChanged).forEach(function (key) {
-      return delete executeOnAttrChanged[key];
     });
     return;
   };
@@ -322,7 +284,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
   (function () {
     var callback = function callback(mutationList, observer) {
-      // Use traditional 'for loops' for IE 11
       var _iterator = _createForOfIteratorHelper(mutationList),
           _step;
 
@@ -334,10 +295,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
             for (var id in executeOnNodeChanged) {
               executeOnNodeChanged[id]();
             }
-          } else if (mutation.type === 'attributes') {
-            for (var _id in executeOnAttrChanged) {
-              executeOnAttrChanged[_id]();
-            }
           }
         }
       } catch (err) {
@@ -348,7 +305,6 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     };
 
     var config = {
-      attributes: true,
       childList: true,
       subtree: true
     };
@@ -787,25 +743,20 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
    * @param {String} queries Media query
    * @param {Function} matchCallback Callback
    * @param {Function} unMatchCallback Callback
+   * @param {Object|Null} Adaptive When in use with Adaptive.js object
    * @return {Void}
    */
 
-  $this.add = function (queries, matchCallback, unMatchCallback, Adaptive) {
+  $this.add = function (queries, matchCallback, unMatchCallback) {
+    var Adaptive = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+
     for (var query in queries) {
       var values = queries[query];
       var queryExpression = query;
-      var queryPreset = void 0,
-          customExpression = void 0;
-
-      if (Adaptive && Adaptive === window.Adaptive) {
-        queryPreset = Adaptive.getMinMaxQueries()[query];
-        customExpression = Adaptive.getExpQueries()[query];
-      }
+      var queryPreset = getPreset(query, Adaptive);
 
       if (queryPreset) {
-        queryExpression = "(min-width: ".concat(queryPreset[0], "px) and (max-width: ").concat(queryPreset[1], "px)");
-      } else if (customExpression) {
-        queryExpression = customExpression;
+        queryExpression = queryPreset;
       }
 
       var isRegistered = Boolean(domQueriesMatch[queryExpression]);
@@ -829,6 +780,11 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
     registerQueryListeners();
     onLoad();
   };
+  /**
+   * Reset the whole object | warning
+   * @return {Void}
+   */
+
 
   $this.reset = function () {
     Object.keys(registeredQueries).forEach(function (queryExpression) {
@@ -845,6 +801,80 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
   // --> PRIVATE
   // --------------------------
 
+  /**
+   * Get the preset query values present in Adaptive object
+   * @private
+   */
+
+
+  function getPreset(queryId) {
+    var Adaptive = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+    var presets = {
+      q: null,
+      // query min-max values preset
+      e: null // custom expression preset
+
+    }; // -----------------------------------------
+    // when working with Adaptive.Js
+
+    if (Adaptive && Adaptive === window.Adaptive) {
+      var _presetQs$queryId, _presetEs$queryId;
+
+      var presetQs = Adaptive.getMinMaxQueries();
+      var presetEs = Adaptive.getExpQueries();
+      presets.q = (_presetQs$queryId = presetQs[queryId]) !== null && _presetQs$queryId !== void 0 ? _presetQs$queryId : null;
+      presets.e = (_presetEs$queryId = presetEs[queryId]) !== null && _presetEs$queryId !== void 0 ? _presetEs$queryId : null;
+
+      if (!presets.q && !presets.e) {
+        if (queryId.includes('|')) {
+          var qs = queryId.split('|');
+          var qs1 = qs[0];
+          var qs2 = qs[1];
+
+          if (presetQs[qs1] && presetQs[qs2]) {
+            return buildExpression(presetQs[qs1], presetQs[qs2], true);
+          }
+
+          if (presetEs[qs1] && presetEs[qs2]) {
+            return buildExpression(presetEs[qs1], presetEs[qs2], true, true);
+          }
+        }
+      } else {
+        // Write the correct expression for the preset min-max
+        if (presets.q) {
+          return buildExpression(presets.q[0], presets.q[1]);
+        } // No need to build the expression as it already is
+
+
+        if (presets.e) {
+          return presets.e;
+        }
+      }
+    }
+
+    return null;
+  }
+  /**
+   * @private
+   */
+
+
+  function buildExpression(q1, q2) {
+    var isCompound = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+    var isExpression = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+    var templateQuery = '(min-width: $1px) and (max-width: $2px)';
+
+    if (isCompound) {
+      if (!isExpression) {
+        q1 = templateQuery.replace('$1', q1[0]).replace('$2', q1[1]);
+        q2 = templateQuery.replace('$1', q2[0]).replace('$2', q2[1]);
+      }
+
+      return "".concat(q1, ", ").concat(q2);
+    }
+
+    return templateQuery.replace('$1', q1).replace('$2', q2);
+  }
   /**
    * @private
    */
@@ -946,41 +976,48 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
 var Teleport = /*#__PURE__*/function () {
   /**
    * Constructor
-   * @param {String|Object} selector
+   * @param {String|Object} selector || props object (see AdaptiveElement)
    * @return {Object}
    */
   function Teleport(props) {
     _classCallCheck(this, Teleport);
 
-    if (!props.adaptiveId) {
-      var element = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"](props);
-      var uniqueId = null;
+    if (props) {
+      if (!props.adaptiveId) {
+        var element = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"](props);
+        var uniqueId = null;
 
-      if (!element.getAttribute('data-adaptive-id')) {
-        uniqueId = element.getHash();
-        element.domElement.setAttribute('data-adaptive-id', uniqueId);
-      } else {
-        uniqueId = element.getAttribute('data-adaptive-id');
+        if (!element.getAttribute('data-adaptive-id')) {
+          uniqueId = element.getHash();
+          element.domElement.setAttribute('data-adaptive-id', uniqueId);
+        } else {
+          uniqueId = element.getAttribute('data-adaptive-id');
+        }
+
+        props = {
+          adaptiveId: uniqueId,
+          helper: element,
+          domElement: element.domElement,
+          xpath: element.getXpathTo()
+        };
       }
 
-      props = {
-        adaptiveId: uniqueId,
-        helper: element,
-        domElement: element.domElement,
-        xpath: element.getXpathTo()
-      };
-    }
+      this.props = props;
+      var placeholder = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"]("[name=\"adaptive\"][value=\"".concat(this.props.adaptiveId, "\""));
 
-    this.props = props;
-    var placeholder = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__["default"]("[name=\"adaptive\"][value=\"".concat(this.props.adaptiveId, "\""));
-
-    if (!placeholder.isInDom()) {
-      placeholder = document.createElement('param');
-      placeholder.name = 'adaptive';
-      placeholder.value = this.props.adaptiveId;
-      this.props.domElement.insertAdjacentElement('beforebegin', placeholder);
+      if (!placeholder.isInDom()) {
+        placeholder = document.createElement('param');
+        placeholder.name = 'adaptive';
+        placeholder.value = this.props.adaptiveId;
+        this.props.domElement.insertAdjacentElement('beforebegin', placeholder);
+      }
     }
   }
+  /**
+   * Teleport object
+   * @param {String|Object} target (selector) directive defaults to "to" || {to|after|before: target}
+   */
+
 
   _createClass(Teleport, [{
     key: "beam",
@@ -1026,6 +1063,10 @@ var Teleport = /*#__PURE__*/function () {
         });
       }
     }
+    /**
+     * Return to its original place
+     */
+
   }, {
     key: "back",
     value: function back() {
@@ -1035,10 +1076,28 @@ var Teleport = /*#__PURE__*/function () {
         target.domElement.insertAdjacentElement('afterend', this.props.domElement); // target.domElement.remove();
       }
     }
+    /**
+     * If element is no it the DOM and needs to cancel the observer
+     */
+
   }, {
     key: "cancel",
     value: function cancel() {
       _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default().removeOnNodeChange(this.props.adaptiveId);
+    }
+    /**
+     * Warning, this will make it global and would work with data attr like data-teleport-to
+     */
+
+  }, {
+    key: "global",
+    value: function global() {
+      if (!this.props) {
+        Array.from(document.querySelectorAll('[data-teleport-to]')).forEach(function (element, index) {
+          var directive = element.getAttribute('data-teleport-to');
+          new Teleport(element).beam(directive);
+        });
+      }
     }
   }]);
 

@@ -106,7 +106,7 @@ export default class AdaptiveElement {
     }
 
     teleport(queries) {
-        let $element = new Teleport(this.props, this.props.settings);
+        let $element = new Teleport(this.props);
 
         return QueryHandler.add(
             queries,

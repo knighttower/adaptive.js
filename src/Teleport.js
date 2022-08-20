@@ -29,38 +29,44 @@ import ElementHelper from './ElementHelper.js';
 export default class Teleport {
     /**
      * Constructor
-     * @param {String|Object} selector
+     * @param {String|Object} selector || props object (see AdaptiveElement)
      * @return {Object}
      */
     constructor(props) {
-        if (!props.adaptiveId) {
-            let element = new ElementHelper(props);
-            let uniqueId = null;
-            if (!element.getAttribute('data-adaptive-id')) {
-                uniqueId = element.getHash();
-                element.domElement.setAttribute('data-adaptive-id', uniqueId);
-            } else {
-                uniqueId = element.getAttribute('data-adaptive-id');
+        if (props) {
+            if (!props.adaptiveId) {
+                let element = new ElementHelper(props);
+                let uniqueId = null;
+                if (!element.getAttribute('data-adaptive-id')) {
+                    uniqueId = element.getHash();
+                    element.domElement.setAttribute('data-adaptive-id', uniqueId);
+                } else {
+                    uniqueId = element.getAttribute('data-adaptive-id');
+                }
+
+                props = {
+                    adaptiveId: uniqueId,
+                    helper: element,
+                    domElement: element.domElement,
+                    xpath: element.getXpathTo(),
+                };
             }
+            this.props = props;
 
-            props = {
-                adaptiveId: uniqueId,
-                helper: element,
-                domElement: element.domElement,
-                xpath: element.getXpathTo(),
-            };
-        }
-        this.props = props;
-
-        let placeholder = new ElementHelper(`[name="adaptive"][value="${this.props.adaptiveId}"`);
-        if (!placeholder.isInDom()) {
-            placeholder = document.createElement('param');
-            placeholder.name = 'adaptive';
-            placeholder.value = this.props.adaptiveId;
-            this.props.domElement.insertAdjacentElement('beforebegin', placeholder);
+            let placeholder = new ElementHelper(`[name="adaptive"][value="${this.props.adaptiveId}"`);
+            if (!placeholder.isInDom()) {
+                placeholder = document.createElement('param');
+                placeholder.name = 'adaptive';
+                placeholder.value = this.props.adaptiveId;
+                this.props.domElement.insertAdjacentElement('beforebegin', placeholder);
+            }
         }
     }
 
+    /**
+     * Teleport object
+     * @param {String|Object} target (selector) directive defaults to "to" || {to|after|before: target}
+     */
     beam($directive) {
         // Defaults to "to" target if only the selector is passed
         if (typeof $directive === 'string') {
@@ -100,6 +106,9 @@ export default class Teleport {
         }
     }
 
+    /**
+     * Return to its original place
+     */
     back() {
         let target = new ElementHelper(`[name="adaptive"][value="${this.props.adaptiveId}"`);
         if (target.isInDom()) {
@@ -108,7 +117,22 @@ export default class Teleport {
         }
     }
 
+    /**
+     * If element is no it the DOM and needs to cancel the observer
+     */
     cancel() {
         DomObserver.removeOnNodeChange(this.props.adaptiveId);
+    }
+
+    /**
+     * Warning, this will make it global and would work with data attr like data-teleport-to
+     */
+    global() {
+        if (!this.props) {
+            Array.from(document.querySelectorAll('[data-teleport-to]')).forEach(function(element, index) {
+                let directive = element.getAttribute('data-teleport-to');
+                new Teleport(element).beam(directive);
+            });
+        }
     }
 }

@@ -73,23 +73,17 @@
      * @param {String} queries Media query
      * @param {Function} matchCallback Callback
      * @param {Function} unMatchCallback Callback
+     * @param {Object|Null} Adaptive When in use with Adaptive.js object
      * @return {Void}
      */
-    $this.add = function(queries, matchCallback, unMatchCallback, Adaptive) {
+    $this.add = function(queries, matchCallback, unMatchCallback, Adaptive = null) {
         for (let query in queries) {
             let values = queries[query];
             let queryExpression = query;
-            let queryPreset, customExpression;
-
-            if (Adaptive && Adaptive === window.Adaptive) {
-                queryPreset = Adaptive.getMinMaxQueries()[query];
-                customExpression = Adaptive.getExpQueries()[query];
-            }
+            let queryPreset = getPreset(query, Adaptive);
 
             if (queryPreset) {
-                queryExpression = `(min-width: ${queryPreset[0]}px) and (max-width: ${queryPreset[1]}px)`;
-            } else if (customExpression) {
-                queryExpression = customExpression;
+                queryExpression = queryPreset;
             }
 
             let isRegistered = Boolean(domQueriesMatch[queryExpression]);
@@ -113,6 +107,10 @@
         onLoad();
     };
 
+    /**
+     * Reset the whole object | warning
+     * @return {Void}
+     */
     $this.reset = () => {
         Object.keys(registeredQueries).forEach((queryExpression) => {
             window.matchMedia(queryExpression).removeEventListener('change', registeredQueries[queryExpression]);
@@ -125,6 +123,70 @@
     // =========================================
     // --> PRIVATE
     // --------------------------
+
+    /**
+     * Get the preset query values present in Adaptive object
+     * @private
+     */
+    function getPreset(queryId, Adaptive = null) {
+        let presets = {
+            q: null, // query min-max values preset
+            e: null, // custom expression preset
+        };
+
+        // -----------------------------------------
+        // when working with Adaptive.Js
+        if (Adaptive && Adaptive === window.Adaptive) {
+            let presetQs = Adaptive.getMinMaxQueries();
+            let presetEs = Adaptive.getExpQueries();
+            presets.q = presetQs[queryId] ?? null;
+            presets.e = presetEs[queryId] ?? null;
+
+            if (!presets.q && !presets.e) {
+                if (queryId.includes('|')) {
+                    let qs = queryId.split('|');
+                    let qs1 = qs[0];
+                    let qs2 = qs[1];
+
+                    if (presetQs[qs1] && presetQs[qs2]) {
+                        return buildExpression(presetQs[qs1], presetQs[qs2], true);
+                    }
+
+                    if (presetEs[qs1] && presetEs[qs2]) {
+                        return buildExpression(presetEs[qs1], presetEs[qs2], true, true);
+                    }
+                }
+            } else {
+                // Write the correct expression for the preset min-max
+                if (presets.q) {
+                    return buildExpression(presets.q[0], presets.q[1]);
+                }
+                // No need to build the expression as it already is
+                if (presets.e) {
+                    return presets.e;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    /**
+     * @private
+     */
+    function buildExpression(q1, q2, isCompound = false, isExpression = false) {
+        let templateQuery = '(min-width: $1px) and (max-width: $2px)';
+
+        if (isCompound) {
+            if (!isExpression) {
+                q1 = templateQuery.replace('$1', q1[0]).replace('$2', q1[1]);
+                q2 = templateQuery.replace('$1', q2[0]).replace('$2', q2[1]);
+            }
+            return `${q1}, ${q2}`;
+        }
+
+        return templateQuery.replace('$1', q1).replace('$2', q2);
+    }
 
     /**
      * @private

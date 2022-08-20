@@ -103,7 +103,7 @@
                 }
             }
         };
-        const config = { attributes: true, childList: true, subtree: true };
+        const config = { childList: true, subtree: true };
         const observer = new MutationObserver(callback);
 
         return observer.observe(document.body, config);

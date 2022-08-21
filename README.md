@@ -175,11 +175,12 @@ The short version.. is edge cases, class management and hierarchy, operations th
 - Too many specific classes for small tweaks and the issue with the "!important" - Now days is not uncommon that frameworks and vendors use their classes, but they all have to some how make their rules be the primary style on any element, and that's why many elements end up with a long list of rule sets with the "!important" keyword in order to override all or some of the computed styles and when the end user needs to add its own styles on top of the others sometimes the only way is to create long hierarchy rule sets like this: .grand-parent > .parent > .child > element.with-class.with-new-class {...!important}. This complexity increases when using media queries because they too need to override other base styles or even overlapping ones, and what about conflict..
 
 
-Inspiration I used to build this:
-https://wicky.nillia.ms/enquire.js/
-https://github.com/CyberAP/vue-component-media-queries
-https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia
-https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver
-https://vuejs.org/guide/built-ins/teleport.html
+Inspiration I used to build this:  
+https://wicky.nillia.ms/enquire.js/  
+https://github.com/CyberAP/vue-component-media-queries  
+https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia  
+https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver  
+https://vuejs.org/guide/built-ins/teleport.html  
+
 
 (This docs still under construction)

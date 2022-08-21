@@ -1,3 +1,4 @@
+(This docs still under construction)
 # Adaptive.js
 
 Adaptive.js is not a CSS media query replacement nor should be the primary handler of responsive or adaptive applications (CSS should do most of it). On the contrary, it aims to enhance the ability to make layouts "adapt" better to different devices depending on preset or custom media queries while using plain JavaScript or any of the cool frameworks out there (Vue, React, etc) and overcome the limitations of pure CSS.
@@ -22,6 +23,9 @@ Consider the following graphic:
 Too many classes or rule sets that override other rules sets can be complex or hard.
 For instance using Bootstrap to add margin and padding for different breakdowns:
 https://codesandbox.io/s/bootstrap-5-playground-forked-ogh556?file=/index.html&resolutionWidth=1000&resolutionHeight=675
+
+### --Add/Remove Inline style
+### --Execute js functions at breakdows
 
 ### Description
 

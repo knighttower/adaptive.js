@@ -38,6 +38,8 @@ Teleports an element temporarily or permanently [before,after,to] to a given tar
 | **after** | teleport.mobile{after:target} --or-- teleport.mobile.after(target) | Teleports the element after the position of the target element (No merging. Good for cases where both should not inherit nor interfere with each other) |
 | **to** | teleport.mobile{to:target} --or-- teleport.mobile.to(target) | Teleports and appends the element to the target element (important if the element needs to inherit properties from the parent (target) element or be part of it) |
 Consider the following graphic:
+![Screenshot_32](https://user-images.githubusercontent.com/649334/185774621-257a9b0f-c68e-4c38-984d-9cfea40ebb71.png)
+
 
 When using with Vue, there is no need to wrap it into custom tags, it uses the directive style v-teleport-to
 

@@ -1,5 +1,5 @@
 
-(This docs still under construction)
+(This docs still under construction, see "example" and "test" folders for extensive examples of usage)
 
 # Adaptive.js
 

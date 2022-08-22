@@ -226,9 +226,56 @@ export default (function(window) {
         }
     };
 
-    // =========================================
-    // --> Instance Protototypes
-    // --------------------------
+    Adaptive.if = function(breakdownId, callback = null) {
+        if (Adaptive.getAllQueries()[breakdownId]) {
+            let isFunction = callback && typeof callback === 'function';
+            let isArray = callback && Array.isArray(callback);
+            let observer = {};
+
+            observer[breakdownId] = {
+                breakdownId: breakdownId,
+                match: false,
+                isMatch() {
+                    this.match = true;
+                },
+                unMatch() {
+                    this.match = false;
+                },
+                do() {
+                    if (this.match) {
+                        if (isFunction) {
+                            callback();
+                        }
+                        if (isArray) {
+                            callback[0][callback[1]] = true;
+                        }
+
+                        return true;
+                    }
+
+                    if (isArray) {
+                        callback[0][callback[1]] = false;
+                    }
+                    return false;
+                },
+            };
+
+            QueryHandler.add(
+                observer,
+                (o) => {
+                    o.isMatch();
+                    o.do();
+                },
+                (o) => {
+                    o.unMatch();
+                    o.do();
+                },
+                Adaptive
+            );
+
+            return observer[breakdownId];
+        }
+    };
 
     /**
      * Full reset, handle with care
@@ -238,7 +285,7 @@ export default (function(window) {
     Adaptive.reset = () => {
         Object.keys(domElements).forEach((key) => delete domElements[key]);
         DomObserver.cleanup();
-        AdaptiveQH.reset();
+        QueryHandler.reset();
         isMounted = false;
     };
 
@@ -259,7 +306,7 @@ export default (function(window) {
             Adaptive.registerElement(element);
         });
 
-        AdaptiveQH.init();
+        QueryHandler.init();
     }
 
     /**

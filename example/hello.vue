@@ -22,6 +22,8 @@
         <div v-teleport-to="'#hello'">Getting teleported (teleport) from the component to "static Hello"</div>
         <br /><br />
         <div ref="callmeback">Has a callback function at a defined breakdown</div>
+        <br /><br />
+        <div v-if="tablet">Has a conditional IF tablet</div>
     </div>
 </template>
 <script>
@@ -30,6 +32,7 @@ export default {
         return {
             greeting: 'Example Vue component Hello World!',
             show: false,
+            tablet: null,
         };
     },
     mounted: function() {
@@ -40,9 +43,11 @@ export default {
             execute: {
                 mobile: function(element) {
                     console.log('This is a callback at mobile breakdown');
+                    console.log(element);
                 },
             },
         });
+        this.$Adaptive.if('tablet', [this, 'tablet']);
     },
     methods: {
         changeText() {

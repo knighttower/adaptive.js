@@ -24,6 +24,7 @@
 */
 
 import Teleport from './Teleport.js';
+// when it imports, it also registers itself as global
 import QueryHandler from './QueryHandler.js';
 
 /**
@@ -43,6 +44,8 @@ export default class AdaptiveElement {
         this.Adaptive = Adaptive;
 
         for (let directive in props.settings) {
+            // Matches the method name and passes the directives
+            // Ex: this[addClass]({...})
             this[directive](props.settings[directive]);
         }
     }

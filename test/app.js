@@ -16,7 +16,8 @@ __webpack_require__.r(__webpack_exports__);
   data: function data() {
     return {
       greeting: 'Example Vue component Hello World!',
-      show: false
+      show: false,
+      tablet: null
     };
   },
   mounted: function mounted() {
@@ -30,9 +31,11 @@ __webpack_require__.r(__webpack_exports__);
       execute: {
         mobile: function mobile(element) {
           console.log('This is a callback at mobile breakdown');
+          console.log(element);
         }
       }
     });
+    this.$Adaptive["if"]('tablet', [this, 'tablet']);
   },
   methods: {
     changeText: function changeText() {
@@ -143,6 +146,18 @@ var _hoisted_22 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 var _hoisted_23 = {
   ref: "callmeback"
 };
+
+var _hoisted_24 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+/* HOISTED */
+);
+
+var _hoisted_25 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1
+/* HOISTED */
+);
+
+var _hoisted_26 = {
+  key: 1
+};
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _directive_adaptive = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveDirective)("adaptive");
 
@@ -166,7 +181,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     })
   }, "Show hide Lazy element"), _hoisted_17, _hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)(((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", null, _hoisted_20)), [[_directive_teleport_to, '#hello']]), _hoisted_21, _hoisted_22, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_23, "Has a callback function at a defined breakdown", 512
   /* NEED_PATCH */
-  )]);
+  ), _hoisted_24, _hoisted_25, $data.tablet ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_26, "Has a conditional IF tablet")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]);
 }
 
 /***/ }),
@@ -435,10 +450,54 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     if (!customExpressionQueries[id]) {
       customExpressionQueries[id] = query;
     }
-  }; // =========================================
-  // --> Instance Protototypes
-  // --------------------------
+  };
 
+  Adaptive["if"] = function (breakdownId) {
+    var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+    if (Adaptive.getAllQueries()[breakdownId]) {
+      var isFunction = callback && typeof callback === 'function';
+      var isArray = callback && Array.isArray(callback);
+      var observer = {};
+      observer[breakdownId] = {
+        breakdownId: breakdownId,
+        match: false,
+        isMatch: function isMatch() {
+          this.match = true;
+        },
+        unMatch: function unMatch() {
+          this.match = false;
+        },
+        "do": function _do() {
+          if (this.match) {
+            if (isFunction) {
+              callback();
+            }
+
+            if (isArray) {
+              callback[0][callback[1]] = true;
+            }
+
+            return true;
+          }
+
+          if (isArray) {
+            callback[0][callback[1]] = false;
+          }
+
+          return false;
+        }
+      };
+      QueryHandler.add(observer, function (o) {
+        o.isMatch();
+        o["do"]();
+      }, function (o) {
+        o.unMatch();
+        o["do"]();
+      }, Adaptive);
+      return observer[breakdownId];
+    }
+  };
   /**
    * Full reset, handle with care
    * @private
@@ -451,7 +510,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
       return delete domElements[key];
     });
     DomObserver.cleanup();
-    AdaptiveQH.reset();
+    QueryHandler.reset();
     isMounted = false;
   }; // =========================================
   // --> DomReady and INIT
@@ -468,7 +527,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     Array.from(document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])')).forEach(function (element, index) {
       Adaptive.registerElement(element);
     });
-    AdaptiveQH.init();
+    QueryHandler.init();
   }
   /**
    * Initialization, cam be called externally to reinitialized after dom loaded
@@ -609,6 +668,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
+ // when it imports, it also registers itself as global
 
 
 /**
@@ -631,6 +691,8 @@ var AdaptiveElement = /*#__PURE__*/function () {
     this.Adaptive = Adaptive;
 
     for (var directive in props.settings) {
+      // Matches the method name and passes the directives
+      // Ex: this[addClass]({...})
       this[directive](props.settings[directive]);
     }
   }
@@ -1298,40 +1360,49 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
    * @private
    */
 
-  var domQueriesUnMatch = {}; // =========================================
+  var domQueriesUnMatch = {};
+  /**
+   * Flag
+   * @private
+   */
+
+  var loaded = false; // =========================================
   // --> PUBLIC
   // --------------------------
 
   /**
    * Register a query
-   * @param {String} queries Media query
+   * @param {Object} queries Media queries with breakdowns and directives
    * @param {Function} matchCallback Callback
-   * @param {Function} unMatchCallback Callback
+   * @param {Function|Null} unMatchCallback Callback
    * @param {Object|Null} Adaptive When in use with Adaptive.js object
    * @return {Void}
    */
 
-  $this.add = function (queries, matchCallback, unMatchCallback) {
+  $this.add = function (queries, matchCallback) {
+    var unMatchCallback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
     var Adaptive = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
 
     for (var query in queries) {
-      var values = queries[query];
-      var queryExpression = query;
-      var queryPreset = getPreset(query, Adaptive);
+      var _getPreset;
 
-      if (queryPreset) {
-        queryExpression = queryPreset;
-      }
+      // Values are the classes, styles, functions
+      var values = queries[query]; // Set a preset if found or just the query in case is custom
 
-      var isRegistered = Boolean(domQueriesMatch[queryExpression]);
+      var queryExpression = (_getPreset = getPreset(query, Adaptive)) !== null && _getPreset !== void 0 ? _getPreset : query; // If it does not exists, add it as an array
 
-      if (!isRegistered) {
+      if (!Boolean(domQueriesMatch[queryExpression])) {
         domQueriesMatch[queryExpression] = [];
         domQueriesUnMatch[queryExpression] = [];
       }
 
       domQueriesMatch[queryExpression].push([matchCallback, values]);
-      domQueriesUnMatch[queryExpression].push([unMatchCallback, values]);
+
+      if (unMatchCallback) {
+        domQueriesUnMatch[queryExpression].push([unMatchCallback, values]);
+      }
+
+      registerQueryListener(queryExpression);
     }
   };
   /**
@@ -1341,8 +1412,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
 
 
   $this.init = function () {
-    registerQueryListeners();
-    onLoad();
+    loaded = true;
+    Object.keys(domQueriesMatch).forEach(function (queryExpression) {
+      // Listener for after initial load
+      registerQueryListener(queryExpression); // Run the queries on load once
+
+      singleRun(queryExpression);
+    });
   };
   /**
    * Reset the whole object | warning
@@ -1365,6 +1441,16 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
   // --> PRIVATE
   // --------------------------
 
+
+  function singleRun(queryExpression) {
+    var mq = window.matchMedia(queryExpression);
+
+    if (mq.matches) {
+      domQueriesMatch[mq.media].forEach(function (callback) {
+        return callback[0](callback[1]);
+      });
+    }
+  }
   /**
    * Get the preset query values present in Adaptive object
    * @private
@@ -1439,53 +1525,36 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
 
     return templateQuery.replace('$1', q1).replace('$2', q2);
   }
-  /**
-   * @private
-   */
+
+  function registerQueryListener(queryExpression) {
+    // If not already registered
+    // This helps to avoid too many Listeners created
+    if (!Boolean(registeredQueries[queryExpression])) {
+      var matchQuery = window.matchMedia(queryExpression);
+
+      var callback = function callback(mq) {
+        if (!mq.matches) {
+          domQueriesUnMatch[mq.media].forEach(function (callback) {
+            return callback[0](callback[1]);
+          });
+        } else {
+          domQueriesMatch[mq.media].forEach(function (callback) {
+            return callback[0](callback[1]);
+          });
+        }
+      };
+
+      registeredQueries[queryExpression] = callback;
+      return matchQuery.addEventListener('change', callback);
+    } // For those added after all has been loaded
 
 
-  function onLoad() {
-    Object.keys(domQueriesMatch).forEach(function (queryExpression) {
-      var mq = window.matchMedia(queryExpression);
-
-      if (mq.matches) {
-        domQueriesMatch[mq.media].forEach(function (callback) {
-          return callback[0](callback[1]);
-        });
-      }
-    });
-  }
-  /**
-   * @private
-   */
-
-
-  function registerQueryListeners() {
-    Object.keys(domQueriesMatch).forEach(function (queryExpression) {
-      var isRegistered = Boolean(registeredQueries[queryExpression]);
-
-      if (!isRegistered) {
-        var matchQuery = window.matchMedia(queryExpression);
-
-        var callback = function callback(mq) {
-          if (!mq.matches) {
-            domQueriesUnMatch[mq.media].forEach(function (callback) {
-              return callback[0](callback[1]);
-            });
-          } else {
-            domQueriesMatch[mq.media].forEach(function (callback) {
-              return callback[0](callback[1]);
-            });
-          }
-        };
-
-        registeredQueries[queryExpression] = callback;
-        return matchQuery.addEventListener('change', callback);
-      }
-    });
+    if (loaded) {
+      singleRun(queryExpression);
+    }
   }
 
-  return window.AdaptiveQH = $this;
+  return window.QueryHandler = $this;
 });
 
 /***/ }),

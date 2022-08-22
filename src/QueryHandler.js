@@ -64,37 +64,44 @@
      */
     const domQueriesUnMatch = {};
 
+    /**
+     * Flag
+     * @private
+     */
+    let loaded = false;
+
     // =========================================
     // --> PUBLIC
     // --------------------------
 
     /**
      * Register a query
-     * @param {String} queries Media query
+     * @param {Object} queries Media queries with breakdowns and directives
      * @param {Function} matchCallback Callback
-     * @param {Function} unMatchCallback Callback
+     * @param {Function|Null} unMatchCallback Callback
      * @param {Object|Null} Adaptive When in use with Adaptive.js object
      * @return {Void}
      */
-    $this.add = function(queries, matchCallback, unMatchCallback, Adaptive = null) {
+    $this.add = function(queries, matchCallback, unMatchCallback = null, Adaptive = null) {
         for (let query in queries) {
+            // Values are the classes, styles, functions
             let values = queries[query];
-            let queryExpression = query;
-            let queryPreset = getPreset(query, Adaptive);
 
-            if (queryPreset) {
-                queryExpression = queryPreset;
-            }
+            // Set a preset if found or just the query in case is custom
+            let queryExpression = getPreset(query, Adaptive) ?? query;
 
-            let isRegistered = Boolean(domQueriesMatch[queryExpression]);
-
-            if (!isRegistered) {
+            // If it does not exists, add it as an array
+            if (!Boolean(domQueriesMatch[queryExpression])) {
                 domQueriesMatch[queryExpression] = [];
                 domQueriesUnMatch[queryExpression] = [];
             }
 
             domQueriesMatch[queryExpression].push([matchCallback, values]);
-            domQueriesUnMatch[queryExpression].push([unMatchCallback, values]);
+            if (unMatchCallback) {
+                domQueriesUnMatch[queryExpression].push([unMatchCallback, values]);
+            }
+
+            registerQueryListener(queryExpression);
         }
     };
 
@@ -103,8 +110,13 @@
      * @return {Void}
      */
     $this.init = () => {
-        registerQueryListeners();
-        onLoad();
+        loaded = true;
+        Object.keys(domQueriesMatch).forEach((queryExpression) => {
+            // Listener for after initial load
+            registerQueryListener(queryExpression);
+            // Run the queries on load once
+            singleRun(queryExpression);
+        });
     };
 
     /**
@@ -123,6 +135,15 @@
     // =========================================
     // --> PRIVATE
     // --------------------------
+
+    function singleRun(queryExpression) {
+        let mq = window.matchMedia(queryExpression);
+        if (mq.matches) {
+            domQueriesMatch[mq.media].forEach(function(callback) {
+                return callback[0](callback[1]);
+            });
+        }
+    }
 
     /**
      * Get the preset query values present in Adaptive object
@@ -188,45 +209,31 @@
         return templateQuery.replace('$1', q1).replace('$2', q2);
     }
 
-    /**
-     * @private
-     */
-    function onLoad() {
-        Object.keys(domQueriesMatch).forEach((queryExpression) => {
-            let mq = window.matchMedia(queryExpression);
-            if (mq.matches) {
-                domQueriesMatch[mq.media].forEach(function(callback) {
-                    return callback[0](callback[1]);
-                });
-            }
-        });
+    function registerQueryListener(queryExpression) {
+        // If not already registered
+        // This helps to avoid too many Listeners created
+        if (!Boolean(registeredQueries[queryExpression])) {
+            let matchQuery = window.matchMedia(queryExpression);
+            let callback = (mq) => {
+                if (!mq.matches) {
+                    domQueriesUnMatch[mq.media].forEach(function(callback) {
+                        return callback[0](callback[1]);
+                    });
+                } else {
+                    domQueriesMatch[mq.media].forEach(function(callback) {
+                        return callback[0](callback[1]);
+                    });
+                }
+            };
+
+            registeredQueries[queryExpression] = callback;
+            return matchQuery.addEventListener('change', callback);
+        }
+        // For those added after all has been loaded
+        if (loaded) {
+            singleRun(queryExpression);
+        }
     }
 
-    /**
-     * @private
-     */
-    function registerQueryListeners() {
-        Object.keys(domQueriesMatch).forEach((queryExpression) => {
-            let isRegistered = Boolean(registeredQueries[queryExpression]);
-            if (!isRegistered) {
-                let matchQuery = window.matchMedia(queryExpression);
-                let callback = (mq) => {
-                    if (!mq.matches) {
-                        domQueriesUnMatch[mq.media].forEach(function(callback) {
-                            return callback[0](callback[1]);
-                        });
-                    } else {
-                        domQueriesMatch[mq.media].forEach(function(callback) {
-                            return callback[0](callback[1]);
-                        });
-                    }
-                };
-
-                registeredQueries[queryExpression] = callback;
-                return matchQuery.addEventListener('change', callback);
-            }
-        });
-    }
-
-    return (window.AdaptiveQH = $this);
+    return (window.QueryHandler = $this);
 });

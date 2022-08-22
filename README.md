@@ -1,5 +1,5 @@
 
-(This docs still under construction)
+(This docs still under construction, see "example" and "test" folders for extensive examples of usage)
 
 # Adaptive.js
 
@@ -36,11 +36,15 @@ Teleports an element temporarily or permanently [before,after,to] to a given tar
 |----------------|-------------------|---------------------|
 | **before** | teleport.mobile{before:target} --or-- teleport.mobile.before(target) | Teleports the element before the position of the target element (No merging. Good for cases where both should not inherit nor interfere with each other) |
 | **after** | teleport.mobile{after:target} --or-- teleport.mobile.after(target) | Teleports the element after the position of the target element (No merging. Good for cases where both should not inherit nor interfere with each other) |
-| **to** | teleport.mobile{to:target} --or-- teleport.mobile.to(target) | Teleports and appends the element to the target element (important if the element needs to inherit properties from the parent (target) element or be part of it) |
+| **to** | teleport.mobile{to:target} --or-- teleport.mobile.to(target) | Teleports and appends the element to the target element (important if the element needs to inherit properties from the parent (target) element or be part of it) |  
+
 Consider the following graphic:
+![Screenshot_32](https://user-images.githubusercontent.com/649334/185774621-257a9b0f-c68e-4c38-984d-9cfea40ebb71.png)
+
 
 When using with Vue, there is no need to wrap it into custom tags, it uses the directive style v-teleport-to
-
+  
+  
 ### --Add/Remove Classes
 
 Too many classes or rule-sets that override other rule-sets can be complex or hard. So rather than creating single use classes, this could be done like this example:
@@ -171,11 +175,12 @@ The short version.. is edge cases, class management and hierarchy, operations th
 - Too many specific classes for small tweaks and the issue with the "!important" - Now days is not uncommon that frameworks and vendors use their classes, but they all have to some how make their rules be the primary style on any element, and that's why many elements end up with a long list of rule sets with the "!important" keyword in order to override all or some of the computed styles and when the end user needs to add its own styles on top of the others sometimes the only way is to create long hierarchy rule sets like this: .grand-parent > .parent > .child > element.with-class.with-new-class {...!important}. This complexity increases when using media queries because they too need to override other base styles or even overlapping ones, and what about conflict..
 
 
-Inspiration I used to build this:
-https://wicky.nillia.ms/enquire.js/
-https://github.com/CyberAP/vue-component-media-queries
-https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia
-https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver
-https://vuejs.org/guide/built-ins/teleport.html
+Inspiration I used to build this:  
+https://wicky.nillia.ms/enquire.js/  
+https://github.com/CyberAP/vue-component-media-queries  
+https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia  
+https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver  
+https://vuejs.org/guide/built-ins/teleport.html  
+
 
 (This docs still under construction)

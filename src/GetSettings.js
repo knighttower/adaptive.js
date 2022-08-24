@@ -29,19 +29,34 @@
  * @return {Object}
  */
 export default function(settings) {
+    let values, breakDownId, directive, properties;
     let type = typeof settings;
-    // Matches the JSON objects as string
-    let regexType1 = /\{((.|\n)*?)\}\}/gm;
-    // Matches object-style strings
+    // Matches the JSON objects as string: {'hello'{key:value}}
+    let regexType1 = /\{((.|\n)*?)\}/gm;
+    // Matches object-style strings: hello.tablet(...values) | hello[expression](...values)
     let regexType2 = /\.(.*?)\(((.|\n)*?)\)/gm;
     let regexType3 = /\[((.|\n)*?)\]/gm;
+    // Matches string ID or class: literals #... or ....
+    let regexType4 = /^(\.|\#)([a-zA-Z]+)/g;
+    // Mathes simple directive function style: hello(#idOr.Class)
+    let regexType5 = /^([a-zA-Z]+)(\()(\.|\#)(.*)(\))/g;
 
     if (type === 'object' || type === 'array') {
         return settings;
     }
+    // Else if String
 
-    // Make sure the settings is string
-    settings = String(settings);
+    if (settings.match(regexType4)) {
+        return settings;
+    }
+
+    if (settings.match(regexType5)) {
+        directive = settings.split('(')[0].trim();
+        values = getInBetween(settings, '(', ')');
+        settings = {};
+        settings[directive] = values;
+        return settings;
+    }
 
     if (settings.match(regexType1)) {
         return JSON.parse(settings.replace(/'/g, '"'));
@@ -49,18 +64,18 @@ export default function(settings) {
 
     if (settings.match(regexType2) || settings.match(regexType3)) {
         let setObject = {};
+
         settings = settings.split(';');
 
         settings.forEach((command) => {
-            let values, breakDownId, directive, properties;
             command = command.trim();
 
             if (command.match(regexType3)) {
-                values = getInBetween(command, '](', ')').trim();
-                breakDownId = getInBetween(command, '[', ']').trim();
+                values = getInBetween(command, '](', ')');
+                breakDownId = getInBetween(command, '[', ']');
                 directive = command.split('[')[0].trim();
             } else {
-                values = getInBetween(command, '(', ')').trim();
+                values = getInBetween(command, '(', ')');
                 command = command.replace(getMatchBlock(command, '(', ')'), '');
                 properties = command.split('.');
                 directive = properties[0];
@@ -92,7 +107,10 @@ export default function(settings) {
 function getInBetween(str, p1, p2) {
     str = getMatchBlock(str, p1, p2);
 
-    return str.replace(new RegExp(setExpString(p1)), '').replace(new RegExp(setExpString(p2)), '');
+    return str
+        .replace(new RegExp(setExpString(p1)), '')
+        .replace(new RegExp(setExpString(p2)), '')
+        .trim();
 }
 
 function getMatchBlock(str, p1, p2) {

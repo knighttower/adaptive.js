@@ -81,6 +81,12 @@ export default (function(window) {
     var useVue = false;
 
     /**
+     * Flag for using Hybrid
+     * @private
+     */
+    var isHybrid = false;
+
+    /**
      * queries possible sizes
      * @private
      */
@@ -187,7 +193,7 @@ export default (function(window) {
                     helper: element,
                     domElement: element.domElement,
                     xpath: element.getXpathTo(),
-                    settings: new GetSettings(data || element.getAttribute('data-adaptive')),
+                    settings: GetSettings(data || element.getAttribute('data-adaptive')),
                     useVue: useVue,
                 },
                 Adaptive
@@ -307,6 +313,9 @@ export default (function(window) {
         });
 
         QueryHandler.init();
+        if (isHybrid) {
+            new Teleport().global();
+        }
     }
 
     /**
@@ -345,7 +354,10 @@ export default (function(window) {
         return;
     }
 
-    Adaptive.useVue = (Vue) => {
+    Adaptive.useVue = (Vue, hybrid = false) => {
+        if (hybrid) {
+            isHybrid = true;
+        }
         if (typeof Vue === 'object' && typeof Vue.mixin === 'function') {
             useVue = true;
             let installer = {

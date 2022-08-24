@@ -577,20 +577,36 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
  * @return {Object}
  */
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(settings) {
-  var type = _typeof(settings); // Matches the JSON objects as string
+  var values, breakDownId, directive, properties;
+
+  var type = _typeof(settings); // Matches the JSON objects as string: {'hello'{key:value}}
 
 
-  var regexType1 = /\{((.|\n)*?)\}\}/gm; // Matches object-style strings
+  var regexType1 = /\{((.|\n)*?)\}/gm; // Matches object-style strings: hello.tablet(...values) | hello[expression](...values)
 
   var regexType2 = /\.(.*?)\(((.|\n)*?)\)/gm;
-  var regexType3 = /\[((.|\n)*?)\]/gm;
+  var regexType3 = /\[((.|\n)*?)\]/gm; // Matches string ID or class: literals #... or ....
+
+  var regexType4 = /^(\.|\#)([a-zA-Z]+)/g; // Mathes simple directive function style: hello(#idOr.Class)
+
+  var regexType5 = /^([a-zA-Z]+)(\()(\.|\#)(.*)(\))/g;
 
   if (type === 'object' || type === 'array') {
     return settings;
-  } // Make sure the settings is string
+  } // Else if String
 
 
-  settings = String(settings);
+  if (settings.match(regexType4)) {
+    return settings;
+  }
+
+  if (settings.match(regexType5)) {
+    directive = settings.split('(')[0].trim();
+    values = getInBetween(settings, '(', ')');
+    settings = {};
+    settings[directive] = values;
+    return settings;
+  }
 
   if (settings.match(regexType1)) {
     return JSON.parse(settings.replace(/'/g, '"'));
@@ -600,17 +616,16 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     var setObject = {};
     settings = settings.split(';');
     settings.forEach(function (command) {
-      var values, breakDownId, directive, properties;
       command = command.trim();
 
       if (command.match(regexType3)) {
-        values = getInBetween(command, '](', ')').trim();
-        breakDownId = getInBetween(command, '[', ']').trim();
+        values = getInBetween(command, '](', ')');
+        breakDownId = getInBetween(command, '[', ']');
         directive = command.split('[')[0].trim();
       } else {
         var _properties$;
 
-        values = getInBetween(command, '(', ')').trim();
+        values = getInBetween(command, '(', ')');
         command = command.replace(getMatchBlock(command, '(', ')'), '');
         properties = command.split('.');
         directive = properties[0];
@@ -639,7 +654,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
 function getInBetween(str, p1, p2) {
   str = getMatchBlock(str, p1, p2);
-  return str.replace(new RegExp(setExpString(p1)), '').replace(new RegExp(setExpString(p2)), '');
+  return str.replace(new RegExp(setExpString(p1)), '').replace(new RegExp(setExpString(p2)), '').trim();
 }
 
 function getMatchBlock(str, p1, p2) {
@@ -950,6 +965,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _DomObserver_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./DomObserver.js */ "./src/DomObserver.js");
 /* harmony import */ var _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_DomObserver_js__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ElementHelper.js */ "./src/ElementHelper.js");
+/* harmony import */ var _GetSettings_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./GetSettings.js */ "./src/GetSettings.js");
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -980,6 +996,7 @@ function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _d
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
+
 
 
 
@@ -1104,7 +1121,7 @@ var Teleport = /*#__PURE__*/function () {
     value: function global() {
       if (!this.props) {
         Array.from(document.querySelectorAll('[data-teleport-to]')).forEach(function (element, index) {
-          var directive = element.getAttribute('data-teleport-to');
+          var directive = (0,_GetSettings_js__WEBPACK_IMPORTED_MODULE_2__["default"])(element.getAttribute('data-teleport-to'));
           new Teleport(element).beam(directive);
         });
       }
@@ -1298,6 +1315,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
   var useVue = false;
   /**
+   * Flag for using Hybrid
+   * @private
+   */
+
+  var isHybrid = false;
+  /**
    * queries possible sizes
    * @private
    */
@@ -1425,7 +1448,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         helper: element,
         domElement: element.domElement,
         xpath: element.getXpathTo(),
-        settings: new _GetSettings_js__WEBPACK_IMPORTED_MODULE_3__["default"](data || element.getAttribute('data-adaptive')),
+        settings: (0,_GetSettings_js__WEBPACK_IMPORTED_MODULE_3__["default"])(data || element.getAttribute('data-adaptive')),
         useVue: useVue
       }, Adaptive);
       return uniqueId;
@@ -1540,6 +1563,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
       Adaptive.registerElement(element);
     });
     QueryHandler.init();
+
+    if (isHybrid) {
+      new _Teleport_js__WEBPACK_IMPORTED_MODULE_2__["default"]().global();
+    }
   }
   /**
    * Initialization, cam be called externally to reinitialized after dom loaded
@@ -1579,6 +1606,12 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
   }
 
   Adaptive.useVue = function (Vue) {
+    var hybrid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+    if (hybrid) {
+      isHybrid = true;
+    }
+
     if (_typeof(Vue) === 'object' && typeof Vue.mixin === 'function') {
       useVue = true;
       var installer = {

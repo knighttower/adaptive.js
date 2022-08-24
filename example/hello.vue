@@ -39,6 +39,7 @@ export default {
         // Example using the ref and custom registered media query (see the app.js)
         this.$Adaptive.registerElement(this.$refs.six, { addClass: { doggy: 'seven' } });
 
+        // can use this...
         this.$Adaptive.registerElement(this.$refs.callmeback, {
             execute: {
                 mobile: function(element) {
@@ -47,7 +48,14 @@ export default {
                 },
             },
         });
+        // or
         this.$Adaptive.if('tablet', [this, 'tablet']);
+        // or
+        this.$Adaptive.if('tablet', function() {
+            // code
+        });
+        // or
+        this.$Adaptive.if('tablet', this.changeText);
     },
     methods: {
         changeText() {

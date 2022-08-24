@@ -25,6 +25,7 @@
 
 import DomObserver from './DomObserver.js';
 import ElementHelper from './ElementHelper.js';
+import GetSettings from './GetSettings.js';
 
 export default class Teleport {
     /**
@@ -130,7 +131,7 @@ export default class Teleport {
     global() {
         if (!this.props) {
             Array.from(document.querySelectorAll('[data-teleport-to]')).forEach(function(element, index) {
-                let directive = element.getAttribute('data-teleport-to');
+                let directive = GetSettings(element.getAttribute('data-teleport-to'));
                 new Teleport(element).beam(directive);
             });
         }

@@ -4,6 +4,10 @@
     </head>
     <body>
         <section id="app">
+            <h2>Resize this window in different resolutions</h2>
+            <br/>
+            <h3>Look at all the examples in the "test/index.html" and "example/app.js" and "example/hello.vue"</h3>
+            <br/><br/>
             <!-- Example adding classes -->
             <div id="hello" class="static-hello" data-adaptive="{'addClass':{'tablet':'hello','desktop':'this-is-a-class-for-desktop'}}">
                 static hello
@@ -39,6 +43,9 @@
             <br/><br/>
             <!-- Teleporting only at mobile and desktop, all others will be set back to original position -->
             <div data-adaptive="teleport.desktop|mobile.before(#hello)"><span style="background:#1f2252; color: white;">Static element that will teleport at "desktop or mobile" right above "static hello"</span></div>
+
+            <br/><br/>
+            <div data-teleport-to="{'after':'#customQueries'}"><span style="background:#067e74; color: white;">Static element that will teleport "customQueries" with data attribute in hybrid mode</span></div>
 
         </section>
 

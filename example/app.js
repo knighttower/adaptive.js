@@ -33,7 +33,8 @@ Adaptive.addQueryMinMax('kitty', 900, 1400);
 // Optional | Add a custom media query expression (it accepts any valid media query)
 Adaptive.addQueryExpression('doggy', '(min-width: 900px)');
 // Needs to be instaciated right after the app and before the components
-Adaptive.useVue(app);
+// The second parameter (optional, defaults to false) is to be in hybrid mode for Vue and Static JS(DOM),
+Adaptive.useVue(app, true);
 // Do components and other stuff right after
 app.component('hello', hello);
 

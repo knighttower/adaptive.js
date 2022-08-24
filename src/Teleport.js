@@ -69,6 +69,7 @@ export default class Teleport {
      * @param {String|Object} target (selector) directive defaults to "to" || {to|after|before: target}
      */
     beam($directive) {
+        $directive = GetSettings($directive);
         // Defaults to "to" target if only the selector is passed
         if (typeof $directive === 'string') {
             $directive = { to: $directive };
@@ -131,8 +132,7 @@ export default class Teleport {
     global() {
         if (!this.props) {
             Array.from(document.querySelectorAll('[data-teleport-to]')).forEach(function(element, index) {
-                let directive = GetSettings(element.getAttribute('data-teleport-to'));
-                new Teleport(element).beam(directive);
+                new Teleport(element).beam(element.getAttribute('data-teleport-to'));
             });
         }
     }

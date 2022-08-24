@@ -1,5 +1,7 @@
 <template>
     <div class="sample">
+        <h4>Start Hello component</h4>
+        <teleport-to target="#hitTarget">Hola</teleport-to>
         <p class="greeting">{{ greeting }}</p>
 
         <br /><br />
@@ -24,6 +26,9 @@
         <div ref="callmeback">Has a callback function at a defined breakdown</div>
         <br /><br />
         <div v-if="tablet">Has a conditional IF tablet</div>
+        <br /><br />
+        <div id="hitTarget"></div>
+        <h4>End Hello component</h4>
     </div>
 </template>
 <script>

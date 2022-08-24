@@ -34,6 +34,7 @@ import ElementHelper from './ElementHelper.js';
 import AdaptiveElement from './AdaptiveElement.js';
 import Teleport from './Teleport.js';
 import GetSettings from './GetSettings.js';
+import TeleportTo from './vue-components/teleport.vue';
 
 // =========================================
 // --> ADAPTIVE JS
@@ -393,6 +394,8 @@ export default (function(window) {
                     return new Teleport(element).beam(binding.value);
                 },
             });
+
+            Vue.component('teleport-to', TeleportTo);
 
             /**
              * Adaptive used for non Vue elements register with data-adaptive attr

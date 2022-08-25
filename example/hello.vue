@@ -4,29 +4,29 @@
         <teleport-to target="#hitTarget">Hola</teleport-to>
         <p class="greeting">{{ greeting }}</p>
 
-        <br /><br />
+        <br />
         <button @click="changeText">Test Vue component is working</button>
-        <br /><br />
+        <br />
 
         <!-- Example of directive binding with Adaptive -->
         <div v-adaptive="{ addClass: { desktop: 'cinco' } }">Using Directive inside Vue component</div>
-        <br /><br />
+        <br />
 
         <!-- Example of use as a ref element with plugin style -->
         <div ref="six">Using Ref element inside component for Vue Plugin mode and custom media query expression</div>
 
-        <br /><br />
+        <br />
         <!-- Example of a later insertion -->
         <div v-if="show" class="lazy">Using (observer) After load inside component</div>
-        <br /><br />
+        <br />
         <button @click="toggle">Show hide Lazy element</button>
-        <br /><br />
+        <br />
         <div v-teleport-to="'#hello'">Getting teleported (teleport) from the component to "static Hello"</div>
-        <br /><br />
+        <br />
         <div ref="callmeback">Has a callback function at a defined breakdown</div>
-        <br /><br />
+        <br />
         <div v-if="tablet">Has a conditional IF tablet</div>
-        <br /><br />
+        <br />
         <div id="hitTarget"></div>
         <h4>End Hello component</h4>
     </div>

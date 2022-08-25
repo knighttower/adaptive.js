@@ -7,47 +7,47 @@
             <h2>Resize this window in different resolutions</h2>
             <br/>
             <h3>Look at all the examples in the "test/index.html" and "example/app.js" and "example/hello.vue"</h3>
-            <br/><br/>
+            <br/>
             <!-- Example adding classes -->
             <div id="hello" style="background-color: yellow;" class="static-hello" data-adaptive="{'addClass':{'tablet':'hello','desktop':'this-is-a-class-for-desktop'}}">
                 static hello using json compliant object
             </div>
-            <br/><br/>
+            <br/>
             <div style="background-color: rgb(236, 236, 206);" data-adaptive="{addClass:{tablet:'hello',desktop:'this-is-a-class-for-desktop'}}">
                 static using non compliant json object
             </div>
-            <br/><br/>
+            <br/>
             <!-- Example of only adding styles per breakdown -->
             <div class="inline-styling" data-adaptive="{'addStyle':{'tablet':'color: blue;','desktop':'color: green;'}}">
                 Inline styling per device
             </div>
-            <br/><br/>
+            <br/>
 
             <!-- Example Vue compoenent -->
             <hello></hello>
-            <br/><br/>
+            <br/>
 
             <!-- Example of using String like directives -->
             <div data-adaptive="addClass.tablet(laura, miau) &&
             addClass.mobile|fullscreen(red, green) && 
             addClass.desktop(uno, dos)">String like directives</div>
 
-            <br/><br/>
+            <br/>
             <!-- Example of using custom queries -->
             <div id="customQueries" data-adaptive="addClass[(min-width: 900px) and (max-width: 1599px)](custom-class-at-custom-breakdown)">Custom Expressions via string like Directive</div>
 
-            <br/><br/>
+            <br/>
             <div data-adaptive="{'teleport':{
                 'tablet': {
                     'to':'.lazy'
                 }
             }}"><span style="color:blue">Static element that will teleport at "tablet" size to a Vue driven element when visible</span></div>
             
-            <br/><br/>
+            <br/>
             <!-- Teleporting only at mobile and desktop, all others will be set back to original position -->
             <div data-adaptive="teleport.desktop|mobile.before(#hello)"><span style="background:#1f2252; color: white;">Static element that will teleport at "desktop or mobile" right above "static hello"</span></div>
 
-            <br/><br/>
+            <br/>
             <div data-teleport-to="{'after':'#customQueries'}"><span style="background:#067e74; color: white;">Static element that will teleport "customQueries" with data attribute in hybrid mode</span></div>
 
         </section>

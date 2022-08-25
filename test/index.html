@@ -9,11 +9,14 @@
             <h3>Look at all the examples in the "test/index.html" and "example/app.js" and "example/hello.vue"</h3>
             <br/><br/>
             <!-- Example adding classes -->
-            <div id="hello" class="static-hello" data-adaptive="{'addClass':{'tablet':'hello','desktop':'this-is-a-class-for-desktop'}}">
-                static hello
+            <div id="hello" style="background-color: yellow;" class="static-hello" data-adaptive="{'addClass':{'tablet':'hello','desktop':'this-is-a-class-for-desktop'}}">
+                static hello using json compliant object
             </div>
             <br/><br/>
-
+            <div style="background-color: rgb(236, 236, 206);" data-adaptive="{addClass:{tablet:'hello',desktop:'this-is-a-class-for-desktop'}}">
+                static using non compliant json object
+            </div>
+            <br/><br/>
             <!-- Example of only adding styles per breakdown -->
             <div class="inline-styling" data-adaptive="{'addStyle':{'tablet':'color: blue;','desktop':'color: green;'}}">
                 Inline styling per device
@@ -25,8 +28,8 @@
             <br/><br/>
 
             <!-- Example of using String like directives -->
-            <div data-adaptive="addClass.tablet(laura, miau); 
-            addClass.mobile|fullscreen(red, green); 
+            <div data-adaptive="addClass.tablet(laura, miau) &&
+            addClass.mobile|fullscreen(red, green) && 
             addClass.desktop(uno, dos)">String like directives</div>
 
             <br/><br/>

@@ -1325,6 +1325,15 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 */
 
 /**
+ * handles the following patterns to get an object from string attributes
+ * // Matches the JSON objects as string: {'hello':{key:value}} OR {key:value}
+ * // Matches object-style strings: hello.tablet(...values) OR hello[expression](...values)
+ * // Matches string ID or class: literals Id(#) or class (.). Note that in Vue it needs to be in quotes attr="'#theId'"
+ * // Mathes simple directive function style: hello(#idOr.Class)
+ * Note: all the above with the exception of the Id/class will be converted into actual objects
+ */
+
+/**
  * Handle getting the correct settings from the string attribute
  * @private
  * @param {String|Array|Object} settings
@@ -1333,28 +1342,28 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(settings) {
   var values, breakDownId, directive, properties;
 
-  var type = _typeof(settings); // Matches the JSON objects as string: {'hello'{key:value}}
+  var type = _typeof(settings); // Matches the JSON objects as string: {'hello':{key:value}} || {key:value}
 
 
-  var regexType1 = /\{((.|\n)*?)\}/gm; // Matches object-style strings: hello.tablet(...values) | hello[expression](...values)
+  var regexObjectLike = /\{((.|\n)*?)\:(.*?)\}/gm; // Matches object-style strings: hello.tablet(...values) | hello[expression](...values)
 
-  var regexType2 = /\.(.*?)\(((.|\n)*?)\)/gm;
-  var regexType3 = /\[((.|\n)*?)\]/gm; // Matches string ID or class: literals #... or ....
+  var regexDotObjectString = /([a-zA-Z]+)\.(.*?)\(((.|\n)*?)\)/gm;
+  var regexExObjectString = /([a-zA-Z]+)\[((.|\n)*?)\]\(((.|\n)*?)\)/gm; // Matches string ID or class: literals #... or ....
 
-  var regexType4 = /^(\.|\#)([a-zA-Z]+)/g; // Mathes simple directive function style: hello(#idOr.Class)
+  var regexIdOrClass = /^(\.|\#)([a-zA-Z]+)/g; // Mathes simple directive function style: hello(#idOr.Class)
 
-  var regexType5 = /^([a-zA-Z]+)(\()(\.|\#)(.*)(\))/g;
+  var regexFunctionString = /^([a-zA-Z]+)(\()(\.|\#)(.*)(\))/g;
 
   if (type === 'object' || type === 'array') {
     return settings;
   } // Else if String
 
 
-  if (settings.match(regexType4)) {
+  if (settings.match(regexIdOrClass)) {
     return settings;
   }
 
-  if (settings.match(regexType5)) {
+  if (settings.match(regexFunctionString)) {
     directive = settings.split('(')[0].trim();
     values = getInBetween(settings, '(', ')');
     settings = {};
@@ -1362,17 +1371,23 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     return settings;
   }
 
-  if (settings.match(regexType1)) {
-    return JSON.parse(settings.replace(/'/g, '"'));
+  if (settings.match(regexObjectLike)) {
+    var keyProps = getInBetween(settings, '{', ':', true);
+    keyProps = keyProps.concat(getInBetween(settings, ',', ':', true));
+    keyProps.forEach(function (str) {
+      var cleanStr = addQuotes(removeQuotes(str));
+      settings = settings.replace(str, cleanStr);
+    });
+    return JSON.parse(fixQuotes(settings));
   }
 
-  if (settings.match(regexType2) || settings.match(regexType3)) {
+  if (settings.match(regexDotObjectString) || settings.match(regexExObjectString)) {
     var setObject = {};
-    settings = settings.split(';');
+    settings = settings.split('&&');
     settings.forEach(function (command) {
       command = command.trim();
 
-      if (command.match(regexType3)) {
+      if (command.match(regexExObjectString)) {
         values = getInBetween(command, '](', ')');
         breakDownId = getInBetween(command, '[', ']');
         directive = command.split('[')[0].trim();
@@ -1407,15 +1422,40 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 }
 
 function getInBetween(str, p1, p2) {
-  str = getMatchBlock(str, p1, p2);
-  return str.replace(new RegExp(setExpString(p1)), '').replace(new RegExp(setExpString(p2)), '').trim();
+  var all = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+
+  if (all) {
+    var _getMatchBlock;
+
+    var matches = [];
+    var group = (_getMatchBlock = getMatchBlock(str, p1, p2, all)) !== null && _getMatchBlock !== void 0 ? _getMatchBlock : [];
+    group.forEach(function (match) {
+      matches.push(cleanStr(match, p1, p2));
+    });
+    return matches;
+  } else {
+    var _getMatchBlock2;
+
+    str = (_getMatchBlock2 = getMatchBlock(str, p1, p2)) !== null && _getMatchBlock2 !== void 0 ? _getMatchBlock2 : str;
+    return cleanStr(str, p1, p2);
+  }
 }
 
 function getMatchBlock(str, p1, p2) {
+  var all = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
   p1 = setExpString(p1);
   p2 = setExpString(p2);
   var regex = new RegExp(setLookUpExp(p1, p2), 'gm');
-  return str.match(regex)[0];
+
+  if (all) {
+    return str.match(regex);
+  } else {
+    return str.match(regex)[0];
+  }
+}
+
+function cleanStr(str, p1, p2) {
+  return str.replace(new RegExp(setExpString(p1)), '').replace(new RegExp(setExpString(p2)), '').trim();
 }
 
 function setExpString(exp) {
@@ -1424,6 +1464,18 @@ function setExpString(exp) {
 
 function setLookUpExp(p1, p2) {
   return "".concat(p1, "((.|\n)*?)").concat(p2);
+}
+
+function removeQuotes(str) {
+  return str.replace(/'|"/g, '');
+}
+
+function fixQuotes(str) {
+  return str.replace(/'/g, '"');
+}
+
+function addQuotes(str) {
+  return "\"".concat(str, "\"");
 }
 
 /***/ }),

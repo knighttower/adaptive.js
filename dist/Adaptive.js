@@ -659,7 +659,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
   var type = _typeof(settings); // Matches the JSON objects as string: {'hello':{key:value}} || {key:value}
 
 
-  var regexObjectLike = /\{((.|\n)*?)\:(.*?)\}/gm; // Matches object-style strings: hello.tablet(...values) | hello[expression](...values)
+  var regexObjectLike = /\{((.|\n)*?)\:((.|\n)*?)\}/gm; // Matches object-style strings: hello.tablet(...values) | hello[expression](...values)
 
   var regexDotObjectString = /([a-zA-Z]+)\.(.*?)\(((.|\n)*?)\)/gm;
   var regexExObjectString = /([a-zA-Z]+)\[((.|\n)*?)\]\(((.|\n)*?)\)/gm; // Matches string ID or class: literals #... or ....

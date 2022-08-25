@@ -40,7 +40,7 @@ export default function(settings) {
     let values, breakDownId, directive, properties;
     let type = typeof settings;
     // Matches the JSON objects as string: {'hello':{key:value}} || {key:value}
-    let regexObjectLike = /\{((.|\n)*?)\:(.*?)\}/gm;
+    let regexObjectLike = /\{((.|\n)*?)\:((.|\n)*?)\}/gm;
     // Matches object-style strings: hello.tablet(...values) | hello[expression](...values)
     let regexDotObjectString = /([a-zA-Z]+)\.(.*?)\(((.|\n)*?)\)/gm;
     let regexExObjectString = /([a-zA-Z]+)\[((.|\n)*?)\]\(((.|\n)*?)\)/gm;

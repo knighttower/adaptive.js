@@ -641,6 +641,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 /**
  * handles the following patterns to get an object from string attributes
  * // Matches the JSON objects as string: {'hello':{key:value}} OR {key:value}
+ * // Matches the Array as string: [value, value] || ['value','value']
  * // Matches object-style strings: hello.tablet(...values) OR hello[expression](...values)
  * // Matches string ID or class: literals Id(#) or class (.). Note that in Vue it needs to be in quotes attr="'#theId'"
  * // Mathes simple directive function style: hello(#idOr.Class)
@@ -659,7 +660,11 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
   var type = _typeof(settings); // Matches the JSON objects as string: {'hello':{key:value}} || {key:value}
 
 
-  var regexObjectLike = /\{((.|\n)*?)\:((.|\n)*?)\}/gm; // Matches object-style strings: hello.tablet(...values) | hello[expression](...values)
+  var regexObjectLike = /\{((.|\n)*?)\:((.|\n)*?)\}/gm; // Matches the Array as string: [value, value] || ['value','value']
+
+  var regexArrayLike = /^\[((.|\n)*?)\]$/gm; // Matches a multi-array string like [[value,value]],value]
+
+  var regexMultiArrayString = /\[(\n|)(((.|\[)*)?)\](\,\n|)(((.|\])*)?)(\n|)\]/gm; // Matches object-style strings: hello.tablet(...values) | hello[expression](...values)
 
   var regexDotObjectString = /([a-zA-Z]+)\.(.*?)\(((.|\n)*?)\)/gm;
   var regexExObjectString = /([a-zA-Z]+)\[((.|\n)*?)\]\(((.|\n)*?)\)/gm; // Matches string ID or class: literals #... or ....
@@ -685,13 +690,33 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     return settings;
   }
 
-  if (settings.match(regexObjectLike)) {
-    var keyProps = getInBetween(settings, '{', ':', true);
-    keyProps = keyProps.concat(getInBetween(settings, ',', ':', true));
+  if (settings.match(regexArrayLike)) {
+    var start = /^\[/;
+    var end = /\]$/;
+    var keyProps = getInBetween(settings, start, end);
+    keyProps = keyProps.split(','); // test if multi-array
+
+    if (settings.match(regexMultiArrayString)) {
+      keyProps = getMultiArray(settings);
+    }
+
     keyProps.forEach(function (str) {
       var cleanStr = addQuotes(removeQuotes(str));
       settings = settings.replace(str, cleanStr);
     });
+    return JSON.parse(fixQuotes(settings));
+  }
+
+  if (settings.match(regexObjectLike)) {
+    var _keyProps = getInBetween(settings, '{', ':', true);
+
+    _keyProps = _keyProps.concat(getInBetween(settings, ',', ':', true));
+
+    _keyProps.forEach(function (str) {
+      var cleanStr = addQuotes(removeQuotes(str));
+      settings = settings.replace(str, cleanStr);
+    });
+
     return JSON.parse(fixQuotes(settings));
   }
 
@@ -735,6 +760,108 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
   }
 }
 
+function getMultiArray(str) {
+  var _Object$keys$length;
+
+  var arrays = {};
+  var innerArrayRegex = /(\[([^[]*?))\]/gm;
+  var start = /^\[/;
+  var end = /\]$/;
+  str = getInBetween(str, start, end);
+  var innerArrays = str.match(innerArrayRegex);
+
+  if (innerArrays) {
+    (function () {
+      var i = 1;
+
+      while (str.match(innerArrayRegex)) {
+        str.match(innerArrayRegex).forEach(function (record, index) {
+          var $index = "@".concat(i, "@").concat(index);
+          arrays[$index] = record;
+          str = str.replace(record, $index);
+        });
+        i++;
+      }
+    })();
+  }
+
+  str = str.split(',');
+  var total = ((_Object$keys$length = Object.keys(arrays).length) !== null && _Object$keys$length !== void 0 ? _Object$keys$length : 1) * str.length;
+  var loops = 0;
+
+  while (Object.keys(arrays).length > 0) {
+    var keys = Object.keys(arrays);
+    var tmpStr = str;
+    Object.keys(arrays).forEach(function (key) {
+      var strArray = getInBetween(arrays[key], start, end).split(',');
+      var replaced = findAndReplace(str, strArray, key);
+
+      if (replaced) {
+        str = replaced;
+        delete arrays[key];
+      }
+    });
+
+    if (loops > total) {
+      throw new Error('Too many loops, the string passed is malformed' + str);
+    }
+
+    loops++;
+  }
+
+  return str;
+}
+/**
+ * Recursively will loop in array to find the desired target
+ * @private
+ * @param {Array} arr
+ * @param {Array|Object|String} value Replacer
+ * @param {String} find The target (needle)
+ * @return {Null|Array}
+ */
+
+
+function findAndReplace(arr, value, find) {
+  var results = null;
+  var tmpArray = arr;
+  arr.forEach(function (prop, index) {
+    if (Array.isArray(prop)) {
+      var replaced = findAndReplace(prop, value, find);
+
+      if (replaced) {
+        tmpArray[index] = replaced;
+        results = tmpArray;
+      }
+    }
+
+    if (prop === find) {
+      if (Array.isArray(value)) {
+        value = value.map(function (p) {
+          if (!Array.isArray(p)) {
+            return p.trim();
+          }
+
+          return p;
+        });
+      }
+
+      tmpArray[index] = value;
+      results = tmpArray;
+    }
+  });
+  return results;
+}
+/**
+ * find a match in between two delimeters, either string or regex given, returns clean matches
+ * @private
+ * @param {String} str
+ * @param {String|Regex} p1
+ * @param {String|Regex} p2
+ * @param {Boolean} all If it should return all matches or single one (default)
+ * @return {String|Array|Null}
+ */
+
+
 function getInBetween(str, p1, p2) {
   var all = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
 
@@ -754,6 +881,16 @@ function getInBetween(str, p1, p2) {
     return cleanStr(str, p1, p2);
   }
 }
+/**
+ * Find math by delimeters returns raw matches
+ * @private
+ * @param {String} str
+ * @param {String|Regex} p1
+ * @param {String|Regex} p2
+ * @param {Boolean} all If it should return all matches or single one (default)
+ * @return {String|Array|Void}
+ */
+
 
 function getMatchBlock(str, p1, p2) {
   var all = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
@@ -771,12 +908,39 @@ function getMatchBlock(str, p1, p2) {
 function cleanStr(str, p1, p2) {
   return str.replace(new RegExp(setExpString(p1)), '').replace(new RegExp(setExpString(p2)), '').trim();
 }
+/**
+ * Escape a regex
+ * @private
+ */
+
 
 function setExpString(exp) {
-  return "\\".concat(exp.split('').join('\\'));
+  if (exp instanceof RegExp) {
+    return exp;
+  } else {
+    return "\\".concat(exp.split('').join('\\'));
+  }
 }
+/**
+ * Regex builder
+ * @private
+ */
+
 
 function setLookUpExp(p1, p2) {
+  var p1IsRegex = p1 instanceof RegExp;
+  var p2IsRegex = p2 instanceof RegExp;
+
+  if (p1IsRegex || p2IsRegex) {
+    if (p1IsRegex) {
+      p1 = p1.source;
+    }
+
+    if (p2IsRegex) {
+      p2 = p2.source;
+    }
+  }
+
   return "".concat(p1, "((.|\n)*?)").concat(p2);
 }
 
@@ -1086,6 +1250,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _DomObserver_js__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_DomObserver_js__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _ElementHelper_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./ElementHelper.js */ "./src/ElementHelper.js");
 /* harmony import */ var _GetSettings_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./GetSettings.js */ "./src/GetSettings.js");
+function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
+
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -1175,6 +1341,14 @@ var Teleport = /*#__PURE__*/function () {
         $directive = {
           to: $directive
         };
+      } else if (Array.isArray($directive)) {
+        if ($directive.length > 1) {
+          $directive = _defineProperty({}, $directive[0], $directive[1]);
+        } else {
+          $directive = {
+            to: $directive[0]
+          };
+        }
       }
 
       var direction = Object.keys($directive)[0];

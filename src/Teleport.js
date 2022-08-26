@@ -73,6 +73,12 @@ export default class Teleport {
         // Defaults to "to" target if only the selector is passed
         if (typeof $directive === 'string') {
             $directive = { to: $directive };
+        } else if (Array.isArray($directive)) {
+            if ($directive.length > 1) {
+                $directive = { [$directive[0]]: $directive[1] };
+            } else {
+                $directive = { to: $directive[0] };
+            }
         }
 
         let direction = Object.keys($directive)[0];

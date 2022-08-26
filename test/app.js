@@ -1302,15 +1302,19 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
  * Handle getting the correct settings from the string attribute
  * @private
  * @param {String|Array|Object} settings
- * @return {Object}
+ * @return {Object|void|null}
  */
 /* harmony default export */ function __WEBPACK_DEFAULT_EXPORT__(settings) {
+  if (!settings) {
+    return null;
+  }
+
   var values, breakDownId, directive, properties;
 
   var type = _typeof(settings); // Matches the JSON objects as string: {'hello':{key:value}} || {key:value}
 
 
-  var regexObjectLike = /\{((.|\n)*?)\:((.|\n)*?)\}/gm; // Matches the Array as string: [value, value] || ['value','value']
+  var regexObjectLike = /^\{((.|\n)*?)\:((.|\n)*?)\}/gm; // Matches the Array as string: [value, value] || ['value','value']
 
   var regexArrayLike = /^\[((.|\n)*?)\]$/gm; // Matches a multi-array string like [[value,value]],value]
 

@@ -35,13 +35,17 @@
  * Handle getting the correct settings from the string attribute
  * @private
  * @param {String|Array|Object} settings
- * @return {Object}
+ * @return {Object|void|null}
  */
 export default function(settings) {
+    if (!settings) {
+        return null;
+    }
     let values, breakDownId, directive, properties;
     const type = typeof settings;
     // Matches the JSON objects as string: {'hello':{key:value}} || {key:value}
-    const regexObjectLike = /\{((.|\n)*?)\:((.|\n)*?)\}/gm;
+    const regexObjectLike = /^\{((.|\n)*?)\:((.|\n)*?)\}/gm;
+
     // Matches the Array as string: [value, value] || ['value','value']
     const regexArrayLike = /^\[((.|\n)*?)\]$/gm;
     // Matches a multi-array string like [[value,value]],value]

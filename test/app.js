@@ -327,7 +327,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
  * @param {Object} root Window or parent object
  * @param {Object} factory The Class
  * @return {Object}
- * @example Add a data attribute with valid JSON like this --> data-adaptive="{'addClass':{'tablet':'hello','desktop':'dos-tres hellothere'},'teleport':{'tablet':{'to':'.sample'}}}"
+ * @example See example > app.js, example > hello.vue, test > index.html
  */
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((function (window) {
@@ -338,7 +338,14 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
    * @return {Object}
    */
 
-  var Adaptive = {};
+  var $this = {};
+  var Adaptive = new Proxy($this, {
+    get: function get(target, prop, receiver) {
+      if (prop in target) {
+        return target[prop];
+      }
+    }
+  });
   /**
    * All the elements that will be part of the grid
    * @private
@@ -448,15 +455,15 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
    * @return {Object}
    */
 
-  Adaptive.getAllQueries = function () {
+  $this.getAllQueries = function () {
     return Object.assign({}, screens, devices, broadMediaQueries, customMinMaxQueries, customExpressionQueries);
   };
 
-  Adaptive.getMinMaxQueries = function () {
+  $this.getMinMaxQueries = function () {
     return Object.assign({}, screens, devices, broadMediaQueries, customMinMaxQueries);
   };
 
-  Adaptive.getExpQueries = function () {
+  $this.getExpQueries = function () {
     return Object.assign({}, customExpressionQueries);
   };
   /**
@@ -467,7 +474,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
    */
 
 
-  Adaptive.registerElement = function (elementOrSelector, data) {
+  $this.registerElement = function (elementOrSelector, data) {
     var helper = new _ElementHelper_js__WEBPACK_IMPORTED_MODULE_0__["default"](elementOrSelector);
 
     if (helper.isInDom()) {
@@ -499,7 +506,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
         xpath: element.getXpathTo(),
         settings: (0,_GetSettings_js__WEBPACK_IMPORTED_MODULE_3__["default"])(data || element.getAttribute('data-adaptive')),
         useVue: useVue
-      }, Adaptive);
+      }, $this);
       return uniqueId;
     }
   }
@@ -512,7 +519,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
    */
 
 
-  Adaptive.addQueryMinMax = function (id, min, max) {
+  $this.addQueryMinMax = function (id, min, max) {
     if (!customMinMaxQueries[id]) {
       if (!min || !max) {
         throw new Exception('Min or Max must be passed (id, min, max)', 1);
@@ -530,16 +537,16 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
    */
 
 
-  Adaptive.addQueryExpression = function (id, query) {
+  $this.addQueryExpression = function (id, query) {
     if (!customExpressionQueries[id]) {
       customExpressionQueries[id] = query;
     }
   };
 
-  Adaptive["if"] = function (breakdownId) {
+  $this["if"] = function (breakdownId) {
     var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
-    if (Adaptive.getAllQueries()[breakdownId]) {
+    if ($this.getAllQueries()[breakdownId]) {
       var isFunction = callback && typeof callback === 'function';
       var isArray = callback && Array.isArray(callback);
       var observer = {};
@@ -578,7 +585,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
       }, function (o) {
         o.unMatch();
         o["do"]();
-      }, Adaptive);
+      }, $this);
       return observer[breakdownId];
     }
   };
@@ -589,7 +596,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
    */
 
 
-  Adaptive.reset = function () {
+  $this.reset = function () {
     Object.keys(domElements).forEach(function (key) {
       return delete domElements[key];
     });
@@ -609,7 +616,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
   function _init() {
     isMounted = true;
     Array.from(document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])')).forEach(function (element, index) {
-      Adaptive.registerElement(element);
+      $this.registerElement(element);
     });
     QueryHandler.init();
 
@@ -623,7 +630,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
    */
 
 
-  Adaptive.init = function () {
+  $this.init = function () {
     if (isMounted) {
       return false;
     }
@@ -654,7 +661,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     return;
   }
 
-  Adaptive.useVue = function (Vue) {
+  $this.useVue = function (Vue) {
     var hybrid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
     if (hybrid) {
@@ -1673,6 +1680,13 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
    */
 
   var $this = {};
+  var QueryHandler = new Proxy($this, {
+    get: function get(target, prop, receiver) {
+      if (prop in target) {
+        return target[prop];
+      }
+    }
+  });
   /**
    * Holds memory of registered queries expressions
    * @private
@@ -1884,7 +1898,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
     }
   }
 
-  return window.QueryHandler = $this;
+  return window.QueryHandler = QueryHandler;
 });
 
 /***/ }),

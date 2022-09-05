@@ -45,6 +45,13 @@
      * @return {Object}
      */
     const $this = {};
+    const QueryHandler = new Proxy($this, {
+        get(target, prop, receiver) {
+            if (prop in target) {
+                return target[prop];
+            }
+        },
+    });
 
     /**
      * Holds memory of registered queries expressions
@@ -235,5 +242,5 @@
         }
     }
 
-    return (window.QueryHandler = $this);
+    return (window.QueryHandler = QueryHandler);
 });

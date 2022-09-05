@@ -46,7 +46,7 @@ import TeleportTo from './vue-components/teleport.vue';
  * @param {Object} root Window or parent object
  * @param {Object} factory The Class
  * @return {Object}
- * @example Add a data attribute with valid JSON like this --> data-adaptive="{'addClass':{'tablet':'hello','desktop':'dos-tres hellothere'},'teleport':{'tablet':{'to':'.sample'}}}"
+ * @example See example > app.js, example > hello.vue, test > index.html
  */
 export default (function(window) {
     'use strict';
@@ -56,7 +56,15 @@ export default (function(window) {
      * @private
      * @return {Object}
      */
-    const Adaptive = {};
+    const $this = {};
+    const Adaptive = new Proxy($this, {
+        get(target, prop, receiver) {
+            if (prop in target) {
+                return target[prop];
+            }
+        },
+    });
+
     /**
      * All the elements that will be part of the grid
      * @private
@@ -146,15 +154,15 @@ export default (function(window) {
      * @private
      * @return {Object}
      */
-    Adaptive.getAllQueries = () => {
+    $this.getAllQueries = () => {
         return Object.assign({}, screens, devices, broadMediaQueries, customMinMaxQueries, customExpressionQueries);
     };
 
-    Adaptive.getMinMaxQueries = () => {
+    $this.getMinMaxQueries = () => {
         return Object.assign({}, screens, devices, broadMediaQueries, customMinMaxQueries);
     };
 
-    Adaptive.getExpQueries = () => {
+    $this.getExpQueries = () => {
         return Object.assign({}, customExpressionQueries);
     };
 
@@ -164,7 +172,7 @@ export default (function(window) {
      * @param {Object} data Optional used directly to add the directives, but is mostly for VUe
      * @return {Void}
      */
-    Adaptive.registerElement = (elementOrSelector, data) => {
+    $this.registerElement = (elementOrSelector, data) => {
         let helper = new ElementHelper(elementOrSelector);
         if (helper.isInDom()) {
             return registerThis(helper, data);
@@ -197,7 +205,7 @@ export default (function(window) {
                     settings: GetSettings(data || element.getAttribute('data-adaptive')),
                     useVue: useVue,
                 },
-                Adaptive
+                $this
             );
 
             return uniqueId;
@@ -211,7 +219,7 @@ export default (function(window) {
      * @param {Number} max Number only, no units attached as it only handles pixels here
      * @return {Void}
      */
-    Adaptive.addQueryMinMax = function(id, min, max) {
+    $this.addQueryMinMax = function(id, min, max) {
         if (!customMinMaxQueries[id]) {
             if (!min || !max) {
                 throw new Exception('Min or Max must be passed (id, min, max)', 1);
@@ -227,14 +235,14 @@ export default (function(window) {
      * @param {Number} max Number only, no units attached as it only handles pixels here
      * @return {Void}
      */
-    Adaptive.addQueryExpression = function(id, query) {
+    $this.addQueryExpression = function(id, query) {
         if (!customExpressionQueries[id]) {
             customExpressionQueries[id] = query;
         }
     };
 
-    Adaptive.if = function(breakdownId, callback = null) {
-        if (Adaptive.getAllQueries()[breakdownId]) {
+    $this.if = function(breakdownId, callback = null) {
+        if ($this.getAllQueries()[breakdownId]) {
             let isFunction = callback && typeof callback === 'function';
             let isArray = callback && Array.isArray(callback);
             let observer = {};
@@ -277,7 +285,7 @@ export default (function(window) {
                     o.unMatch();
                     o.do();
                 },
-                Adaptive
+                $this
             );
 
             return observer[breakdownId];
@@ -289,7 +297,7 @@ export default (function(window) {
      * @private
      * @return {Void}
      */
-    Adaptive.reset = () => {
+    $this.reset = () => {
         Object.keys(domElements).forEach((key) => delete domElements[key]);
         DomObserver.cleanup();
         QueryHandler.reset();
@@ -310,7 +318,7 @@ export default (function(window) {
             element,
             index
         ) {
-            Adaptive.registerElement(element);
+            $this.registerElement(element);
         });
 
         QueryHandler.init();
@@ -323,7 +331,7 @@ export default (function(window) {
      * Initialization, cam be called externally to reinitialized after dom loaded
      * @return {Void}
      */
-    Adaptive.init = () => {
+    $this.init = () => {
         if (isMounted) {
             return false;
         }
@@ -355,7 +363,7 @@ export default (function(window) {
         return;
     }
 
-    Adaptive.useVue = (Vue, hybrid = false) => {
+    $this.useVue = (Vue, hybrid = false) => {
         if (hybrid) {
             isHybrid = true;
         }

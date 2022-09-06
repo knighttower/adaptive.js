@@ -26,6 +26,7 @@
 const { createApp } = Vue;
 import Adaptive from '../src/Adaptive.js';
 import hello from './hello.vue';
+import compApiSample from './compApiSample.vue';
 
 const app = createApp({});
 //Optional | Add custom media query (min px, max px) settings (min max)
@@ -37,6 +38,7 @@ Adaptive.addQueryExpression('doggy', '(min-width: 900px)');
 Adaptive.useVue(app, true);
 // Do components and other stuff right after
 app.component('hello', hello);
+app.component('comp-api-sample', compApiSample);
 
 // Testing the code if there is a delay on load and how the Adaptive would react
 setTimeout(() => {

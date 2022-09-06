@@ -374,7 +374,7 @@ export default (function(window) {
                     // For Options API
                     app.config.globalProperties.$Adaptive = Adaptive;
                     // For composition API
-                    app.provide('$Adpative', Adaptive);
+                    app.provide('Adpative', Adaptive);
                 },
             };
 

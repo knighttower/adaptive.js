@@ -22,6 +22,9 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
+
+const { VueElement } = require('vue');
+
 /**
  * @class Detect DOM changes
  * @param {window} selector
@@ -164,7 +167,7 @@
 
         // -----------------------------------------
         // when working with Adaptive.Js
-        if (Adaptive && Adaptive === window.Adaptive) {
+        if (Adaptive) {
             let presetQs = Adaptive.getMinMaxQueries();
             let presetEs = Adaptive.getExpQueries();
             presets.q = presetQs[queryId] ?? null;

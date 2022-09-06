@@ -120,8 +120,8 @@ export default (function(window) {
     const devices = {
         mobile: [1, 599] /* Actual phones */,
         tablet: [600, 799] /* tablets in portrait or below */,
-        'odd-device': [800, 1024] /* small Laptops and Ipads in landscape */,
-        desktop: [1025, 1440] /* Most common resolutions below 1920 */,
+        'odd-device': [800, 1023] /* small Laptops and Ipads in landscape */,
+        desktop: [1024, 1440] /* Most common resolutions below 1920 */,
     };
 
     /**
@@ -129,7 +129,8 @@ export default (function(window) {
      * @private
      */
     const broadMediaQueries = {
-        'non-desktop': [100, 1024],
+        'non-desktop': [100, 1023],
+        nondesktop: [100, 1023],
         fullscreen: [1441, 6000] /* Large monitos and fullscreen in 1920 res */,
     };
 
@@ -374,7 +375,7 @@ export default (function(window) {
                     // For Options API
                     app.config.globalProperties.$Adaptive = Adaptive;
                     // For composition API
-                    app.provide('Adpative', Adaptive);
+                    app.provide('Adaptive', Adaptive);
                 },
             };
 

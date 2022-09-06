@@ -472,10 +472,10 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     tablet: [600, 799]
     /* tablets in portrait or below */
     ,
-    'odd-device': [800, 1024]
+    'odd-device': [800, 1023]
     /* small Laptops and Ipads in landscape */
     ,
-    desktop: [1025, 1440]
+    desktop: [1024, 1440]
     /* Most common resolutions below 1920 */
 
   };
@@ -485,7 +485,8 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
    */
 
   var broadMediaQueries = {
-    'non-desktop': [100, 1024],
+    'non-desktop': [100, 1023],
+    nondesktop: [100, 1023],
     fullscreen: [1441, 6000]
     /* Large monitos and fullscreen in 1920 res */
 
@@ -731,7 +732,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
           // For Options API
           app.config.globalProperties.$Adaptive = Adaptive; // For composition API
 
-          app.provide('Adpative', Adaptive);
+          app.provide('Adaptive', Adaptive);
         }
       };
       /**
@@ -1708,13 +1709,16 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
-
+var _require = __webpack_require__(/*! vue */ "vue"),
+    VueElement = _require.VueElement;
 /**
  * @class Detect DOM changes
  * @param {window} selector
  * @param {Funtion}
  * @return QueryHandler
  */
+
+
 (function (root, factory) {
   'use strict';
 
@@ -1867,7 +1871,7 @@ var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _type
     }; // -----------------------------------------
     // when working with Adaptive.Js
 
-    if (Adaptive && Adaptive === window.Adaptive) {
+    if (Adaptive) {
       var _presetQs$queryId, _presetEs$queryId;
 
       var presetQs = Adaptive.getMinMaxQueries();

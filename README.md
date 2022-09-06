@@ -246,9 +246,9 @@ mobile: [1, 599] /* Actual phones */,
 
 tablet: [600, 799] /* tablets in portrait or below */,
 
-'odd-device': [800, 1024] /* small Laptops and Ipads in landscape */,
+'odd-device': [800, 1023] /* small Laptops and Ipads in landscape */,
 
-desktop: [1025, 1440] /* Most common resolutions below 1920 */,
+desktop: [1024, 1440] /* Most common resolutions below 1920 */,
 
 };
 

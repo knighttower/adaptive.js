@@ -475,7 +475,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     'odd-device': [800, 1023]
     /* small Laptops and Ipads in landscape */
     ,
-    desktop: [1024, 1440]
+    desktop: [1024, 1920]
     /* Most common resolutions below 1920 */
 
   };
@@ -487,7 +487,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
   var broadMediaQueries = {
     'non-desktop': [100, 1023],
     nondesktop: [100, 1023],
-    fullscreen: [1441, 6000]
+    fullscreen: [1920, 6000]
     /* Large monitos and fullscreen in 1920 res */
 
   };
@@ -602,49 +602,46 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
 
   $this["if"] = function (breakdownId) {
     var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-
-    if ($this.getAllQueries()[breakdownId]) {
-      var isFunction = callback && typeof callback === 'function';
-      var isArray = callback && Array.isArray(callback);
-      var observer = {};
-      observer[breakdownId] = {
-        breakdownId: breakdownId,
-        match: false,
-        isMatch: function isMatch() {
-          this.match = true;
-        },
-        unMatch: function unMatch() {
-          this.match = false;
-        },
-        "do": function _do() {
-          if (this.match) {
-            if (isFunction) {
-              callback();
-            }
-
-            if (isArray) {
-              callback[0][callback[1]] = true;
-            }
-
-            return true;
+    var isFunction = callback && typeof callback === 'function';
+    var isArray = callback && Array.isArray(callback);
+    var observer = {};
+    observer[breakdownId] = {
+      breakdownId: breakdownId,
+      match: false,
+      isMatch: function isMatch() {
+        this.match = true;
+      },
+      unMatch: function unMatch() {
+        this.match = false;
+      },
+      "do": function _do() {
+        if (this.match) {
+          if (isFunction) {
+            callback();
           }
 
           if (isArray) {
-            callback[0][callback[1]] = false;
+            callback[0][callback[1]] = true;
           }
 
-          return false;
+          return true;
         }
-      };
-      QueryHandler.add(observer, function (o) {
-        o.isMatch();
-        o["do"]();
-      }, function (o) {
-        o.unMatch();
-        o["do"]();
-      }, $this);
-      return observer[breakdownId];
-    }
+
+        if (isArray) {
+          callback[0][callback[1]] = false;
+        }
+
+        return false;
+      }
+    };
+    QueryHandler.add(observer, function (o) {
+      o.isMatch();
+      o["do"]();
+    }, function (o) {
+      o.unMatch();
+      o["do"]();
+    }, $this);
+    return observer[breakdownId];
   };
   /**
    * Full reset, handle with care

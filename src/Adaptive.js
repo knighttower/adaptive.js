@@ -121,7 +121,7 @@ export default (function(window) {
         mobile: [1, 599] /* Actual phones */,
         tablet: [600, 799] /* tablets in portrait or below */,
         'odd-device': [800, 1023] /* small Laptops and Ipads in landscape */,
-        desktop: [1024, 1440] /* Most common resolutions below 1920 */,
+        desktop: [1024, 1920] /* Most common resolutions below 1920 */,
     };
 
     /**
@@ -131,7 +131,7 @@ export default (function(window) {
     const broadMediaQueries = {
         'non-desktop': [100, 1023],
         nondesktop: [100, 1023],
-        fullscreen: [1441, 6000] /* Large monitos and fullscreen in 1920 res */,
+        fullscreen: [1920, 6000] /* Large monitos and fullscreen in 1920 res */,
     };
 
     /**
@@ -243,54 +243,52 @@ export default (function(window) {
     };
 
     $this.if = function(breakdownId, callback = null) {
-        if ($this.getAllQueries()[breakdownId]) {
-            let isFunction = callback && typeof callback === 'function';
-            let isArray = callback && Array.isArray(callback);
-            let observer = {};
+        let isFunction = callback && typeof callback === 'function';
+        let isArray = callback && Array.isArray(callback);
+        let observer = {};
 
-            observer[breakdownId] = {
-                breakdownId: breakdownId,
-                match: false,
-                isMatch() {
-                    this.match = true;
-                },
-                unMatch() {
-                    this.match = false;
-                },
-                do() {
-                    if (this.match) {
-                        if (isFunction) {
-                            callback();
-                        }
-                        if (isArray) {
-                            callback[0][callback[1]] = true;
-                        }
-
-                        return true;
+        observer[breakdownId] = {
+            breakdownId: breakdownId,
+            match: false,
+            isMatch() {
+                this.match = true;
+            },
+            unMatch() {
+                this.match = false;
+            },
+            do() {
+                if (this.match) {
+                    if (isFunction) {
+                        callback();
                     }
-
                     if (isArray) {
-                        callback[0][callback[1]] = false;
+                        callback[0][callback[1]] = true;
                     }
-                    return false;
-                },
-            };
 
-            QueryHandler.add(
-                observer,
-                (o) => {
-                    o.isMatch();
-                    o.do();
-                },
-                (o) => {
-                    o.unMatch();
-                    o.do();
-                },
-                $this
-            );
+                    return true;
+                }
 
-            return observer[breakdownId];
-        }
+                if (isArray) {
+                    callback[0][callback[1]] = false;
+                }
+                return false;
+            },
+        };
+
+        QueryHandler.add(
+            observer,
+            (o) => {
+                o.isMatch();
+                o.do();
+            },
+            (o) => {
+                o.unMatch();
+                o.do();
+            },
+            $this
+        );
+
+        return observer[breakdownId];
     };
 
     /**

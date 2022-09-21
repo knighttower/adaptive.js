@@ -35,6 +35,7 @@ import AdaptiveElement from './AdaptiveElement.js';
 import Teleport from './Teleport.js';
 import GetSettings from './GetSettings.js';
 import TeleportTo from './vue-components/teleport.vue';
+import ProxyHelper from './ProxyHelper.js';
 
 // =========================================
 // --> ADAPTIVE JS
@@ -57,25 +58,13 @@ export default (function(window) {
      * @return {Object}
      */
     const $this = {};
-    const Adaptive = new Proxy($this, {
-        get(target, prop, receiver) {
-            if (prop in target) {
-                return target[prop];
-            }
-        },
-    });
+    const Adaptive = ProxyHelper($this);
 
     /**
      * All the elements that will be part of the grid
      * @private
      */
     const domElements = {};
-
-    /**
-     * Holds memory of registered domobserver callbacks
-     * @private
-     */
-    const domObserver = [];
 
     /**
      * Flag for isMounted
@@ -242,19 +231,27 @@ export default (function(window) {
         }
     };
 
+    /**
+     * Register A custom Query Expression
+     * @param {String} breakdownId Identifier like "tablet" or "mobile", etc
+     * @param {Fucntion|Array} callback Function/Method or Array with object and property to set
+     * @example Adaptive.if('mobile', [object, propertyId]) || Adaptive.if('mobile', () => {})
+     * @return {Object} Proxy
+     */
     $this.if = function(breakdownId, callback = null) {
         let isFunction = callback && typeof callback === 'function';
         let isArray = callback && Array.isArray(callback);
         let observer = {};
 
         observer[breakdownId] = {
+            _private: ['breakdownId', 'match', 'ifElse', 'do'],
             breakdownId: breakdownId,
             match: false,
-            isMatch() {
-                this.match = true;
-            },
-            unMatch() {
-                this.match = false;
+            ifElse: null,
+            else(ifElse) {
+                if (ifElse && typeof ifElse === 'function') {
+                    this.ifElse = ifElse;
+                }
             },
             do() {
                 if (this.match) {
@@ -271,6 +268,11 @@ export default (function(window) {
                 if (isArray) {
                     callback[0][callback[1]] = false;
                 }
+
+                if (this.ifElse) {
+                    this.ifElse();
+                }
+
                 return false;
             },
         };
@@ -278,17 +280,17 @@ export default (function(window) {
         QueryHandler.add(
             observer,
             (o) => {
-                o.isMatch();
+                o.match = true;
                 o.do();
             },
             (o) => {
-                o.unMatch();
+                o.match = false;
                 o.do();
             },
             $this
         );
 
-        return observer[breakdownId];
+        return ProxyHelper(observer[breakdownId]);
     };
 
     /**

@@ -8,21 +8,21 @@
 	"author": {
 		"name": "knighttower",
 		"url": "https://github.com/knighttower"
-	  },
+	},
 	"keywords": [
-	"media query",
-	"media queries",
-	"matchMedia",
-	"adaptive",
-	"responsive",
-	"teleport",
-	"DOM observer",
-	"DOM selector",
-	"Utility"
+		"media query",
+		"media queries",
+		"matchMedia",
+		"adaptive",
+		"responsive",
+		"teleport",
+		"DOM observer",
+		"DOM selector",
+		"Utility"
 	],
 	"repository": {
-	"type": "git",
-	"url": "git://github.com/knighttower/adaptive.js.git"
+		"type": "git",
+		"url": "git://github.com/knighttower/adaptive.js.git"
 	},
 	"scripts": {
 		"dev": "npm run development",
@@ -36,7 +36,7 @@
 		"prettier-check": "prettier --config .prettierrc.json --check ./src",
 		"precommit": "lint-staged",
 		"eslint": "eslint -c ./eslintrc.json --fix ./src",
-		"size": "cross-env NODE_OPTIONS=--max-old-space-size=4096"
+		"size": "cross-env NODE_OPTIONS=--max-old-space-size=12000"
 	},
 	"devDependencies": {
 		"cross-env": "7.0.3",
@@ -54,6 +54,7 @@
 		"install": "^0.12.2",
 		"jshint": "^2.13.4",
 		"lint-staged": "11.1.2",
+		"lodash": "^4.17.21",
 		"npm": "^6.14.0"
 	},
 	"lint-staged": {

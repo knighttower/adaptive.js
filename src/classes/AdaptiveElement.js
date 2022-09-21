@@ -23,9 +23,9 @@
     SOFTWARE.
 */
 
-import Teleport from './Teleport.js';
+import Teleport from '../Teleport.js';
 // when it imports, it also registers itself as global
-import QueryHandler from './QueryHandler.js';
+import QueryHandler from '../QueryHandler.js';
 
 /**
  * @class Adds some extra functionality to interact with a DOM element

@@ -1,7 +1,7 @@
 {
   "name": "@knighttower/adaptive",
-  "version": "1.2.1",
-  "main": "./src",
+  "version": "1.2.2",
+  "main": "index.js",
   "license": "MIT",
   "description": "Stand-alone or with Vue Hybrid mode Js helper library to help with adaptive layouts",
   "homepage": "https://github.com/knighttower/adaptive.js",
@@ -38,7 +38,7 @@
     "prettier-check": "prettier --config .prettierrc.json --check ./src",
     "precommit": "lint-staged",
     "eslint": "eslint -c ./eslintrc.json --fix ./src",
-    "size": "cross-env NODE_OPTIONS=--max-old-space-size=12000"
+    "size": "cross-env NODE_OPTIONS=--max-old-space-size=6000"
   },
   "devDependencies": {
     "cross-env": "7.0.3",

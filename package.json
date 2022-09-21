@@ -1,68 +1,75 @@
 {
-	"name": "adaptive.js",
-	"version": "1.0.0",
-	"main": "./src",
-	"license": "MIT",
-	"description": "Stand-alone or with Vue Hybrid mode Js helper library to help with adaptive layouts",
-	"homepage": "https://github.com/knighttower/adaptive.js",
-	"author": {
-		"name": "knighttower",
-		"url": "https://github.com/knighttower"
-	},
-	"keywords": [
-		"media query",
-		"media queries",
-		"matchMedia",
-		"adaptive",
-		"responsive",
-		"teleport",
-		"DOM observer",
-		"DOM selector",
-		"Utility"
-	],
-	"repository": {
-		"type": "git",
-		"url": "git://github.com/knighttower/adaptive.js.git"
-	},
-	"scripts": {
-		"dev": "npm run development",
-		"development": "npm run size && mix",
-		"watch": "npm run size && mix watch",
-		"watch-poll": "mix watch -- --watch-options-poll=1000",
-		"hot": "mix watch --hot",
-		"prod": "npm run production",
-		"production": "npm run size && mix --production",
-		"prettier": "prettier --config .prettierrc.json --write ./src",
-		"prettier-check": "prettier --config .prettierrc.json --check ./src",
-		"precommit": "lint-staged",
-		"eslint": "eslint -c ./eslintrc.json --fix ./src",
-		"size": "cross-env NODE_OPTIONS=--max-old-space-size=12000"
-	},
-	"devDependencies": {
-		"cross-env": "7.0.3",
-		"enquire.js": "^2.1.6",
-		"eslint": "^6.8.0",
-		"eslint-plugin-vue": "^6.1.2",
-		"laravel-mix": "^6.0.43",
-		"prettier": "1.19.1",
-		"pretty-quick": "^1.11.1",
-		"vue": "3.2.37",
-		"vue-loader": "17.0.0",
-		"vue-template-compiler": "2.6.14"
-	},
-	"dependencies": {
-		"install": "^0.12.2",
-		"jshint": "^2.13.4",
-		"lint-staged": "11.1.2",
-		"lodash": "^4.17.21",
-		"npm": "^6.14.0"
-	},
-	"lint-staged": {
-		"*.js": [
-			"prettier --config .prettierrc.json --write"
-		],
-		"*.vue": [
-			"prettier --config .prettierrc.json --write"
-		]
-	}
+  "name": "@knighttower/adaptive",
+  "version": "1.2.1",
+  "main": "./src",
+  "license": "MIT",
+  "description": "Stand-alone or with Vue Hybrid mode Js helper library to help with adaptive layouts",
+  "homepage": "https://github.com/knighttower/adaptive.js",
+  "author": "knighttower (https://github.com/knighttower)",
+  "keywords": [
+    "media query",
+    "media queries",
+    "matchMedia",
+    "adaptive",
+    "responsive",
+    "teleport",
+    "DOM observer",
+    "DOM selector",
+    "Utility",
+    "Element Helper",
+    "Get Settings",
+    "Vue",
+    "library",
+    "plugin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/knighttower/adaptive.js.git"
+  },
+  "scripts": {
+    "dev": "npm run development",
+    "development": "npm run size && mix",
+    "watch": "npm run size && mix watch",
+    "watch-poll": "mix watch -- --watch-options-poll=1000",
+    "hot": "mix watch --hot",
+    "prod": "npm run production",
+    "production": "npm run size && mix --production",
+    "prettier": "prettier --config .prettierrc.json --write ./src",
+    "prettier-check": "prettier --config .prettierrc.json --check ./src",
+    "precommit": "lint-staged",
+    "eslint": "eslint -c ./eslintrc.json --fix ./src",
+    "size": "cross-env NODE_OPTIONS=--max-old-space-size=12000"
+  },
+  "devDependencies": {
+    "cross-env": "7.0.3",
+    "enquire.js": "^2.1.6",
+    "eslint": "^6.8.0",
+    "eslint-plugin-vue": "^6.1.2",
+    "laravel-mix": "^6.0.43",
+    "prettier": "1.19.1",
+    "pretty-quick": "^1.11.1",
+    "vue": "3.2.37",
+    "vue-loader": "17.0.0",
+    "vue-template-compiler": "2.6.14"
+  },
+  "dependencies": {
+    "install": "^0.12.2",
+    "jshint": "^2.13.4",
+    "lint-staged": "11.1.2",
+    "npm": "^6.14.0"
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --config .prettierrc.json --write"
+    ],
+    "*.vue": [
+      "prettier --config .prettierrc.json --write"
+    ]
+  },
+  "bugs": {
+    "url": "https://github.com/knighttower/adaptive.js/issues"
+  },
+  "directories": {
+    "example": "example"
+  }
 }

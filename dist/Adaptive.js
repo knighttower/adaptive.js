@@ -90,10 +90,10 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
 /**
-* @author Antuan Suarez
+* @author Antuan
     MIT License
 
-    Copyright (c) [2022] [Antuan Suarez] https://github.com/knighttower
+    Copyright (c) [2022] [Antuan] https://github.com/knighttower
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -249,10 +249,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 /**
-* @author Antuan Suarez
+* @author Antuan
     MIT License
 
-    Copyright (c) [2022] [Antuan Suarez] https://github.com/knighttower
+    Copyright (c) [2022] [Antuan] https://github.com/knighttower
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -408,10 +408,10 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
 /**
-* @author Antuan Suarez
+* @author Antuan
     MIT License
 
-    Copyright (c) [2022] [Antuan Suarez] https://github.com/knighttower
+    Copyright (c) [2022] [Antuan] https://github.com/knighttower
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -614,10 +614,10 @@ __webpack_require__.r(__webpack_exports__);
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 /**
-* @author Antuan Suarez
+* @author Antuan
     MIT License
 
-    Copyright (c) [2022] [Antuan Suarez] https://github.com/knighttower
+    Copyright (c) [2022] [Antuan] https://github.com/knighttower
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -976,10 +976,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
 /**
-* @author Antuan Suarez
+* @author Antuan
     MIT License
 
-    Copyright (c) [2022] [Antuan Suarez] https://github.com/knighttower
+    Copyright (c) [2022] [Antuan] https://github.com/knighttower
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -1037,10 +1037,10 @@ __webpack_require__.r(__webpack_exports__);
 var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_RESULT__;function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 /**
-* @author Antuan Suarez
+* @author Antuan
     MIT License
 
-    Copyright (c) [2022] [Antuan Suarez] https://github.com/knighttower
+    Copyright (c) [2022] [Antuan] https://github.com/knighttower
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -1335,10 +1335,10 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
 /**
-* @author Antuan Suarez
+* @author Antuan
     MIT License
 
-    Copyright (c) [2022] [Antuan Suarez] https://github.com/knighttower
+    Copyright (c) [2022] [Antuan] https://github.com/knighttower
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -18922,10 +18922,10 @@ __webpack_require__.r(__webpack_exports__);
 function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
 /**
-* //@author Antuan Suarez
+* //@author Antuan
     MIT License
 
-    Copyright (c) [2022] [Antuan Suarez] https://github.com/knighttower
+    Copyright (c) [2022] [Antuan] https://github.com/knighttower
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal

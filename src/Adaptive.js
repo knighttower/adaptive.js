@@ -31,7 +31,7 @@
 // -----------------------------------------
 
 import ElementHelper from './ElementHelper.js';
-import AdaptiveElement from './AdaptiveElement.js';
+import AdaptiveElement from './classes/AdaptiveElement.js';
 import Teleport from './Teleport.js';
 import GetSettings from './GetSettings.js';
 import TeleportTo from './vue-components/teleport.vue';
@@ -47,7 +47,7 @@ import ProxyHelper from './ProxyHelper.js';
  * @param {Object} root Window or parent object
  * @param {Object} factory The Class
  * @return {Object}
- * @example See example > app.js, example > hello.vue, test > index.html
+ * @example See example > app.js, example > hello.vue, example > index.html
  */
 export default (function(window) {
     'use strict';

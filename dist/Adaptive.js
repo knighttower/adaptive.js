@@ -69,170 +69,6 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
 
 /***/ }),
 
-/***/ "./src/AdaptiveElement.js":
-/*!********************************!*\
-  !*** ./src/AdaptiveElement.js ***!
-  \********************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (/* binding */ AdaptiveElement)
-/* harmony export */ });
-/* harmony import */ var _Teleport_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Teleport.js */ "./src/Teleport.js");
-/* harmony import */ var _QueryHandler_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./QueryHandler.js */ "./src/QueryHandler.js");
-/* harmony import */ var _QueryHandler_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_QueryHandler_js__WEBPACK_IMPORTED_MODULE_1__);
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
-
-/**
-* @author Antuan
-    MIT License
-
-    Copyright (c) [2022] [Antuan] https://github.com/knighttower
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
-*/
- // when it imports, it also registers itself as global
-
-
-/**
- * @class Adds some extra functionality to interact with a DOM element
- * @param {Object} props
- * @param {Object} Adaptive Instance of
- * @return {Object}
- */
-
-var AdaptiveElement = /*#__PURE__*/function () {
-  /**
-   * Constructor
-   * @param {String|Object} selector
-   * @return {Object}
-   */
-  function AdaptiveElement(props, Adaptive) {
-    _classCallCheck(this, AdaptiveElement);
-
-    this.props = props;
-    this.Adaptive = Adaptive;
-
-    for (var directive in props.settings) {
-      // Matches the method name and passes the directives
-      // Ex: this[addClass]({...})
-      this[directive](props.settings[directive]);
-    }
-  }
-
-  _createClass(AdaptiveElement, [{
-    key: "addClass",
-    value: function addClass(queries) {
-      var _this = this;
-
-      return _QueryHandler_js__WEBPACK_IMPORTED_MODULE_1___default().add(queries, function ($classes) {
-        $classes = $classes.split(' ');
-        $classes.forEach(function ($class) {
-          _this.props.domElement.classList.add($class);
-        });
-        return;
-      }, function ($classes) {
-        $classes = $classes.split(' ');
-        $classes.forEach(function ($class) {
-          _this.props.domElement.classList.remove($class);
-        });
-        return;
-      }, this.Adaptive);
-    }
-  }, {
-    key: "removeClass",
-    value: function removeClass(queries) {
-      var _this2 = this;
-
-      return _QueryHandler_js__WEBPACK_IMPORTED_MODULE_1___default().add(queries, function ($classes) {
-        $classes = $classes.split(' ');
-        $classes.forEach(function ($class) {
-          _this2.props.domElement.classList.remove($class);
-        });
-        return;
-      }, function ($classes) {
-        $classes = $classes.split(' ');
-        $classes.forEach(function ($class) {
-          _this2.props.domElement.classList.add($class);
-        });
-        return;
-      }, this.Adaptive);
-    }
-  }, {
-    key: "addStyle",
-    value: function addStyle(queries) {
-      var _this3 = this;
-
-      // Save the original style in memory to not discard them
-      this.props.originalStyle = this.props.domElement.getAttribute('style');
-      return _QueryHandler_js__WEBPACK_IMPORTED_MODULE_1___default().add(queries, function ($styles) {
-        return _this3.props.domElement.style.cssText += $styles;
-      }, function () {
-        return _this3.props.domElement.style.cssText = _this3.props.originalStyle;
-      }, this.Adaptive);
-    }
-  }, {
-    key: "teleport",
-    value: function teleport(queries) {
-      var $element = new _Teleport_js__WEBPACK_IMPORTED_MODULE_0__["default"](this.props);
-      return _QueryHandler_js__WEBPACK_IMPORTED_MODULE_1___default().add(queries, function ($directive) {
-        return $element.beam($directive);
-      }, function () {
-        $element.back();
-        return $element.cancel();
-      }, this.Adaptive);
-    }
-  }, {
-    key: "execute",
-    value: function execute(queries) {
-      var $element = this;
-      var attrs = {
-        adaptiveId: $element.props.uniqueId,
-        helper: $element.props.helper,
-        domElement: $element.props.domElement,
-        xpath: $element.props.xpath
-      };
-      return _QueryHandler_js__WEBPACK_IMPORTED_MODULE_1___default().add(queries, function ($callback) {
-        if ($callback && typeof $callback === 'function') {
-          return $callback(attrs);
-        }
-      }, function ($callback) {
-        if ($callback && typeof $callback === 'function') {
-          return $callback(attrs);
-        }
-      }, this.Adaptive);
-    }
-  }]);
-
-  return AdaptiveElement;
-}();
-
-
-
-/***/ }),
-
 /***/ "./src/DomObserver.js":
 /*!****************************!*\
   !*** ./src/DomObserver.js ***!
@@ -1499,6 +1335,170 @@ var Teleport = /*#__PURE__*/function () {
   }]);
 
   return Teleport;
+}();
+
+
+
+/***/ }),
+
+/***/ "./src/classes/AdaptiveElement.js":
+/*!****************************************!*\
+  !*** ./src/classes/AdaptiveElement.js ***!
+  \****************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ AdaptiveElement)
+/* harmony export */ });
+/* harmony import */ var _Teleport_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Teleport.js */ "./src/Teleport.js");
+/* harmony import */ var _QueryHandler_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../QueryHandler.js */ "./src/QueryHandler.js");
+/* harmony import */ var _QueryHandler_js__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(_QueryHandler_js__WEBPACK_IMPORTED_MODULE_1__);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
+
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
+
+/**
+* @author Antuan
+    MIT License
+
+    Copyright (c) [2022] [Antuan] https://github.com/knighttower
+
+    Permission is hereby granted, free of charge, to any person obtaining a copy
+    of this software and associated documentation files (the "Software"), to deal
+    in the Software without restriction, including without limitation the rights
+    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+    copies of the Software, and to permit persons to whom the Software is
+    furnished to do so, subject to the following conditions:
+
+    The above copyright notice and this permission notice shall be included in all
+    copies or substantial portions of the Software.
+
+    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+    SOFTWARE.
+*/
+ // when it imports, it also registers itself as global
+
+
+/**
+ * @class Adds some extra functionality to interact with a DOM element
+ * @param {Object} props
+ * @param {Object} Adaptive Instance of
+ * @return {Object}
+ */
+
+var AdaptiveElement = /*#__PURE__*/function () {
+  /**
+   * Constructor
+   * @param {String|Object} selector
+   * @return {Object}
+   */
+  function AdaptiveElement(props, Adaptive) {
+    _classCallCheck(this, AdaptiveElement);
+
+    this.props = props;
+    this.Adaptive = Adaptive;
+
+    for (var directive in props.settings) {
+      // Matches the method name and passes the directives
+      // Ex: this[addClass]({...})
+      this[directive](props.settings[directive]);
+    }
+  }
+
+  _createClass(AdaptiveElement, [{
+    key: "addClass",
+    value: function addClass(queries) {
+      var _this = this;
+
+      return _QueryHandler_js__WEBPACK_IMPORTED_MODULE_1___default().add(queries, function ($classes) {
+        $classes = $classes.split(' ');
+        $classes.forEach(function ($class) {
+          _this.props.domElement.classList.add($class);
+        });
+        return;
+      }, function ($classes) {
+        $classes = $classes.split(' ');
+        $classes.forEach(function ($class) {
+          _this.props.domElement.classList.remove($class);
+        });
+        return;
+      }, this.Adaptive);
+    }
+  }, {
+    key: "removeClass",
+    value: function removeClass(queries) {
+      var _this2 = this;
+
+      return _QueryHandler_js__WEBPACK_IMPORTED_MODULE_1___default().add(queries, function ($classes) {
+        $classes = $classes.split(' ');
+        $classes.forEach(function ($class) {
+          _this2.props.domElement.classList.remove($class);
+        });
+        return;
+      }, function ($classes) {
+        $classes = $classes.split(' ');
+        $classes.forEach(function ($class) {
+          _this2.props.domElement.classList.add($class);
+        });
+        return;
+      }, this.Adaptive);
+    }
+  }, {
+    key: "addStyle",
+    value: function addStyle(queries) {
+      var _this3 = this;
+
+      // Save the original style in memory to not discard them
+      this.props.originalStyle = this.props.domElement.getAttribute('style');
+      return _QueryHandler_js__WEBPACK_IMPORTED_MODULE_1___default().add(queries, function ($styles) {
+        return _this3.props.domElement.style.cssText += $styles;
+      }, function () {
+        return _this3.props.domElement.style.cssText = _this3.props.originalStyle;
+      }, this.Adaptive);
+    }
+  }, {
+    key: "teleport",
+    value: function teleport(queries) {
+      var $element = new _Teleport_js__WEBPACK_IMPORTED_MODULE_0__["default"](this.props);
+      return _QueryHandler_js__WEBPACK_IMPORTED_MODULE_1___default().add(queries, function ($directive) {
+        return $element.beam($directive);
+      }, function () {
+        $element.back();
+        return $element.cancel();
+      }, this.Adaptive);
+    }
+  }, {
+    key: "execute",
+    value: function execute(queries) {
+      var $element = this;
+      var attrs = {
+        adaptiveId: $element.props.uniqueId,
+        helper: $element.props.helper,
+        domElement: $element.props.domElement,
+        xpath: $element.props.xpath
+      };
+      return _QueryHandler_js__WEBPACK_IMPORTED_MODULE_1___default().add(queries, function ($callback) {
+        if ($callback && typeof $callback === 'function') {
+          return $callback(attrs);
+        }
+      }, function ($callback) {
+        if ($callback && typeof $callback === 'function') {
+          return $callback(attrs);
+        }
+      }, this.Adaptive);
+    }
+  }]);
+
+  return AdaptiveElement;
 }();
 
 
@@ -18914,7 +18914,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
 /* harmony import */ var _ElementHelper_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./ElementHelper.js */ "./src/ElementHelper.js");
-/* harmony import */ var _AdaptiveElement_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AdaptiveElement.js */ "./src/AdaptiveElement.js");
+/* harmony import */ var _classes_AdaptiveElement_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./classes/AdaptiveElement.js */ "./src/classes/AdaptiveElement.js");
 /* harmony import */ var _Teleport_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Teleport.js */ "./src/Teleport.js");
 /* harmony import */ var _GetSettings_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./GetSettings.js */ "./src/GetSettings.js");
 /* harmony import */ var _vue_components_teleport_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./vue-components/teleport.vue */ "./src/vue-components/teleport.vue");
@@ -19130,7 +19130,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     if (!element.getAttribute('data-adaptive-id')) {
       var uniqueId = element.getHash();
       element.domElement.setAttribute('data-adaptive-id', uniqueId);
-      domElements[uniqueId] = new _AdaptiveElement_js__WEBPACK_IMPORTED_MODULE_1__["default"]({
+      domElements[uniqueId] = new _classes_AdaptiveElement_js__WEBPACK_IMPORTED_MODULE_1__["default"]({
         adaptiveId: uniqueId,
         helper: element,
         domElement: element.domElement,

@@ -42,10 +42,10 @@ export default {
     },
     mounted: function() {
         // Example using the ref and custom registered media query (see the app.js)
-        this.$Adaptive.registerElement(this.$refs.six, { addClass: { doggy: 'seven' } });
+        this.Adaptive.registerElement(this.$refs.six, { addClass: { doggy: 'seven' } });
 
         // can use this...
-        this.$Adaptive.registerElement(this.$refs.callmeback, {
+        this.Adaptive.registerElement(this.$refs.callmeback, {
             execute: {
                 mobile: function(element) {
                     console.log('This is a callback at mobile breakdown');
@@ -54,13 +54,13 @@ export default {
             },
         });
         // or
-        this.$Adaptive.if('tablet', [this, 'tablet']);
+        this.Adaptive.if('tablet', [this, 'tablet']);
         // or
-        this.$Adaptive.if('tablet', function() {
+        this.Adaptive.if('tablet', function() {
             // code
         });
         // or
-        this.$Adaptive.if('tablet', this.changeText);
+        this.Adaptive.if('tablet', this.changeText);
     },
     methods: {
         changeText() {

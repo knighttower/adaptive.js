@@ -1,1 +1,2 @@
-export { Adaptive as default } from './src/Adaptive.js';
+import Adaptive from './src/Adaptive.js';
+export default Adaptive;

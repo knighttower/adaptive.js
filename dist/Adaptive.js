@@ -811,6 +811,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! lodash */ "./node_modules/lodash/lodash.js");
 /* harmony import */ var lodash__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(lodash__WEBPACK_IMPORTED_MODULE_0__);
+function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
+
 /**
 * @author Antuan
     MIT License
@@ -837,8 +839,9 @@ __webpack_require__.r(__webpack_exports__);
 */
 
 /**
- * Convert to proxy
- * @private
+ * Convert to proxy to protect objects
+ * Allows to declare _private, _protected and _mutable all arrays with prop names
+ * @example ProxyHelper({objectProps..., _protected: array(...)})
  * @param {Object} object
  * @return {Proxy}
  */
@@ -852,11 +855,45 @@ __webpack_require__.r(__webpack_exports__);
     _private = _.concat(_private, object._private);
   }
 
+  var _protected = _.concat(['_protected'], _private);
+
+  if (object._protected) {
+    _protected = _.concat(_protected, object._protected);
+  }
+
+  var _mutable = [];
+
+  if (object._mutable) {
+    _mutable = _.concat(_mutable, object._mutable);
+  }
+
   return new Proxy(object, {
-    get: function get(target, prop, receiver) {
+    get: function get(target, prop) {
       if (prop in target && !_.includes(_private, prop)) {
         return target[prop];
+      } else {
+        console.error('Prop is not private, not set or object is protected', prop);
       }
+    },
+    set: function set(target, prop, value) {
+      if (prop in target) {
+        if (_.includes(_mutable, prop)) {
+          return target[prop] = value;
+        } // Functions by default are protected
+
+
+        var type = _typeof(target[prop]);
+
+        if (type !== 'function' || !_.includes(_protected, prop)) {
+          target[prop] = value;
+        } else {
+          console.error('The prop is a function and cannot be modified', prop, value);
+        }
+      } else {
+        console.error('Protected Object, cannot set props', prop, value);
+      }
+
+      return true;
     }
   });
 }
@@ -18969,7 +19006,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
  * @param {Object} root Window or parent object
  * @param {Object} factory The Class
  * @return {Object}
- * @example See example > app.js, example > hello.vue, test > index.html
+ * @example See example > app.js, example > hello.vue, example > index.html
  */
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ((function (window) {
@@ -19189,6 +19226,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     var observer = {};
     observer[breakdownId] = {
       _private: ['breakdownId', 'match', 'ifElse', 'do'],
+      _mutable: ['ifElse'],
       breakdownId: breakdownId,
       match: false,
       ifElse: null,
@@ -19314,7 +19352,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
       var installer = {
         install: function install(app, options) {
           // For Options API
-          app.config.globalProperties.$Adaptive = Adaptive; // For composition API
+          app.config.globalProperties.Adaptive = Adaptive; // For composition API
 
           app.provide('Adaptive', Adaptive);
         }
@@ -19362,7 +19400,7 @@ function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" =
     return Vue;
   };
 
-  return window.Adaptive = Adaptive;
+  return window.$adaptive = Adaptive;
 })(typeof window !== 'undefined' ? window : undefined));
 })();
 

@@ -25,8 +25,9 @@
 import { concat } from 'lodash';
 
 /**
- * Convert to proxy
- * @private
+ * Convert to proxy to protect objects
+ * Allows to declare _private, _protected and _mutable all arrays with prop names
+ * @example ProxyHelper({objectProps..., _protected: array(...)})
  * @param {Object} object
  * @return {Proxy}
  */
@@ -37,11 +38,41 @@ export default function(object) {
     if (object._private) {
         _private = _.concat(_private, object._private);
     }
+
+    let _protected = _.concat(['_protected'], _private);
+    if (object._protected) {
+        _protected = _.concat(_protected, object._protected);
+    }
+
+    let _mutable = [];
+    if (object._mutable) {
+        _mutable = _.concat(_mutable, object._mutable);
+    }
+
     return new Proxy(object, {
-        get(target, prop, receiver) {
+        get(target, prop) {
             if (prop in target && !_.includes(_private, prop)) {
                 return target[prop];
+            } else {
+                console.error('Prop is not private, not set or object is protected', prop);
             }
+        },
+        set(target, prop, value) {
+            if (prop in target) {
+                if (_.includes(_mutable, prop)) {
+                    return (target[prop] = value);
+                }
+                // Functions by default are protected
+                let type = typeof target[prop];
+                if (type !== 'function' || !_.includes(_protected, prop)) {
+                    target[prop] = value;
+                } else {
+                    console.error('The prop is a function and cannot be modified', prop, value);
+                }
+            } else {
+                console.error('Protected Object, cannot set props', prop, value);
+            }
+            return true;
         },
     });
 }

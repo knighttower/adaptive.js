@@ -1,6 +1,6 @@
 {
   "name": "@knighttower/adaptive",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "main": "index.js",
   "license": "MIT",
   "description": "Stand-alone or with Vue Hybrid mode Js helper library to help with adaptive layouts",
@@ -20,7 +20,9 @@
     "Get Settings",
     "Vue",
     "library",
-    "plugin"
+    "plugin",
+    "adapt",
+    "adaptive.js"
   ],
   "repository": {
     "type": "git",

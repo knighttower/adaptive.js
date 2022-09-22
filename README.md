@@ -1,11 +1,18 @@
 
   
-
 (This docs still under construction, see "example" and "test" folders for extensive examples of usage)
 
 # Adaptive.js
 
-Adaptive.js is not a CSS media query replacement nor should be the primary handler of responsive or adaptive applications (CSS should do most of it). On the contrary, it aims to enhance the ability to make layouts "adapt" better to different devices depending on preset or custom media queries via plain JavaScript or integrating with any of the cool frameworks out there (Vue, React, etc) and thus overcomimg the limitations of pure CSS or targeting complex bahaviors.
+So what's the story or why even today? In many projects I have worked on, even thought I try to stick to the philosophy of using mostly CSS utility classes and media queries to create responsive and adaptive layouts, CSS sometime falls short in some areas, and that's why some JS is needed to help in those bumps. For instance, moving elements from one location to another is not possible with CSS (only if the element belongs directly to the same parent and is a flex (flex order)). In cases like that, where an element has to move that far, Adaptive.js has a "teleport" feature that will move any element to specific targets at the specified Media query breakdown. Thus helping the layout not just being responsive but also adapting to the desired necessities.
+
+Furthermore, Adaptive.js helps with adding (or removing) already existing classes, teleporting and even adding specific JS functions that will execute at a very specific screen size or media query.
+
+But wait! what are those limitations you speak of! kind sir...
+
+The short version.. is edge cases, class management and hierarchy, operations that are not currently part of CSS (teleporting, adding inline style on the fly, adding/removing classes, execute JS code at specific breakpoinst, etc)
+
+Adaptive.js is not a CSS media query replacement nor should be the primary handler of responsive or adaptive applications (CSS should do most of it). On the contrary, it aims to enhance the ability to make layouts "adapt" better to different devices depending on preset or custom media queries via plain JavaScript or integrating with any of the cool frameworks out there (Vue, React, etc) and thus overcomimg the limitations of pure CSS or targeting complex bahaviors and furthermore avoids WET and bloted code so that no JavaScript hacks or media functions need to be written all over, just using Adaptive will do all the magic.
 
 (If you need some reference to understand responsive and adaptive head over here: https://www.geeksforgeeks.org/difference-between-responsive-design-and-adaptive-design/)
 
@@ -29,6 +36,7 @@ Example as Stand Alone:
 <script src="Adaptive.js"></script>
 
 <!-- body -->
+<!-- Applied directly to elements -->
 <div id="IllBeTeleportedToAnotherElement" data-adaptive="teleport.desktop|mobile.before(#hello)">
 	<span>Element that will teleport at "desktop or mobile" right above an element with Id "hello" but put back in place autmatically in tablet breakdowns</span>
 </div>
@@ -36,7 +44,7 @@ Example as Stand Alone:
 <!-- OR in Js -->
 <script>
 	// Target specific elements
-	Adaptive.registerElement('#hello', {
+	$adaptive.registerElement('#hello', {
 		addClass: {
 			mobile: 'a-class-added-only-for-mobiles',
 		},
@@ -44,11 +52,12 @@ Example as Stand Alone:
 
 	// OR
 	// Run functions at specific layouts or special js needs
-	Adaptive.if('tablet', function() {
+	$adaptive.if('tablet', function() {
 		// code to execute here
 	});
 
-// ...See more use cases in the example and test files
+// ...See more use cases in the example files!
+
 </script>
 ```
 
@@ -74,20 +83,21 @@ App.mount('#app');
 
 // -----------------------------------
 // In Component XX
-// <!-- Example of directive binding with Adaptive  -->
+// <!-- Example of directive binding with Adaptive directly in the element  -->
         <div v-adaptive="{ addClass: { desktop: 'adds-this-class-xxxx' } }">
 			Using Directive inside Vue component
 		</div>
 		<div v-teleport-to="'#hello'">Getting teleported (teleport) from the component to "static Hello"</div>
+
 // Or in code
 <script>
 .... mounted() {
-	this.$Adaptive.if('tablet', function() {
+	this.Adaptive.if('tablet', function() {
             // code
 	});
 	// or
-	this.$Adaptive.if('tablet', this.nameOfMethod);
-	// ...See more use cases in the example and test files
+	this.Adaptive.if('tablet', this.nameOfMethod);
+	// ...See more use cases in the example files!
 }
 </script>
 ```
@@ -151,36 +161,36 @@ One off cases where it needs tweaks per breakdown. For instance:
 
 ```js
 
-Adaptive.registerElement(body, {
-	execute: {
-		mobile: function(element) {
-		axio.get(something only for mobiles)
-	},
-	tablets: function(element) {
-		axio.get(something only for tablets)
-	},
-}
 
-// or
+// Stand alone (no vue)
+$adaptive.if('tablet', function() {
+// code
+});
+
+// OR
 // For Vue
-this.$Adaptive.if('tablet', [this, 'ThisCustomMethod']);
+this.Adaptive.if('tablet', [this, 'ThisCustomMethod']);
 // It will call a method "ThisCustomMethod"
 data.tablet (reactive|function)
 
-// or
-Stand alone
-Adaptive.if('tablet', function() {
-// code
-});
-//or
+
+//OR
 //Vue
-this.$Adaptive.if('tablet', function() {
-// code
+this.Adaptive.if('tablet', function() {
+	// code...
 });
 
-// or
+//OR
+//Vue
+this.Adaptive.if('mobile', function() {
+	// code..
+}).else(function(){
+	//code..
+});
+
+// OR
 //Vue callback
-this.$Adaptive.if('tablet', this.changeText);
+this.Adaptive.if('tablet', this.changeText);
 
 ```
 
@@ -294,24 +304,24 @@ addClass.desktop(uno, dos)">....</div>
 ## Description
 
 <br/>
-So what's the story or why even today? In many projects I have worked in, even thought I try to stick to the philosophy of using mostly CSS utility classes and media queries to create responsive and adaptive layouts, CSS sometime falls short in some areas, and that's why some JS is needed to help in those bumps. For instance, moving elements from one location to another is not possible with CSS (only if the element belongs directly to the same parent and is a flex (flex order)). In cases like that, where an element has to move that far, Adaptive.js has a "teleport" feature that will move any element to specific targets at the specified Media query breakdown. Thus helping the layout not just being responsive but also adapting to the desired necessities.
-
-Furthermore, Adaptive.js helps with adding (or removing) already existing classes, teleporting and even adding specific JS functions that will execute at a very specific screen size or media query.
-
-But wait! what are those limitations you speak of! kind sir...
-
-The short version.. is edge cases, class management and hierarchy, operations that are not currently part of CSS (teleporting, adding inline style on the fly, adding/removing classes, execute JS code at specific breakpoinst, etc) like:
+ like:
 
 
 - Too many specific classes for small tweaks and the issue with the "!important" - Now days is not uncommon that frameworks and vendors use their classes, but they all have to some how make their rules be the primary style on any element, and that's why many elements end up with a long list of rule sets with the "!important" keyword in order to override all or some of the computed styles and when the end user needs to add its own styles on top of the others sometimes the only way is to create long hierarchy rule sets like this: .grand-parent > .parent > .child > element.with-class.with-new-class {...!important}. This complexity increases when using media queries because they too need to override other base styles or even overlapping ones, and what about conflict..
 
 
 Inspiration I used to build this:
+<br/>
 https://wicky.nillia.ms/enquire.js/
+<br/>
 https://github.com/CyberAP/vue-component-media-queries
+<br/>
 https://developer.mozilla.org/en-US/docs/Web/API/Window/matchMedia
+<br/>
 https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver
+<br/>
 https://vuejs.org/guide/built-ins/teleport.html
+<br/>
 
 
 

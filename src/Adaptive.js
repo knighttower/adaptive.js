@@ -245,6 +245,7 @@ export default (function(window) {
 
         observer[breakdownId] = {
             _private: ['breakdownId', 'match', 'ifElse', 'do'],
+            _mutable: ['ifElse'],
             breakdownId: breakdownId,
             match: false,
             ifElse: null,
@@ -373,7 +374,7 @@ export default (function(window) {
             let installer = {
                 install: (app, options) => {
                     // For Options API
-                    app.config.globalProperties.$Adaptive = Adaptive;
+                    app.config.globalProperties.Adaptive = Adaptive;
                     // For composition API
                     app.provide('Adaptive', Adaptive);
                 },
@@ -421,5 +422,5 @@ export default (function(window) {
         return Vue;
     };
 
-    return (window.Adaptive = Adaptive);
+    return (window.$adaptive = Adaptive);
 })(typeof window !== 'undefined' ? window : this);

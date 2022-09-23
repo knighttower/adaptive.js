@@ -34,7 +34,6 @@ import ElementHelper from './ElementHelper.js';
 import AdaptiveElement from './classes/AdaptiveElement.js';
 import Teleport from './Teleport.js';
 import GetSettings from './GetSettings.js';
-import TeleportTo from './vue-components/teleport.vue';
 import ProxyHelper from './ProxyHelper.js';
 
 // =========================================
@@ -370,6 +369,7 @@ export default (function(window) {
             isHybrid = true;
         }
         if (typeof Vue === 'object' && typeof Vue.mixin === 'function') {
+            const TeleportTo = require('./vue-components/teleport.vue').deafult;
             useVue = true;
             let installer = {
                 install: (app, options) => {

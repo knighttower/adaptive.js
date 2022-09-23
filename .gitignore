@@ -1,10 +1,9 @@
 # Sensitive files
 .env
 env
-.db.cnf
 
 # Build artifacts
-/node_modules
+**/node_modules
 /vendor
 /npm-debug.log
 /logs

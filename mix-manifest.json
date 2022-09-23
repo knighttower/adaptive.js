@@ -1,5 +1,6 @@
 {
-    "/example/app.min.js": "/example/app.min.js",
+    "/examples/vue/app.min.js": "/examples/vue/app.min.js",
+    "/examples/react/app.min.js": "/examples/react/app.min.js",
     "/dist/Adaptive.js": "/dist/Adaptive.js",
     "/dist/Adaptive.min.js": "/dist/Adaptive.min.js"
 }

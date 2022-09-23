@@ -22,25 +22,23 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
+// const { useState } = React;
+// const { render } = ReactDOM;
+import Adaptive from 'Adaptive.js';
 
-const { createApp } = Vue;
-import Adaptive from '../src/Adaptive.js';
-import hello from './hello.vue';
-import compApiSample from './compApiSample.vue';
+// const app = createApp({});
+// //Optional | Add custom media query (min px, max px) settings (min max)
+// Adaptive.addQueryMinMax('kitty', 900, 1400);
+// // Optional | Add a custom media query expression (it accepts any valid media query)
+// Adaptive.addQueryExpression('doggy', '(min-width: 900px)');
+// // Needs to be instaciated right after the app and before the components
+// // The second parameter (optional, defaults to false) is to be in hybrid mode for Vue and Static JS(DOM),
+// Adaptive.useVue(app, true);
+// // Do components and other stuff right after
+// app.component('hello', hello);
+// app.component('comp-api-sample', compApiSample);
 
-const app = createApp({});
-//Optional | Add custom media query (min px, max px) settings (min max)
-Adaptive.addQueryMinMax('kitty', 900, 1400);
-// Optional | Add a custom media query expression (it accepts any valid media query)
-Adaptive.addQueryExpression('doggy', '(min-width: 900px)');
-// Needs to be instaciated right after the app and before the components
-// The second parameter (optional, defaults to false) is to be in hybrid mode for Vue and Static JS(DOM),
-Adaptive.useVue(app, true);
-// Do components and other stuff right after
-app.component('hello', hello);
-app.component('comp-api-sample', compApiSample);
-
-// Testing the code if there is a delay on load and how the Adaptive would react
-setTimeout(() => {
-    app.mount('#app');
-}, '1');
+// // Testing the code if there is a delay on load and how the Adaptive would react
+// setTimeout(() => {
+//     app.mount('#app');
+// }, '1');

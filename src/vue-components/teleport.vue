@@ -4,7 +4,6 @@
     </div>
 </template>
 <script>
-import { onMounted, inject } from 'vue';
 /**
  * Adaptive Teleport
  * @module

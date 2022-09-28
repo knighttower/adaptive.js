@@ -22,7 +22,9 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
-import { concat } from 'lodash';
+const _ = {
+    concat: require('lodash/concat'),
+};
 
 /**
  * Convert to proxy to protect objects
@@ -51,20 +53,20 @@ export default function(object) {
 
     return new Proxy(object, {
         get(target, prop) {
-            if (prop in target && !_.includes(_private, prop)) {
+            if (prop in target && !_private.includes(prop)) {
                 return target[prop];
             } else {
-                console.error('Prop is not private, not set or object is protected', prop);
+                console.error('Prop is private, not set or object is protected', prop);
             }
         },
         set(target, prop, value) {
             if (prop in target) {
-                if (_.includes(_mutable, prop)) {
+                if (_mutable.includes(prop)) {
                     return (target[prop] = value);
                 }
                 // Functions by default are protected
                 let type = typeof target[prop];
-                if (type !== 'function' || !_.includes(_protected, prop)) {
+                if (type !== 'function' || !_protected.includes(prop)) {
                     target[prop] = value;
                 } else {
                     console.error('The prop is a function and cannot be modified', prop, value);

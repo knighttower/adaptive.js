@@ -29,7 +29,9 @@
  * Import the Element DOM helper
  */
 // -----------------------------------------
-
+const _ = {
+    uId: require('lodash/uniqueId'),
+};
 import ElementHelper from './ElementHelper.js';
 import AdaptiveElement from './classes/AdaptiveElement.js';
 import Teleport from './Teleport.js';
@@ -50,6 +52,13 @@ import ProxyHelper from './ProxyHelper.js';
  */
 export default (function(window) {
     'use strict';
+
+    // -----------------------------------------
+    // This will make it reuse the same instance if already imported without overwrites
+    if (window.$adaptive) {
+        return window.$adaptive;
+    }
+    // -----------------------------------------
 
     /**
      * Register this library into the window
@@ -243,14 +252,23 @@ export default (function(window) {
         let observer = {};
 
         observer[breakdownId] = {
-            _private: ['breakdownId', 'match', 'ifElse', 'do'],
+            _private: ['breakdownId', 'match', 'ifElse', 'do', 'removeAfterExec'],
             _mutable: ['ifElse'],
+            uid: _.uId(),
             breakdownId: breakdownId,
             match: false,
+            executed: false,
+            removeAfterExec: false,
             ifElse: null,
             else(ifElse) {
                 if (ifElse && typeof ifElse === 'function') {
                     this.ifElse = ifElse;
+                }
+            },
+            onlyOnce() {
+                this.removeAfterExec = true;
+                if (this.executed) {
+                    QueryHandler.remove(this.uid, 'uid');
                 }
             },
             do() {
@@ -262,6 +280,10 @@ export default (function(window) {
                         callback[0][callback[1]] = true;
                     }
 
+                    if (this.removeAfterExec) {
+                        QueryHandler.remove(this.uid, 'uid');
+                    }
+                    this.executed = true;
                     return true;
                 }
 
@@ -369,7 +391,7 @@ export default (function(window) {
             isHybrid = true;
         }
         if (typeof Vue === 'object' && typeof Vue.mixin === 'function') {
-            const TeleportTo = require('./vue-components/teleport.vue').deafult;
+            const TeleportTo = require('./vue-components/Teleport.vue').deafult;
             useVue = true;
             let installer = {
                 install: (app, options) => {
@@ -420,6 +442,15 @@ export default (function(window) {
         }
 
         return Vue;
+    };
+
+    $this.useReact = (React, hybrid = false) => {
+        if (hybrid) {
+            isHybrid = true;
+        }
+        if (typeof React === 'object') {
+            const TeleportTo = require('./web-components/teleport.vue').deafult;
+        }
     };
 
     return (window.$adaptive = Adaptive);

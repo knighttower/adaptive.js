@@ -22,6 +22,10 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
+const _ = {
+    forEach: require('lodash/forEach'),
+    reject: require('lodash/reject'),
+};
 /**
  * @class Detect DOM changes
  * @param {window} selector
@@ -89,7 +93,7 @@
      * @param {Object|Null} Adaptive When in use with Adaptive.js object
      * @return {Void}
      */
-    $this.add = function(queries, matchCallback, unMatchCallback = null, Adaptive = null) {
+    $this.add = (queries, matchCallback, unMatchCallback = null, Adaptive = null) => {
         for (let query in queries) {
             // Values are the classes, styles, functions
             let values = queries[query];
@@ -110,6 +114,29 @@
 
             registerQueryListener(queryExpression);
         }
+    };
+
+    $this.remove = (value, prop) => {
+        _.forEach(domQueriesMatch, (collection, exp) => {
+            _.forEach(collection, (reg, key) => {
+                let type = typeof reg[1];
+                // -----------------------------------------
+                // LooUp by the prop value when the second arr is object
+                if (prop && type === 'object') {
+                    if (prop in reg[1] && reg[1][prop] === value) {
+                        domQueriesMatch[exp] = _.reject(domQueriesMatch[exp], function(o) {
+                            return o[1][prop] === value;
+                        });
+                    }
+                    // -----------------------------------------
+                    // LookUp by the value (function) and prop when is only string
+                } else if (type === 'string' && reg[1] === prop) {
+                    domQueriesMatch[exp] = _.reject(domQueriesMatch[exp], function(o) {
+                        return o[0] === value;
+                    });
+                }
+            });
+        });
     };
 
     /**
@@ -236,7 +263,7 @@
             registeredQueries[queryExpression] = callback;
             return matchQuery.addEventListener('change', callback);
         }
-        // For those added after all has been loaded
+        // For those added after the loaded event
         if (loaded) {
             singleRun(queryExpression);
         }

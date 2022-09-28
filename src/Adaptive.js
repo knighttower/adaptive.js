@@ -29,7 +29,9 @@
  * Import the Element DOM helper
  */
 // -----------------------------------------
-
+const _ = {
+    uId: require('lodash/uniqueId'),
+};
 import ElementHelper from './ElementHelper.js';
 import AdaptiveElement from './classes/AdaptiveElement.js';
 import Teleport from './Teleport.js';
@@ -50,6 +52,13 @@ import ProxyHelper from './ProxyHelper.js';
  */
 export default (function(window) {
     'use strict';
+
+    // -----------------------------------------
+    // This will make it reuse the same instance if already imported without overwrites
+    if (window.$adaptive) {
+        return window.$adaptive;
+    }
+    // -----------------------------------------
 
     /**
      * Register this library into the window
@@ -76,6 +85,18 @@ export default (function(window) {
      * @private
      */
     var useVue = false;
+
+    /**
+     * Flag for using React
+     * @private
+     */
+    var useReact = false;
+
+    /**
+     * Flag for using React
+     * @private
+     */
+    var useWeb = false;
 
     /**
      * Flag for using Hybrid
@@ -193,6 +214,7 @@ export default (function(window) {
                     xpath: element.getXpathTo(),
                     settings: GetSettings(data || element.getAttribute('data-adaptive')),
                     useVue: useVue,
+                    useReact: useReact,
                 },
                 $this
             );
@@ -243,14 +265,23 @@ export default (function(window) {
         let observer = {};
 
         observer[breakdownId] = {
-            _private: ['breakdownId', 'match', 'ifElse', 'do'],
+            _private: ['breakdownId', 'match', 'ifElse', 'do', 'removeAfterExec'],
             _mutable: ['ifElse'],
+            uid: _.uId(),
             breakdownId: breakdownId,
             match: false,
+            executed: false,
+            removeAfterExec: false,
             ifElse: null,
             else(ifElse) {
                 if (ifElse && typeof ifElse === 'function') {
                     this.ifElse = ifElse;
+                }
+            },
+            onlyOnce() {
+                this.removeAfterExec = true;
+                if (this.executed) {
+                    QueryHandler.remove(this.uid, 'uid');
                 }
             },
             do() {
@@ -262,6 +293,10 @@ export default (function(window) {
                         callback[0][callback[1]] = true;
                     }
 
+                    if (this.removeAfterExec) {
+                        QueryHandler.remove(this.uid, 'uid');
+                    }
+                    this.executed = true;
                     return true;
                 }
 
@@ -364,12 +399,18 @@ export default (function(window) {
         return;
     }
 
+    /**
+     * For use with Vue
+     * @param {Vue} Vue Vue instance
+     * @param {Boolean} hybrid Allow support when using static and dynamic
+     * @return {Vue}
+     */
     $this.useVue = (Vue, hybrid = false) => {
         if (hybrid) {
             isHybrid = true;
         }
         if (typeof Vue === 'object' && typeof Vue.mixin === 'function') {
-            const TeleportTo = require('./vue-components/teleport.vue').deafult;
+            const TeleportTo = require('./vue-components/TeleportTo.vue').deafult;
             useVue = true;
             let installer = {
                 install: (app, options) => {
@@ -420,6 +461,29 @@ export default (function(window) {
         }
 
         return Vue;
+    };
+
+    $this.useWebComponent = () => {
+        if (!useWeb && !useVue) {
+            require('./web-components/TeleportTo.js').deafult;
+            useWeb = true;
+        }
+    };
+
+    /**
+     * For use with React
+     * @param {React} React React instance
+     * @param {Boolean} hybrid Allow support when using static and dynamic
+     * @return {Void}
+     */
+    $this.useReact = (React, hybrid = false) => {
+        if (hybrid) {
+            isHybrid = true;
+        }
+        if (typeof React === 'object') {
+            $this.useWebComponent();
+            useReact = true;
+        }
     };
 
     return (window.$adaptive = Adaptive);

@@ -399,6 +399,12 @@ export default (function(window) {
         return;
     }
 
+    /**
+     * For use with Vue
+     * @param {Vue} Vue Vue instance
+     * @param {Boolean} hybrid Allow support when using static and dynamic
+     * @return {Vue}
+     */
     $this.useVue = (Vue, hybrid = false) => {
         if (hybrid) {
             isHybrid = true;
@@ -464,6 +470,12 @@ export default (function(window) {
         }
     };
 
+    /**
+     * For use with React
+     * @param {React} React React instance
+     * @param {Boolean} hybrid Allow support when using static and dynamic
+     * @return {Void}
+     */
     $this.useReact = (React, hybrid = false) => {
         if (hybrid) {
             isHybrid = true;

@@ -7005,6 +7005,13 @@ var _ = {
 
     return;
   }
+  /**
+   * For use with Vue
+   * @param {Vue} Vue Vue instance
+   * @param {Boolean} hybrid Allow support when using static and dynamic
+   * @return {Vue}
+   */
+
 
   $this.useVue = function (Vue) {
     var hybrid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
@@ -7074,6 +7081,13 @@ var _ = {
       useWeb = true;
     }
   };
+  /**
+   * For use with React
+   * @param {React} React React instance
+   * @param {Boolean} hybrid Allow support when using static and dynamic
+   * @return {Void}
+   */
+
 
   $this.useReact = function (React) {
     var hybrid = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;

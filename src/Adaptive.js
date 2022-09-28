@@ -87,6 +87,18 @@ export default (function(window) {
     var useVue = false;
 
     /**
+     * Flag for using React
+     * @private
+     */
+    var useReact = false;
+
+    /**
+     * Flag for using React
+     * @private
+     */
+    var useWeb = false;
+
+    /**
      * Flag for using Hybrid
      * @private
      */
@@ -202,6 +214,7 @@ export default (function(window) {
                     xpath: element.getXpathTo(),
                     settings: GetSettings(data || element.getAttribute('data-adaptive')),
                     useVue: useVue,
+                    useReact: useReact,
                 },
                 $this
             );
@@ -391,7 +404,7 @@ export default (function(window) {
             isHybrid = true;
         }
         if (typeof Vue === 'object' && typeof Vue.mixin === 'function') {
-            const TeleportTo = require('./vue-components/Teleport.vue').deafult;
+            const TeleportTo = require('./vue-components/TeleportTo.vue').deafult;
             useVue = true;
             let installer = {
                 install: (app, options) => {
@@ -444,12 +457,20 @@ export default (function(window) {
         return Vue;
     };
 
+    $this.useWebComponent = () => {
+        if (!useWeb && !useVue) {
+            require('./web-components/TeleportTo.js').deafult;
+            useWeb = true;
+        }
+    };
+
     $this.useReact = (React, hybrid = false) => {
         if (hybrid) {
             isHybrid = true;
         }
         if (typeof React === 'object') {
-            const TeleportTo = require('./web-components/teleport.vue').deafult;
+            $this.useWebComponent();
+            useReact = true;
         }
     };
 

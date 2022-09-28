@@ -32,14 +32,19 @@ class Button extends React.Component {
     }
 }
 
-function Hello(props) {  return <div data-adaptive="teleport.desktop|mobile.before(#hello)" style={{background: 'beige'}}>
+function Hello(props) {  return <div>
     <h4>React component</h4>
     <p>This component will move at tablet to static hello { props.hello }</p>
     <div data-adaptive="addClass.tablet(laura, miau) &&
         addClass.mobile|fullscreen(red, green) && 
         addClass.desktop(uno, dos)">This is inside the react component</div>
         <Counter />
-        
+        {/* One time Teleport */}
+        <teleport-to target="#hello" position="after">
+            <div style={{padding: '8px', background: 'violet'}}>Teleporting an element from inside react component</div>
+        </teleport-to>
+        {/* conditional teleport with adaptive */}
+        <div data-adaptive="teleport.desktop|mobile.before(#hello)" style={{background: 'beige'}}>Teleporting on desktop or mobile</div>
 </div>; };
 
 const root = ReactDOM.createRoot(document.getElementById('reactHello'));

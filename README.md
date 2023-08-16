@@ -15,6 +15,7 @@ Adaptive.js is not a CSS media query replacement nor should be the primary handl
 (If you need some reference to understand responsive and adaptive head over here: https://www.geeksforgeeks.org/difference-between-responsive-design-and-adaptive-design/)
 
 <br/>
+
 **Bridging the Gaps:**
 
 Adaptive.js isn't merely a response to the shortcomings of CSS; it's a comprehensive solution to the challenges presented by many frameworks. It abstracts the complexity, allowing developers to focus on creating exceptional user experiences rather than navigating through conflicting classes or puzzling rules.

@@ -1,13 +1,27 @@
 (This docs still under construction, see "example" and "test" folders for extensive examples of usage)
 
+**Installation:**
+https://www.npmjs.com/package/@knighttower/adaptive
+https://github.com/knighttower/adaptive.js
+
+```
+npm install adaptive.js
+```
+
+**Usage:**
+
+```
+import Adaptive from 'adaptive.js'
+```
+
 # Adaptive.js: Enhancing Layout Adaptability Beyond CSS, Navigating the Complexities of Modern Web Development
 
-So what's the story or even why today? 
-In many projects, even when trying to stick to the philosophy of using mostly CSS utility classes and media queries to create responsive and adaptive layouts, CSS sometimes falls short in some areas, and that's why some JS is needed to help along those bumps.  
+So what's the story or even why today?
+In many projects, even when trying to stick to the philosophy of using mostly CSS utility classes and media queries to create responsive and adaptive layouts, CSS sometimes falls short in some areas, and that's why some JS is needed to help along those bumps.
 
 But wait! what are those limitations you speak of! kind sir...
 
-The short version.. is edge cases, class management and hierarchy, operations that are not currently part of CSS (teleporting, adding inline style on the fly, adding/removing classes, execute JS code at specific breakpoinst, etc)  
+The short version.. is edge cases, class management and hierarchy, operations that are not currently part of CSS (teleporting, adding inline style on the fly, adding/removing classes, execute JS code at specific breakpoinst, etc)
 
 For instance, moving elements from one location to another is not possible with CSS (only if the element belongs directly to the same parent and is a flex item (flex order)). In cases like that, where an element has to move that far, that's when Adaptive.js has a "teleport" feature that will move any element to specific targets at the specified Media query breakdown. Thus helping the layout not just being responsive but also adapting to the desired necessities.
 But that's not all Adaptive.js can help with, it can dynamically add and remove classes at different Media Breakdowns, or even to add 'inline' styles so that small tweaks are possible without adding endless classes that have only a single-one-time use.
@@ -23,32 +37,26 @@ Adaptive.js is not a CSS media query replacement nor should be the primary handl
 **Bridging the Gaps:**
 
 Adaptive.js isn't merely a response to the shortcomings of CSS; it's a comprehensive solution to the challenges presented by many CSS frameworks. It abstracts the complexity, allowing developers to focus on creating exceptional user experiences rather than navigating through conflicting classes, puzzling rules or messy solutions.
-  
 
 **Teleportation Without Boundaries:**
 
 With the "teleport" feature of Adaptive.js, moving elements across your design is no longer a chore confined to heavy frameworks like Vue or React. This feature enables effortless repositioning, eliminating the dependency on bulkier solutions.
-  
 
 **Precision Functionality with Breakpoints:**
 
 Adaptive.js takes adaptability to a new level. Not only can you design with precision, but you can also dictate functionality based on screen size. This means executing specific JavaScript functions at exact CSS breakpoints. The design and functionality are now in sync, responding dynamically to user environments.
-  
 
 **Dynamic Class and Attribute Management:**
 
 Adding or removing classes and attributes can often be a cumbersome task. With Adaptive.js, this process is streamlined. Whether it's tweaking a design element or enhancing functionality, Adaptive.js ensures it's done with ease and precision.
-  
 
 **Tailored Designs with Custom CSS Queries:**
 
 While Adaptive.js has a preset breakdown for media queries, it also offers an API to craft custom CSS queries. This means designs that are not just responsive but truly bespoke, tailored to the unique requirements of each project.
 
-
 **Efficient, Clean, and Adaptable Code:**
 
 Redundant code is a developer's bane. Adaptive.js champions the DRY (Don't Repeat Yourself) principle, ensuring that every line of code serves a purpose, reducing clutter, and boosting efficiency.
-
 
 **Seamless Integration for a Cohesive Development Experience:**
 
@@ -56,12 +64,12 @@ While Adaptive.js shines as a standalone tool, its real strength lies in its abi
 <br/>
 <br/>
 
-
 ## Features
 
-### -- It can be used directly with the markup or as part of the JS code  
+### -- It can be used directly with the markup or as part of the JS code
 
 #### Directly in markup
+
 ```html
 <!-- Example of only adding styles per breakdown -->
 <div class="inline-styling" data-adaptive="{'addStyle':{'tablet':'color: blue;','desktop':'color: green;'}}">
@@ -69,40 +77,43 @@ While Adaptive.js shines as a standalone tool, its real strength lies in its abi
 </div>
 
 <!-- Example of using custom queries -->
-<div id="customQueries"
-    data-adaptive="addClass[(min-width: 900px) and (max-width: 1599px)](custom-class-at-custom-breakdown)">
+<div
+    id="customQueries"
+    data-adaptive="addClass[(min-width: 900px) and (max-width: 1599px)](custom-class-at-custom-breakdown)"
+>
     Custom Expressions via string like Directive
 </div>
 
 <!-- Teleporting -->
 <div data-teleport-to="{'after':'#customQueries'}">
-    <span style="background:#067e74; color: white;">Static element that will teleport "customQueries" with data
-        attribute in hybrid mode</span>
+    <span style="background:#067e74; color: white;"
+        >Static element that will teleport "customQueries" with data attribute in hybrid mode</span
+    >
 </div>
-
 ```
+
 <br/>
-#### Along with JS code  
+#### Along with JS code
 
 ```html
 <script>
-	// Target specific elements
-	$adaptive.registerElement('#hello', {
-		addClass: {
-			mobile: 'a-class-added-only-for-mobiles',
-		},
-	});
+    // Target specific elements
+    $adaptive.registerElement('#hello', {
+        addClass: {
+            mobile: 'a-class-added-only-for-mobiles',
+        },
+    });
 
-	// OR
-	// Run functions at specific layouts or special js needs
-	$adaptive.if('tablet', function() {
-		// code to execute here
-	});
+    // OR
+    // Run functions at specific layouts or special js needs
+    $adaptive.if('tablet', function() {
+        // code to execute here
+    });
 
-// ...See more use cases in the example files!
-
+    // ...See more use cases in the example files!
 </script>
-```   
+```
+
 <br/>
 ### -- It works as Stand alone or hybrid Stand Alonge + (Vue or React) or directly as a plugin for Vue or React
 
@@ -111,6 +122,7 @@ Adaptive.js works as stand-alone out-of-the-box, but it also works along side in
 For frameworks like React, Adaptive would work with them in a slightly different manner and not as tightly coupled as it could be with Vue.
 
 #### - Example as Stand Alone:
+
 <br/>
 
 ```html
@@ -118,8 +130,7 @@ For frameworks like React, Adaptive would work with them in a slightly different
     <head> </head>
     <body>
         <section id="app">
-            
-           <!-- Example of only adding styles per breakdown -->
+            <!-- Example of only adding styles per breakdown -->
             <div
                 class="inline-styling"
                 data-adaptive="{'addStyle':{'tablet':'color: blue;','desktop':'color: green;'}}"
@@ -141,13 +152,12 @@ For frameworks like React, Adaptive would work with them in a slightly different
         <script>
             $adaptive.init();
         </script>
-        
     </body>
 </html>
 ```
 
-  
 Example as hybrid mode:
+
 ```js
 // In App.js
 const { createApp } = Vue;
@@ -186,18 +196,20 @@ App.mount('#app');
 }
 </script>
 ```
+
 <br/>
 <br/>
 
-### -- Teleport  
+### -- Teleport
 
 Teleports an element temporarily or permanently [before,after,to] to a given target. Important because the order, position and hierarchy can be adapt better to the desired layout or device.
 
-| prop				|use				|description			|
-|-------------------|-------------------|-----------------------|
-| **before** | teleport.mobile{before:target} --or-- teleport.mobile.before(target) | Teleports the element before the position of the target element (No merging. Good for cases where both should not inherit nor interfere with each other) |
-| **after** | teleport.mobile{after:target} --or-- teleport.mobile.after(target) | Teleports the element after the position of the target element (No merging. Good for cases where both should not inherit nor interfere with each other) |
-| **to** | teleport.mobile{to:target} --or-- teleport.mobile.to(target) | Teleports and appends the element to the target element (important if the element needs to inherit properties from the parent (target) element or be part of it) |
+| prop       | use                                                                  | description                                                                                                                                                      |
+| ---------- | -------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **before** | teleport.mobile{before:target} --or-- teleport.mobile.before(target) | Teleports the element before the position of the target element (No merging. Good for cases where both should not inherit nor interfere with each other)         |
+| **after**  | teleport.mobile{after:target} --or-- teleport.mobile.after(target)   | Teleports the element after the position of the target element (No merging. Good for cases where both should not inherit nor interfere with each other)          |
+| **to**     | teleport.mobile{to:target} --or-- teleport.mobile.to(target)         | Teleports and appends the element to the target element (important if the element needs to inherit properties from the parent (target) element or be part of it) |
+
 --
 
 Consider the following graphic:
@@ -212,19 +224,19 @@ When using with Vue, there is no need to wrap it into custom tags (like Vue does
 
 Too many classes or rule-sets that override other rule-sets can be complex or hard. So rather than creating single use classes, this could be done like this example:
 
-- Need to change the class only at mobiles and desktop, others should be the base class:
+-   Need to change the class only at mobiles and desktop, others should be the base class:
 
--  ``<div class="bg-warning" data-adaptive="addClass.mobile|desktop(bg-info,w-100,p-5); removeClass.mobile|desktop('bg-warning')>...</div>``
+-   `<div class="bg-warning" data-adaptive="addClass.mobile|desktop(bg-info,w-100,p-5); removeClass.mobile|desktop('bg-warning')>...</div>`
 
-- The above will result like:
+-   The above will result like:
 
-- Mobile and desktop devices:
+-   Mobile and desktop devices:
 
--  ``<div class="bg-info,w-100,p-5"...>...</div>``
+-   `<div class="bg-info,w-100,p-5"...>...</div>`
 
-- Other devices
+-   Other devices
 
--  ``<div class="bg-warning"...>...</div>``
+-   `<div class="bg-warning"...>...</div>`
 
 <br/>
 <br/>
@@ -233,12 +245,11 @@ Too many classes or rule-sets that override other rule-sets can be complex or ha
 
 One off cases where it needs tweaks per breakdown. For instance:
 
-- On mobile devices the element needs 2px left margin
--  ``<div ... data-adaptive="addStyle.mobile(margin-left:2px;)>...</div>``
-- The above will result in mobiles like:
--  -  ``<div style="margin-left:2px;"...>...</div>``
+-   On mobile devices the element needs 2px left margin
+-   `<div ... data-adaptive="addStyle.mobile(margin-left:2px;)>...</div>`
+-   The above will result in mobiles like:
+-   -   `<div style="margin-left:2px;"...>...</div>`
 
-  
 <br/>
 
 ### -- Execute js functions at breakdows
@@ -293,118 +304,123 @@ this.Adaptive.if('tablet', this.changeText);
 <br/>
 
 ### -- Add custom queries
+
 <br/>
 
 ```js
-
 //Optional | Add custom media query (min px, max px) settings (min max)
 Adaptive.addQueryMinMax('kitty', 900, 1400);
 
 // Optional | Add a custom media query expression (it accepts any valid media query)
 Adaptive.addQueryExpression('doggy', '(min-width: 900px)');
-
 ```
 
 or directly in the element
 
 ```html
 <!-- Example of using custom queries -->
-<div id="customQueries" data-adaptive="addClass[(min-width: 900px) and (max-width: 1599px)](custom-class-at-custom-breakdown)">Custom Expressions via string like Directive</div>
-
+<div
+    id="customQueries"
+    data-adaptive="addClass[(min-width: 900px) and (max-width: 1599px)](custom-class-at-custom-breakdown)"
+>
+    Custom Expressions via string like Directive
+</div>
 ```
-
-  
 
 ### --Out of the box present breakdowns
 
 ```js
 screens = {
-'320': [1, 379],
-'480': [380, 519],
-'520': [520, 599] /* up to : mobiles */,
-'600': [600, 699] /* up to : mid-size-tables */,
-'700': [700, 799] /* up to : tablets / ipad */,
-'800': [800, 919] /* transition in between tablets and desktop */,
-'920': [920, 999] /* from here on for desktops */,
-'1000': [1000, 1199],
-'1200': [1200, 1439],
-'1440': [1440, 1599],
-'1600': [1600, 1700],
+    '320': [1, 379],
+    '480': [380, 519],
+    '520': [520, 599] /* up to : mobiles */,
+    '600': [600, 699] /* up to : mid-size-tables */,
+    '700': [700, 799] /* up to : tablets / ipad */,
+    '800': [800, 919] /* transition in between tablets and desktop */,
+    '920': [920, 999] /* from here on for desktops */,
+    '1000': [1000, 1199],
+    '1200': [1200, 1439],
+    '1440': [1440, 1599],
+    '1600': [1600, 1700],
 };
 
 /**
-* break the 3 major device types
-*/
+ * break the 3 major device types
+ */
 devices = {
-	mobile: [1, 599] /* Actual phones */,
-	tablet: [600, 799] /* tablets in portrait or below */,
-	'odd-device': [800, 1023] /* small Laptops and Ipads in landscape */,
-	desktop: [1024, 1440] /* Most common resolutions below 1920 */,
+    mobile: [1, 599] /* Actual phones */,
+    tablet: [600, 799] /* tablets in portrait or below */,
+    'odd-device': [800, 1023] /* small Laptops and Ipads in landscape */,
+    desktop: [1024, 1440] /* Most common resolutions below 1920 */,
 };
 
 /**
-* other non standard
-*/
+ * other non standard
+ */
 broadMediaQueries = {
-	'non-desktop': [100, 1024],
-	fullscreen: [1441, 6000] /* Large monitos and fullscreen in 1920 res */,
+    'non-desktop': [100, 1024],
+    fullscreen: [1441, 6000] /* Large monitos and fullscreen in 1920 res */,
 };
-
 ```
 
 <br/>
 
 ### -- Easy sintax
 
-- Dot notation
+-   Dot notation
 
 ```html
-
 <!-- Teleporting only at mobile and desktop, all others will be set back to original position -->
-<div data-adaptive="teleport.desktop|mobile.before(#hello)"><span style="background:#1f2252; color: white;">Static element that will teleport at "desktop or mobile" right above "static hello"</span></div>
-
+<div data-adaptive="teleport.desktop|mobile.before(#hello)">
+    <span style="background:#1f2252; color: white;"
+        >Static element that will teleport at "desktop or mobile" right above "static hello"</span
+    >
+</div>
 ```
-- Object like
+
+-   Object like
+
 ```html
-<div data-adaptive="{'teleport':{
+<div
+    data-adaptive="{'teleport':{
 	'tablet': {
 	'to':'.lazy'
 }
-}}">
-	<span>Static element that will teleport at "tablet" size to a Vue driven element when visible</span>
+}}"
+>
+    <span>Static element that will teleport at "tablet" size to a Vue driven element when visible</span>
 </div>
-
 ```
 
-- Array like
+-   Array like
 
-- Compound breakdowns
+-   Compound breakdowns
+
 ```html
 <div data-teleport-to="[after,'#hello']">
-    <span style="background:#083d39; color: white;">2 Static element that will teleport "hello" with data attribute
-        using an array like string</span>
+    <span style="background:#083d39; color: white;"
+        >2 Static element that will teleport "hello" with data attribute using an array like string</span
+    >
 </div>
-
-````
-
+```
 
 ## -- All Adaptive.js Classes can be used as stand-alone
 
-- **Adaptive**: Main Adaptive.js
-- **Observer**: Easy register or unregister callback functions to be executed when any document node changes. (can be used stand alone or along with Adaptive.js)
-- 
-- **Teleport**: teleport elements to other locations (can be used stand alone or along with Adaptive.js)
-- **ElementHelper**: Element selector with some utility functions and Xpath support. (can be used stand alone or along with Adaptive.js)
+-   **Adaptive**: Main Adaptive.js
+-   **Observer**: Easy register or unregister callback functions to be executed when any document node changes. (can be used stand alone or along with Adaptive.js)
+-
+-   **Teleport**: teleport elements to other locations (can be used stand alone or along with Adaptive.js)
+-   **ElementHelper**: Element selector with some utility functions and Xpath support. (can be used stand alone or along with Adaptive.js)
 
 <br/>
 
 ---
+
 <br/>
 
 ## Description
 
 <br/>
-
 
 Inspiration used to build this:
 <br/>
@@ -418,7 +434,5 @@ https://developer.mozilla.org/en-US/docs/Web/API/MutationObserver
 <br/>
 https://vuejs.org/guide/built-ins/teleport.html
 <br/>
-
-
 
 (This docs still under construction)

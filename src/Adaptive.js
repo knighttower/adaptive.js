@@ -1,5 +1,5 @@
 /**
-* //@author Knighttower
+* Author Knighttower
     MIT License
 
     Copyright (c) [2022] [knighttower] https://github.com/knighttower

@@ -1,8 +1,8 @@
 /**
-* @author Antuan
+* @author Knighttower
     MIT License
 
-    Copyright (c) [2022] [Antuan] https://github.com/knighttower
+    Copyright (c) [2022] [Knighttower] https://github.com/knighttower
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -27,6 +27,12 @@ import DomObserver from './DomObserver.js';
 import ElementHelper from './ElementHelper.js';
 import GetSettings from './GetSettings.js';
 
+/**
+* @module Teleport
+* Teleport an element to another place in the DOM
+* @example new Teleport({domElement: element, adaptiveId: uniqueId}).beam({to: selector})
+* @return {Object}
+*/
 export default class Teleport {
     /**
      * Constructor

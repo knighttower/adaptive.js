@@ -1,8 +1,8 @@
 /**
-* //@author Antuan
+* //@author Knighttower
     MIT License
 
-    Copyright (c) [2022] [Antuan] https://github.com/knighttower
+    Copyright (c) [2022] [knighttower] https://github.com/knighttower
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -48,7 +48,11 @@ import ProxyHelper from './ProxyHelper.js';
  * @param {Object} root Window or parent object
  * @param {Object} factory The Class
  * @return {Object}
- * @example See example > app.js, example > hello.vue, example > index.html
+ * @example Adaptive(window, Adaptive)
+ * @example Adaptive(this, Adaptive)
+ * @example Adaptive.registerElement(element) 
+ * @see "example" folder for more
+ * 
  */
 export default (function(window) {
     'use strict';

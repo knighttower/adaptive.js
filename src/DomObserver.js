@@ -1,8 +1,7 @@
-/**
-* @author Antuan
+/* Author Knighttower
     MIT License
 
-    Copyright (c) [2022] [Antuan] https://github.com/knighttower
+    Copyright (c) [2022] [Knighttower] https://github.com/knighttower
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -22,12 +21,15 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
-
 /**
- * @class Detect DOM changes
+ * @module DomObserver
+ * Detect DOM changes
+ * @name DomObserver
  * @param {window} selector
  * @param {Funtion}
  * @return DomObserver
+ * @example DomObserver.addOnNodeChange('elementIdentifier', () => { console.log('Node changed') })
+ * @example DomObserver.removeOnNodeChange('elementIdentifier')
  */
 (function(root, factory) {
     'use strict';
@@ -39,7 +41,7 @@
         factory(root);
     }
 })(typeof window !== 'undefined' ? window : this, function(window) {
-    'use strict';
+    ('use strict');
 
     /**
      * Register this library into the window
@@ -103,7 +105,10 @@
                 }
             }
         };
-        const config = { childList: true, subtree: true };
+        const config = {
+            childList: true,
+            subtree: true,
+        };
         const observer = new MutationObserver(callback);
 
         return observer.observe(document.body, config);

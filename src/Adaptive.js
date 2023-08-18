@@ -1,8 +1,7 @@
-/**
-* //@author Antuan
+/* Author Knighttower
     MIT License
 
-    Copyright (c) [2022] [Antuan] https://github.com/knighttower
+    Copyright (c) [2022] [knighttower] https://github.com/knighttower
 
     Permission is hereby granted, free of charge, to any person obtaining a copy
     of this software and associated documentation files (the "Software"), to deal
@@ -22,12 +21,11 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
-/**
- * Inspired by http://wicky.nillia.ms/enquire.js
- */
-/**
- * Import the Element DOM helper
- */
+
+// Inspired by http://wicky.nillia.ms/enquire.js
+
+// Import the Element DOM helper
+
 // -----------------------------------------
 const _ = {
     uId: require('lodash/uniqueId'),
@@ -42,15 +40,17 @@ import ProxyHelper from './ProxyHelper.js';
 // --> ADAPTIVE JS
 // --------------------------
 
+
 /**
+ * @module Adaptive
  * Add/remove classes/styles or teleport an element
- * @module Adpative
- * @param {Object} root Window or parent object
- * @param {Object} factory The Class
  * @return {Object}
- * @example See example > app.js, example > hello.vue, example > index.html
+ * @example Adaptive(window, Adaptive)
+ * @example Adaptive(this, Adaptive)
+ * @example Adaptive.registerElement(element) 
+ * @see "example" folder for more
  */
-export default (function(window) {
+export default (function (window) {
     'use strict';
 
     // -----------------------------------------
@@ -66,6 +66,7 @@ export default (function(window) {
      * @return {Object}
      */
     const $this = {};
+
     const Adaptive = ProxyHelper($this);
 
     /**
@@ -168,15 +169,29 @@ export default (function(window) {
         return Object.assign({}, screens, devices, broadMediaQueries, customMinMaxQueries, customExpressionQueries);
     };
 
+    /**
+    * @memberof Adaptive
+    * @inner
+    * Get all the available min max queries
+    * @return {Object}
+    */
     $this.getMinMaxQueries = () => {
         return Object.assign({}, screens, devices, broadMediaQueries, customMinMaxQueries);
     };
 
+    /**
+    * @memberof Adaptive
+    * @inner
+    * Get all the available "expression" queries
+    * @return {Object}
+    */
     $this.getExpQueries = () => {
         return Object.assign({}, customExpressionQueries);
     };
 
     /**
+     * @memberof Adaptive
+     * @inner
      * Register an element
      * @param {String|Object} elementOrSelector
      * @param {Object} data Optional used directly to add the directives, but is mostly for VUe
@@ -187,7 +202,7 @@ export default (function(window) {
         if (helper.isInDom()) {
             return registerThis(helper, data);
         } else {
-            helper.whenInDom().then(function(element) {
+            helper.whenInDom().then(function (element) {
                 return registerThis(element, data);
             });
         }
@@ -224,13 +239,15 @@ export default (function(window) {
     }
 
     /**
+     * @memberof Adaptive
+     * @inner
      * Register A custom Query Min, Max
      * @param {String} id Identifier
      * @param {Number} min Number only, no units attached as it only handles pixels here
      * @param {Number} max Number only, no units attached as it only handles pixels here
      * @return {Void}
      */
-    $this.addQueryMinMax = function(id, min, max) {
+    $this.addQueryMinMax = function (id, min, max) {
         if (!customMinMaxQueries[id]) {
             if (!min || !max) {
                 throw new Exception('Min or Max must be passed (id, min, max)', 1);
@@ -240,26 +257,30 @@ export default (function(window) {
     };
 
     /**
+     * @memberof Adaptive
+     * @inner
      * Register A custom Query Expression
      * @param {String} id Identifier
      * @param {String} query Media query, example "screen and (max-width: 500em) and (orientation: landscape)"
      * @param {Number} max Number only, no units attached as it only handles pixels here
      * @return {Void}
      */
-    $this.addQueryExpression = function(id, query) {
+    $this.addQueryExpression = function (id, query) {
         if (!customExpressionQueries[id]) {
             customExpressionQueries[id] = query;
         }
     };
 
     /**
+     * @memberof Adaptive
+     * @inner
      * Register A custom Query Expression
      * @param {String} breakdownId Identifier like "tablet" or "mobile", etc
      * @param {Fucntion|Array} callback Function/Method or Array with object and property to set
      * @example Adaptive.if('mobile', [object, propertyId]) || Adaptive.if('mobile', () => {})
      * @return {Object} Proxy
      */
-    $this.if = function(breakdownId, callback = null) {
+    $this.if = function (breakdownId, callback = null) {
         let isFunction = callback && typeof callback === 'function';
         let isArray = callback && Array.isArray(callback);
         let observer = {};
@@ -350,7 +371,7 @@ export default (function(window) {
      */
     function _init() {
         isMounted = true;
-        Array.from(document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])')).forEach(function(
+        Array.from(document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])')).forEach(function (
             element,
             index
         ) {
@@ -364,6 +385,8 @@ export default (function(window) {
     }
 
     /**
+     * @memberof Adaptive
+     * @inner
      * Initialization, cam be called externally to reinitialized after dom loaded
      * @return {Void}
      */
@@ -400,6 +423,8 @@ export default (function(window) {
     }
 
     /**
+     * @memberof Adaptive
+     * @inner
      * For use with Vue
      * @param {Vue} Vue Vue instance
      * @param {Boolean} hybrid Allow support when using static and dynamic
@@ -463,6 +488,12 @@ export default (function(window) {
         return Vue;
     };
 
+    //docs
+    /**
+     * For use with Web Components
+     * @private
+     * @return {Void}
+     */
     $this.useWebComponent = () => {
         if (!useWeb && !useVue) {
             require('./web-components/TeleportTo.js').deafult;
@@ -471,6 +502,8 @@ export default (function(window) {
     };
 
     /**
+     * @memberof Adaptive
+     * @inner
      * For use with React
      * @param {React} React React instance
      * @param {Boolean} hybrid Allow support when using static and dynamic

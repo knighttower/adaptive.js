@@ -32,10 +32,6 @@
             </div>
             <br />
 
-            <!-- Example Vue compoenent -->
-            <hello></hello>
-            <br />
-
             <!-- Example of using String like directives -->
             <div
                 data-adaptive="addClass.tablet(laura, miau) &&
@@ -76,6 +72,7 @@
             </div>
 
             <br />
+            <!-- Teleporting -->
             <div data-teleport-to="{'after':'#customQueries'}">
                 <span style="background:#067e74; color: white;"
                     >Static element that will teleport "customQueries" with data attribute in hybrid mode</span
@@ -87,13 +84,13 @@
                     >2 Static element that will teleport "hello" with data attribute using an array like string</span
                 >
             </div>
-
-            <comp-api-sample></comp-api-sample>
         </section>
 
         <!-- JS -->
-        <script src="//cdn.jsdelivr.net/npm/vue@3.3.4/dist/vue.global.min.js"></script>
-        <script src="./app.min.js"></script>
+        <script src="../../dist/Adaptive.js"></script>
+        <script>
+            $adaptive.init();
+        </script>
         <style>
             .laura {
                 color: blueviolet;

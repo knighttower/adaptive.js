@@ -1,5 +1,4 @@
-/**
-* Author Knighttower
+/* Author Knighttower
     MIT License
 
     Copyright (c) [2022] [Knighttower] https://github.com/knighttower
@@ -22,9 +21,10 @@
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
 */
-
 /**
- * @class Detect DOM changes
+ * @module DomObserver
+ * Detect DOM changes
+ * @name DomObserver
  * @param {window} selector
  * @param {Funtion}
  * @return DomObserver
@@ -41,7 +41,7 @@
         factory(root);
     }
 })(typeof window !== 'undefined' ? window : this, function(window) {
-    'use strict';
+    ('use strict');
 
     /**
      * Register this library into the window
@@ -57,7 +57,6 @@
     const executeOnNodeChanged = {};
 
     /**
-     * @method addOnNodeChange
      * When node change
      * @param {String} id
      * @param {Function} callback Callback when any node changes/ add/deleted/modified
@@ -71,7 +70,6 @@
     };
 
     /**
-     * @method removeOnNodeChange
      * Remove from node change
      * @param {String} id
      * @return {Void}
@@ -84,7 +82,6 @@
     };
 
     /**
-     * @method cleanup
      * Deep cleanup
      * @return {Void}
      */
@@ -108,7 +105,10 @@
                 }
             }
         };
-        const config = { childList: true, subtree: true };
+        const config = {
+            childList: true,
+            subtree: true,
+        };
         const observer = new MutationObserver(callback);
 
         return observer.observe(document.body, config);

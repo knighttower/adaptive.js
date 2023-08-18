@@ -1,5 +1,4 @@
-/**
-* Author Knighttower
+/* Author Knighttower
     MIT License
 
     Copyright (c) [2022] [Knighttower] https://github.com/knighttower
@@ -51,7 +50,6 @@ export default class ElementHelper {
     // --------------------------
 
     /**
-     * @method isInDom
      * Check if the element exists or is visible. It will keep querying
      * @return {Boolean}
      */
@@ -63,7 +61,6 @@ export default class ElementHelper {
     }
 
     /**
-     * @method whenInDom
      * Wait for element exists or is visible. It will keep querying
      * @return {Promise}
      */
@@ -88,7 +85,6 @@ export default class ElementHelper {
     }
 
     /**
-     * @method getElementByXpath
      * Find element by Xpath string
      * @param {String} xpath
      * @example getElementByXpath("//html[1]/body[1]/div[1]")
@@ -99,7 +95,6 @@ export default class ElementHelper {
     }
 
     /**
-     * @method getXpathTo
      * Get the element xpath string
      * @author Based on https://stackoverflow.com/questions/2631820/how-do-i-ensure-saved-click-coordinates-can-be-reload-to-the-same-place-even-if/2631931#2631931
      * @return {String}
@@ -130,7 +125,6 @@ export default class ElementHelper {
     }
 
     /**
-     * @method getAttribute
      * Get the element attribute, but parse it if it is an object or array
      * @param {String} attr Atrribute name
      * @return {String|Array|Object|Null}
@@ -141,7 +135,6 @@ export default class ElementHelper {
     }
 
     /**
-     * @method getHash
      * Create a unique has for the element derived from its xpath
      * @author Based on https://www.geeksforgeeks.org/how-to-create-hash-from-string-in-javascript/
      * @return {String}

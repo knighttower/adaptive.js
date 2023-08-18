@@ -34,17 +34,18 @@
         "watch": "mix watch",
         "watch-poll": "mix watch -- --watch-options-poll=1000",
         "hot": "mix watch --hot",
-        "prod": "npm run production",
+        "prod": "npm run production && npm run docs",
         "production": "mix --production",
         "prettier": "prettier --config .prettierrc.json --write ./src",
         "prettier-check": "prettier --config .prettierrc.json --check ./src",
         "precommit": "lint-staged",
-        "eslint": "eslint -c ./eslintrc.json --fix ./src"
+        "eslint": "eslint -c ./eslintrc.json --fix ./src",
+        "docs": "documentation build src/Adaptive.js src/ElementHelper.js src/ProxyHelper.js src/DomObserver.js -f html -o docs --shallow"
     },
     "devDependencies": {
-        "@babel/preset-react": "^7.18.6",
         "@babel/plugin-proposal-class-properties": "^7.18",
         "@babel/plugin-syntax-class-properties": "^7.12",
+        "@babel/preset-react": "^7.18.6",
         "eslint": "^6.8.0",
         "eslint-plugin-vue": "^6.1.2",
         "laravel-mix": "^6.0.43",
@@ -57,6 +58,7 @@
         "vue-template-compiler": "2.7.14"
     },
     "dependencies": {
+        "documentation": "^14.0.2",
         "install": "^0.12.2",
         "jshint": "^2.13.4",
         "lint-staged": "11.1.2",

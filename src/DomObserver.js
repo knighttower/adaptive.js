@@ -28,6 +28,8 @@
  * @param {window} selector
  * @param {Funtion}
  * @return DomObserver
+ * @example DomObserver.addOnNodeChange('elementIdentifier', () => { console.log('Node changed') })
+ * @example DomObserver.removeOnNodeChange('elementIdentifier')
  */
 (function(root, factory) {
     'use strict';
@@ -55,6 +57,7 @@
     const executeOnNodeChanged = {};
 
     /**
+     * @method addOnNodeChange
      * When node change
      * @param {String} id
      * @param {Function} callback Callback when any node changes/ add/deleted/modified
@@ -68,6 +71,7 @@
     };
 
     /**
+     * @method removeOnNodeChange
      * Remove from node change
      * @param {String} id
      * @return {Void}
@@ -80,6 +84,7 @@
     };
 
     /**
+     * @method cleanup
      * Deep cleanup
      * @return {Void}
      */

@@ -33,6 +33,10 @@ const _ = {
  * @example ProxyHelper({objectProps..., _protected: array(...)})
  * @param {Object} object
  * @return {Proxy}
+ * @usage const proxy = ProxyHelper({objectProps..., _protected: array(...), _private: array(...), _mutable: array(...)})
+ * @usage _protected: array(...) -> Cannot be modified
+ * @usage _private: array(...) -> Cannot be accessed
+ * @usage _mutable: array(...) -> Can be modified
  */
 export default function(object) {
     'use strict';

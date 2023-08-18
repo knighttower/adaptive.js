@@ -164,6 +164,7 @@ export default (function(window) {
     // --------------------------
 
     /**
+     * @method getAllQueries
      * Get all the available queries
      * @private
      * @return {Object}
@@ -172,15 +173,26 @@ export default (function(window) {
         return Object.assign({}, screens, devices, broadMediaQueries, customMinMaxQueries, customExpressionQueries);
     };
 
+    /**
+    * @method getMinMaxQueries
+    * Get all the available min max queries
+    * @return {Object}
+    */
     $this.getMinMaxQueries = () => {
         return Object.assign({}, screens, devices, broadMediaQueries, customMinMaxQueries);
     };
 
+    /**
+    * @method getExpQueries
+    * Get all the available "expression" queries
+    * @return {Object}
+    */
     $this.getExpQueries = () => {
         return Object.assign({}, customExpressionQueries);
     };
 
     /**
+     * @method getBreakdown
      * Register an element
      * @param {String|Object} elementOrSelector
      * @param {Object} data Optional used directly to add the directives, but is mostly for VUe
@@ -228,6 +240,7 @@ export default (function(window) {
     }
 
     /**
+     * @method addQueryMinMax
      * Register A custom Query Min, Max
      * @param {String} id Identifier
      * @param {Number} min Number only, no units attached as it only handles pixels here
@@ -244,6 +257,7 @@ export default (function(window) {
     };
 
     /**
+     * @method addQueryMinMax
      * Register A custom Query Expression
      * @param {String} id Identifier
      * @param {String} query Media query, example "screen and (max-width: 500em) and (orientation: landscape)"
@@ -257,6 +271,7 @@ export default (function(window) {
     };
 
     /**
+     * @method addQueryMinMax
      * Register A custom Query Expression
      * @param {String} breakdownId Identifier like "tablet" or "mobile", etc
      * @param {Fucntion|Array} callback Function/Method or Array with object and property to set
@@ -333,6 +348,7 @@ export default (function(window) {
     };
 
     /**
+     * @method addQueryMinMax
      * Full reset, handle with care
      * @private
      * @return {Void}
@@ -368,6 +384,7 @@ export default (function(window) {
     }
 
     /**
+     * @method init
      * Initialization, cam be called externally to reinitialized after dom loaded
      * @return {Void}
      */
@@ -404,6 +421,7 @@ export default (function(window) {
     }
 
     /**
+     * @method useVue
      * For use with Vue
      * @param {Vue} Vue Vue instance
      * @param {Boolean} hybrid Allow support when using static and dynamic
@@ -467,6 +485,12 @@ export default (function(window) {
         return Vue;
     };
 
+    //docs
+    /**
+     * For use with Web Components
+     * @private
+     * @return {Void}
+     */
     $this.useWebComponent = () => {
         if (!useWeb && !useVue) {
             require('./web-components/TeleportTo.js').deafult;
@@ -475,6 +499,7 @@ export default (function(window) {
     };
 
     /**
+     * @method useReact
      * For use with React
      * @param {React} React React instance
      * @param {Boolean} hybrid Allow support when using static and dynamic

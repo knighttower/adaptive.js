@@ -1,8 +1,9 @@
 (This docs still under construction, see "example" and "test" folders for extensive examples of usage)
 
-**Installation:**
-https://www.npmjs.com/package/@knighttower/adaptive
-https://github.com/knighttower/adaptive.js
+**Installation:**  
+NPM: https://www.npmjs.com/package/@knighttower/adaptive  
+GIT: https://github.com/knighttower/adaptive.js  
+DOCS: https://knighttower.github.io/adaptive.js/  
 
 ```
 npm install adaptive.js

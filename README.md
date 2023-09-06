@@ -1,4 +1,5 @@
 (This docs still under construction, see "example" and "test" folders for extensive examples of usage)
+[![Node.js Package](https://github.com/knighttower/adaptive.js/actions/workflows/npm-publish.yml/badge.svg?branch=development&event=release)](https://github.com/knighttower/adaptive.js/actions/workflows/npm-publish.yml)
 
 **Installation:**  
 NPM: https://www.npmjs.com/package/@knighttower/adaptive   

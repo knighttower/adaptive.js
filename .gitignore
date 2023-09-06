@@ -1,4 +1,7 @@
 # Sensitive files
+.gitcommands
+.gitconfig
+.vscode
 .env
 env
 

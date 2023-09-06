@@ -22,6 +22,7 @@ It has:
 ### Contents  
 - [Installation](#installation)
 - [Usage](#usage)
+- [Implementation](#implementation)  
 - [Features and examples](#features)
 - [Full Description](#description)
 
@@ -47,6 +48,8 @@ Dropin from CDN (no build step)
     <script src=" [https://cdn.jsdelivr.net/npm/@knighttower/adaptive@1.3/dist/Adaptive.min.js](https://cdn.jsdelivr.net/npm/@knighttower/adaptive@1.3/dist/Adaptive.min.js) "></script>
 
 ---
+<br/>
+<br/>  
 
 ## Usage <a name="usage"></a>  
 
@@ -82,6 +85,86 @@ Adaptive.init();
 // ... other code
 ```
 ---
+<br/>
+<br/>
+
+## Implementation examples  <a name="implementation"></a>
+-   **Simple String**
+	- It just teleports, does not specify breakpoints and location
+``data-teleport-to="#hello"``
+``data-teleport-before="#hello"``  
+``data-teleport-after="#hello"``
+
+```html
+<div data-teleport-to="#hello">
+    <span style="background:#083d39; color: white;"
+        >2 Static element that will teleport "hello" with data attribute using an array like string</span
+    >
+</div>
+```
+
+-   **Dot notation**
+	- Allows to specify multiple breakpoints and locations
+``data-adaptive=[command].[breakpoint].[to|from|after](target_id_or_class)``  
+the "|" is "OR": [breakpoint]|[breakpoint]  
+
+```html
+<!-- Teleporting only at mobile and desktop, all others will be set back to original position -->
+<div data-adaptive="teleport.desktop|mobile.before(#hello)">
+    <span style="background:#1f2252; color: white;"
+        >Static element that will teleport at "desktop or mobile" right above "static hello"</span
+    >
+</div>
+```
+
+-   **Object like**
+``data-adaptive={'command':{breakpoint:{[to|before|after]:target_id_or_class}}}``
+
+```html
+<div
+    data-adaptive="{'teleport':{
+	'tablet': {
+	'to':'.lazy'
+}
+}}"
+>
+    <span>Static element that will teleport at "tablet" size to a Vue driven element when visible</span>
+</div>
+```
+
+-   **Array like**
+``data-teleport-to=[[after|before], target_id_or_class]``
+
+```html
+<div data-teleport-to="[after,'#hello']">
+    <span style="background:#083d39; color: white;"
+        >2 Static element that will teleport "hello" with data attribute using an array like string</span
+    >
+</div>
+```
+
+- **Inside Vue**
+	- Array, object or dot notation works inside Vue, just use "v-adaptive=..." or 	" v-teleport-to..."
+ - 
+```
+<div v-teleport-to="'#hello'">Getting teleported (teleport) from the component to "static Hello"</div>
+
+// Or in code
+<script>
+.... mounted() {
+	this.Adaptive.if('tablet', function() {
+            // code
+	});
+	// or
+	this.Adaptive.if('tablet', this.nameOfMethod);
+	// ...See more use cases in the example files!
+}
+</script>
+```
+
+---
+<br/>
+<br/>
 
 ## Features <a name="features"></a>
 
@@ -112,6 +195,7 @@ Adaptive.init();
 ```
 
 <br/>
+
 #### Along with JS code
 
 ```html
@@ -174,8 +258,9 @@ For frameworks like React, Adaptive would work with them in a slightly different
     </body>
 </html>
 ```
+<br/>
 
-Example as hybrid mode:
+### Example as hybrid mode:
 
 ```js
 // In App.js
@@ -412,8 +497,6 @@ broadMediaQueries = {
 ```
 
 -   Array like
-
--   Compound breakdowns
 
 ```html
 <div data-teleport-to="[after,'#hello']">

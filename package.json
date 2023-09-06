@@ -1,6 +1,6 @@
 {
     "name": "@knighttower/adaptive",
-    "version": "1.3.5",
+    "version": "1.3.6",
     "main": "index.js",
     "module": "index.js",
     "jsdeliver": "dist/Adaptive.js",

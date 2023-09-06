@@ -1,82 +1,89 @@
-(This docs still under construction, see "example" and "test" folders for extensive examples of usage)
+
 [![Node.js Package](https://github.com/knighttower/adaptive.js/actions/workflows/npm-publish.yml/badge.svg?branch=development&event=release)](https://github.com/knighttower/adaptive.js/actions/workflows/npm-publish.yml)
 
-**Installation:**  
-NPM: https://www.npmjs.com/package/@knighttower/adaptive   
 
-GIT: https://github.com/knighttower/adaptive.js   
-
-DOCS: https://knighttower.github.io/adaptive.js/  
-
-
-```
-npm install adaptive.js
-```
-
-**Usage:**
-
-```
-import Adaptive from 'adaptive.js'
-```
+  
+(This docs still under construction, see "example" and "test" folders for extensive examples of usage)
 
 # Adaptive.js: Enhancing Layout Adaptability Beyond CSS, Navigating the Complexities of Modern Web Development
 
-So what's the story or even why today?
-In many projects, even when trying to stick to the philosophy of using mostly CSS utility classes and media queries to create responsive and adaptive layouts, CSS sometimes falls short in some areas, and that's why some JS is needed to help along those bumps.
+It has:
 
-But wait! what are those limitations you speak of! kind sir...
+ - Teleport
+	 - Teleport element base on the css breakpoint and reverse it back to its original place at command. It can be used as a drop-in into vanilla js projects or along with Vue or React.
+- Dynamic Class and Attribute Management
+	- Add remove classes or inline styles per breakpoint
+- Execute JS function at CSS breakdowns
+	- Helps to have specific code executing only when needed
+- Observer for DOM changes
 
-The short version.. is edge cases, class management and hierarchy, operations that are not currently part of CSS (teleporting, adding inline style on the fly, adding/removing classes, execute JS code at specific breakpoinst, etc)
+---
 
-For instance, moving elements from one location to another is not possible with CSS (only if the element belongs directly to the same parent and is a flex item (flex order)). In cases like that, where an element has to move that far, that's when Adaptive.js has a "teleport" feature that will move any element to specific targets at the specified Media query breakdown. Thus helping the layout not just being responsive but also adapting to the desired necessities.
-But that's not all Adaptive.js can help with, it can dynamically add and remove classes at different Media Breakdowns, or even to add 'inline' styles so that small tweaks are possible without adding endless classes that have only a single-one-time use.
+### Contents  
+- [Installation](#installation)
+- [Usage](#usage)
+- [Features and examples](#features)
+- [Full Description](#description)
 
-Furthermore, Adaptive.js can add specific JS functions that will execute at a very specific screen size or media query, that is extremely helpful if you have JS functionality that should only execute at a very specific size or device!
+<br><br><br>
 
-Adaptive.js is not a CSS media query replacement nor should be the primary handler of responsive or adaptive applications (CSS should do most of it). On the contrary, it aims to enhance the ability to make layouts "adapt" better to different devices depending on preset or custom media queries via plain JavaScript or integrating with any of the cool frameworks out there (Vue, React, etc) and thus overcomimg the limitations of pure CSS or targeting complex bahaviors while avoiding WET and bloted code so that no JavaScript hacks or media functions need to be written all over, just using Adaptive will do all the magic.
+**Installation:**  <a name="installation"></a>
+NPM:  [https://www.npmjs.com/package/@knighttower/adaptive](https://www.npmjs.com/package/@knighttower/adaptive)
 
-(If you need some reference to understand responsive and adaptive head over here: https://www.geeksforgeeks.org/difference-between-responsive-design-and-adaptive-design/)
+GIT:  [https://github.com/knighttower/adaptive.js](https://github.com/knighttower/adaptive.js)
 
-![adaptive ex1](https://github.com/knighttower/adaptive.js/assets/649334/a15b62bd-25e3-48e2-9ea5-0804d1da17c8)
+DOCS:  [https://knighttower.github.io/adaptive.js/](https://knighttower.github.io/adaptive.js/)
 
+npm:
+```
+npm install adaptive.js
+```
+yarn
+```
+yarn add adaptive.js
+```
+Dropin from CDN (no build step)
 
-<br/>
+    <script src=" [https://cdn.jsdelivr.net/npm/@knighttower/adaptive@1.3/dist/Adaptive.min.js](https://cdn.jsdelivr.net/npm/@knighttower/adaptive@1.3/dist/Adaptive.min.js) "></script>
 
-![adaptive ex2](https://github.com/knighttower/adaptive.js/assets/649334/9bcf8ae5-1ddd-46e4-a48f-09cc894d7e53)
+---
 
-<br/>
-<br/>
-**Bridging the Gaps:**
+## Usage <a name="usage"></a>  
 
-Adaptive.js isn't merely a response to the shortcomings of CSS; it's a comprehensive solution to the challenges presented by many CSS frameworks. It abstracts the complexity, allowing developers to focus on creating exceptional user experiences rather than navigating through conflicting classes, puzzling rules or messy solutions.
+### As a module for Vue
+```js
+const { createApp } = Vue;
+import Adaptive from 'adaptive.js';
+const App = createApp({});
+// NOTE: that adaptive will self register, do not use App.use()
+// Adaptive does that automatically
+Adaptive.useVue(App);
+App.mount('#app');
+```
 
-**Teleportation Without Boundaries:**
+### As stand-alone script in you project
 
-With the "teleport" feature of Adaptive.js, moving elements across your design is no longer a chore confined to heavy frameworks like Vue or React. This feature enables effortless repositioning, eliminating the dependency on bulkier solutions.
+```html
+<script src="//cdn.jsdelivr.net/npm/@knighttower/adaptive@1.3/dist/Adaptive.min.js"></script>
+ <script>
+     $adaptive.init();
+ </script>
+ ```
 
-**Precision Functionality with Breakpoints:**
+### As a module for React
+```js
+import React from 'react';
+import ReactDom from 'react-dom';
+import Adaptive from 'adaptive.js';
+// NOTE: that adaptive will self register, do not use App.use()
+// Adaptive does that automatically
+Adaptive.useReact(React);
+Adaptive.init();
+// ... other code
+```
+---
 
-Adaptive.js takes adaptability to a new level. Not only can you design with precision, but you can also dictate functionality based on screen size. This means executing specific JavaScript functions at exact CSS breakpoints. The design and functionality are now in sync, responding dynamically to user environments.
-
-**Dynamic Class and Attribute Management:**
-
-Adding or removing classes and attributes can often be a cumbersome task. With Adaptive.js, this process is streamlined. Whether it's tweaking a design element or enhancing functionality, Adaptive.js ensures it's done with ease and precision.
-
-**Tailored Designs with Custom CSS Queries:**
-
-While Adaptive.js has a preset breakdown for media queries, it also offers an API to craft custom CSS queries. This means designs that are not just responsive but truly bespoke, tailored to the unique requirements of each project.
-
-**Efficient, Clean, and Adaptable Code:**
-
-Redundant code is a developer's bane. Adaptive.js champions the DRY (Don't Repeat Yourself) principle, ensuring that every line of code serves a purpose, reducing clutter, and boosting efficiency.
-
-**Seamless Integration for a Cohesive Development Experience:**
-
-While Adaptive.js shines as a standalone tool, its real strength lies in its ability to play well with others. Its seamless integration with Vue and React ensures that you get the best of all worlds, enhancing and complementing without any friction.
-<br/>
-<br/>
-
-## Features
+## Features <a name="features"></a>
 
 ### -- It can be used directly with the markup or as part of the JS code
 
@@ -427,6 +434,66 @@ broadMediaQueries = {
 <br/>
 
 ---
+
+# The full description <a name="description"></a>
+
+So what's the story or even why today?
+In many projects, even when trying to stick to the philosophy of using mostly CSS utility classes and media queries to create responsive and adaptive layouts, CSS sometimes falls short in some areas, and that's why some JS is needed to help along those bumps.
+
+But wait! what are those limitations you speak of! kind sir...
+
+The short version.. is edge cases, class management and hierarchy, operations that are not currently part of CSS (teleporting, adding inline style on the fly, adding/removing classes, execute JS code at specific breakpoinst, etc)
+
+For instance, moving elements from one location to another is not possible with CSS (only if the element belongs directly to the same parent and is a flex item (flex order)). In cases like that, where an element has to move that far, that's when Adaptive.js has a "teleport" feature that will move any element to specific targets at the specified Media query breakdown. Thus helping the layout not just being responsive but also adapting to the desired necessities.
+But that's not all Adaptive.js can help with, it can dynamically add and remove classes at different Media Breakdowns, or even to add 'inline' styles so that small tweaks are possible without adding endless classes that have only a single-one-time use.
+
+Furthermore, Adaptive.js can add specific JS functions that will execute at a very specific screen size or media query, that is extremely helpful if you have JS functionality that should only execute at a very specific size or device!
+
+Adaptive.js is not a CSS media query replacement nor should be the primary handler of responsive or adaptive applications (CSS should do most of it). On the contrary, it aims to enhance the ability to make layouts "adapt" better to different devices depending on preset or custom media queries via plain JavaScript or integrating with any of the cool frameworks out there (Vue, React, etc) and thus overcomimg the limitations of pure CSS or targeting complex bahaviors while avoiding WET and bloted code so that no JavaScript hacks or media functions need to be written all over, just using Adaptive will do all the magic.
+
+(If you need some reference to understand responsive and adaptive head over here: https://www.geeksforgeeks.org/difference-between-responsive-design-and-adaptive-design/)
+
+![adaptive ex1](https://github.com/knighttower/adaptive.js/assets/649334/a15b62bd-25e3-48e2-9ea5-0804d1da17c8)
+
+
+<br/>
+
+![adaptive ex2](https://github.com/knighttower/adaptive.js/assets/649334/9bcf8ae5-1ddd-46e4-a48f-09cc894d7e53)
+
+<br/>
+<br/>
+
+**Bridging the Gaps:**
+
+Adaptive.js isn't merely a response to the shortcomings of CSS; it's a comprehensive solution to the challenges presented by many CSS frameworks. It abstracts the complexity, allowing developers to focus on creating exceptional user experiences rather than navigating through conflicting classes, puzzling rules or messy solutions.
+
+**Teleportation Without Boundaries:**
+
+With the "teleport" feature of Adaptive.js, moving elements across your design is no longer a chore confined to heavy frameworks like Vue or React. This feature enables effortless repositioning, eliminating the dependency on bulkier solutions.
+
+**Precision Functionality with Breakpoints:**
+
+Adaptive.js takes adaptability to a new level. Not only can you design with precision, but you can also dictate functionality based on screen size. This means executing specific JavaScript functions at exact CSS breakpoints. The design and functionality are now in sync, responding dynamically to user environments.
+
+**Dynamic Class and Attribute Management:**
+
+Adding or removing classes and attributes can often be a cumbersome task. With Adaptive.js, this process is streamlined. Whether it's tweaking a design element or enhancing functionality, Adaptive.js ensures it's done with ease and precision.
+
+**Tailored Designs with Custom CSS Queries:**
+
+While Adaptive.js has a preset breakdown for media queries, it also offers an API to craft custom CSS queries. This means designs that are not just responsive but truly bespoke, tailored to the unique requirements of each project.
+
+**Efficient, Clean, and Adaptable Code:**
+
+Redundant code is a developer's bane. Adaptive.js champions the DRY (Don't Repeat Yourself) principle, ensuring that every line of code serves a purpose, reducing clutter, and boosting efficiency.
+
+**Seamless Integration for a Cohesive Development Experience:**
+
+While Adaptive.js shines as a standalone tool, its real strength lies in its ability to play well with others. Its seamless integration with Vue and React ensures that you get the best of all worlds, enhancing and complementing without any friction.
+<br/>
+<br/>
+
+
 
 <br/>
 

@@ -1,4 +1,4 @@
-import Teleport from '../Teleport';
+import Teleport from '@knighttower/js-teleport';
 
 class TeleportTo extends HTMLElement {
     constructor() {

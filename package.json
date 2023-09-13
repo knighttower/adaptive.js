@@ -1,6 +1,6 @@
 {
     "name": "@knighttower/adaptive",
-    "version": "1.3.7",
+    "version": "1.3.8",
     "main": "index.js",
     "module": "index.js",
     "jsdeliver": "dist/Adaptive.js",
@@ -26,7 +26,17 @@
         "library",
         "plugin",
         "adapt",
-        "adaptive.js"
+        "adaptive.js",
+        "proxy",
+        "css",
+        "javascript",
+        "js",
+        "helper",
+        "helper functions",
+        "helper library",
+        "helper library for adaptive layouts",
+        "helper library for adaptive layouts with Vue",
+        "helper library for adaptive layouts with Vue and Teleport"
     ],
     "repository": {
         "type": "git",
@@ -44,7 +54,7 @@
         "prettier-check": "prettier --config .prettierrc.json --check ./src",
         "precommit": "lint-staged",
         "eslint": "eslint -c ./eslintrc.json --fix ./src",
-        "docs": "documentation build src/Adaptive.js src/ElementHelper.js src/ProxyHelper.js src/DomObserver.js -f html -o docs --shallow"
+        "docs": "documentation build src/Adaptive.js -f html -o docs --shallow"
     },
     "devDependencies": {
         "@babel/plugin-proposal-class-properties": "^7.18",
@@ -62,6 +72,11 @@
         "vue-template-compiler": "2.7.14"
     },
     "dependencies": {
+        "@knighttower/element-helper": "^1.0.9",
+        "@knighttower/js-dom-observer": "^1.0.4",
+        "@knighttower/js-object-proxy-helper": "^1.0.4",
+        "@knighttower/js-power-helper-functions": "^1.0.2",
+        "@knighttower/js-teleport": "^1.0.0",
         "documentation": "^14.0.2",
         "install": "^0.12.2",
         "jshint": "^2.13.4",
@@ -78,8 +93,5 @@
     },
     "bugs": {
         "url": "https://github.com/knighttower/adaptive.js/issues"
-    },
-    "directories": {
-        "example": "example"
     }
 }

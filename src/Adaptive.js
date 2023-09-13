@@ -1,45 +1,24 @@
-/* Author Knighttower
-    MIT License
-
-    Copyright (c) [2022] [knighttower] https://github.com/knighttower
-
-    Permission is hereby granted, free of charge, to any person obtaining a copy
-    of this software and associated documentation files (the "Software"), to deal
-    in the Software without restriction, including without limitation the rights
-    to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-    copies of the Software, and to permit persons to whom the Software is
-    furnished to do so, subject to the following conditions:
-
-    The above copyright notice and this permission notice shall be included in all
-    copies or substantial portions of the Software.
-
-    THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-    IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-    FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-    AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-    LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-    OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-    SOFTWARE.
-*/
+// Author Knighttower
+// MIT License
+// Copyright (c) [2022] [knighttower] https://github.com/knighttower
 
 // Inspired by http://wicky.nillia.ms/enquire.js
 
 // Import the Element DOM helper
 
 // -----------------------------------------
-const _ = {
-    uId: require('lodash/uniqueId'),
-};
-import ElementHelper from './ElementHelper.js';
+
+import { uniqueId } from 'lodash';
+const _ = { uniqueId };
+import { ElementHelper } from '@knighttower/element-helper';
 import AdaptiveElement from './classes/AdaptiveElement.js';
-import Teleport from './Teleport.js';
-import GetSettings from './GetSettings.js';
-import ProxyHelper from './ProxyHelper.js';
+import Teleport from '@knighttower/js-teleport';
+import { getDirectivesFromString as GetSettings } from '@knighttower/js-power-helper-functions';
+import ProxyHelper from '@knighttower/js-object-proxy-helper';
 
 // =========================================
 // --> ADAPTIVE JS
 // --------------------------
-
 
 /**
  * @module Adaptive
@@ -47,10 +26,10 @@ import ProxyHelper from './ProxyHelper.js';
  * @return {Object}
  * @example Adaptive(window, Adaptive)
  * @example Adaptive(this, Adaptive)
- * @example Adaptive.registerElement(element) 
+ * @example Adaptive.registerElement(element)
  * @see "example" folder for more
  */
-export default (function (window) {
+export default (function(window) {
     'use strict';
 
     // -----------------------------------------
@@ -170,21 +149,21 @@ export default (function (window) {
     };
 
     /**
-    * @memberof Adaptive
-    * @inner
-    * Get all the available min max queries
-    * @return {Object}
-    */
+     * @memberof Adaptive
+     * @inner
+     * Get all the available min max queries
+     * @return {Object}
+     */
     $this.getMinMaxQueries = () => {
         return Object.assign({}, screens, devices, broadMediaQueries, customMinMaxQueries);
     };
 
     /**
-    * @memberof Adaptive
-    * @inner
-    * Get all the available "expression" queries
-    * @return {Object}
-    */
+     * @memberof Adaptive
+     * @inner
+     * Get all the available "expression" queries
+     * @return {Object}
+     */
     $this.getExpQueries = () => {
         return Object.assign({}, customExpressionQueries);
     };
@@ -202,7 +181,7 @@ export default (function (window) {
         if (helper.isInDom()) {
             return registerThis(helper, data);
         } else {
-            helper.whenInDom().then(function (element) {
+            helper.whenInDom().then(function(element) {
                 return registerThis(element, data);
             });
         }
@@ -247,7 +226,7 @@ export default (function (window) {
      * @param {Number} max Number only, no units attached as it only handles pixels here
      * @return {Void}
      */
-    $this.addQueryMinMax = function (id, min, max) {
+    $this.addQueryMinMax = function(id, min, max) {
         if (!customMinMaxQueries[id]) {
             if (!min || !max) {
                 throw new Exception('Min or Max must be passed (id, min, max)', 1);
@@ -265,7 +244,7 @@ export default (function (window) {
      * @param {Number} max Number only, no units attached as it only handles pixels here
      * @return {Void}
      */
-    $this.addQueryExpression = function (id, query) {
+    $this.addQueryExpression = function(id, query) {
         if (!customExpressionQueries[id]) {
             customExpressionQueries[id] = query;
         }
@@ -280,7 +259,7 @@ export default (function (window) {
      * @example Adaptive.if('mobile', [object, propertyId]) || Adaptive.if('mobile', () => {})
      * @return {Object} Proxy
      */
-    $this.if = function (breakdownId, callback = null) {
+    $this.if = function(breakdownId, callback = null) {
         let isFunction = callback && typeof callback === 'function';
         let isArray = callback && Array.isArray(callback);
         let observer = {};
@@ -288,7 +267,7 @@ export default (function (window) {
         observer[breakdownId] = {
             _private: ['breakdownId', 'match', 'ifElse', 'do', 'removeAfterExec'],
             _mutable: ['ifElse'],
-            uid: _.uId(),
+            uid: _.uniqueId(),
             breakdownId: breakdownId,
             match: false,
             executed: false,
@@ -371,7 +350,7 @@ export default (function (window) {
      */
     function _init() {
         isMounted = true;
-        Array.from(document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])')).forEach(function (
+        Array.from(document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])')).forEach(function(
             element,
             index
         ) {
@@ -435,7 +414,7 @@ export default (function (window) {
             isHybrid = true;
         }
         if (typeof Vue === 'object' && typeof Vue.mixin === 'function') {
-            const TeleportTo = require('./vue-components/TeleportTo.vue').deafult;
+            const TeleportTo = require('./vue-components/TeleportTo.vue').default;
             useVue = true;
             let installer = {
                 install: (app, options) => {

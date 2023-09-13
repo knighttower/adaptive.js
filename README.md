@@ -1,59 +1,67 @@
-
 [![Node.js Package](https://github.com/knighttower/adaptive.js/actions/workflows/npm-publish.yml/badge.svg?branch=development&event=release)](https://github.com/knighttower/adaptive.js/actions/workflows/npm-publish.yml)
 
-
-  
 (This docs still under construction, see "example" and "test" folders for extensive examples of usage)
 
 # Adaptive.js: Enhancing Layout Adaptability Beyond CSS, Navigating the Complexities of Modern Web Development
 
-It has:
+It Uses/Offers:
 
- - Teleport
-	 - Teleport element base on the css breakpoint and reverse it back to its original place at command. It can be used as a drop-in into vanilla js projects or along with Vue or React.
-- Dynamic Class and Attribute Management
-	- Add remove classes or inline styles per breakpoint
-- Execute JS function at CSS breakdowns
-	- Helps to have specific code executing only when needed
-- Observer for DOM changes
+-   Teleport - Teleport element base on the css breakpoint and reverse it back to its original place at command. It can be used as a drop-in into vanilla js projects or along with Vue or React. See stand-alone or docs for more info here-> [https://github.com/knighttower/JsTeleport](https://github.com/knighttower/JsTeleport)
+-   Dynamic Class and Attribute Management - Add remove classes or inline styles per breakpoint
+-   Execute JS function at CSS breakdowns - Helps to have specific code executing only when needed
+-   Js Power Functions for Regex and other non standard edge cases. See Stand-alone or docs for more info -> [https://github.com/knighttower/JsPowerHelperFunctions](https://github.com/knighttower/JsPowerHelperFunctions)
+-   ProxyHelper [https://github.com/knighttower/JsObjectProxyHelper](https://github.com/knighttower/JsObjectProxyHelper)
+-   ElementHelper, tiny element DOM helper [https://github.com/knighttower/ElementHelper](https://github.com/knighttower/ElementHelper)
+-   DomObserver, tiny class to help track of DOM changes --> [https://github.com/knighttower/JsDomObserver](https://github.com/knighttower/JsDomObserver)
+-   Vue and React support
+-   Supports all modern browsers
 
 ---
 
-### Contents  
-- [Installation](#installation)
-- [Usage](#usage)
-- [Implementation](#implementation)  
-- [Features and examples](#features)
-- [Full Description](#description)
+[![NPM published](https://github.com/knighttower/adaptive.js/actions/workflows/main.yml/badge.svg)](https://github.com/knighttower/adaptive.js/actions/workflows/main.yml) [![pages-build-deployment](https://github.com/knighttower/adaptive.js/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/knighttower/adaptive.js/actions/workflows/pages/pages-build-deployment) [![release version](https://github.com/knighttower/adaptive.js/actions/workflows/auto-release.yml/badge.svg)](https://github.com/knighttower/adaptive.js/actions/workflows/auto-release.yml)
+
+### Contents
+
+-   [Installation](#installation)
+-   [Usage](#usage)
+-   [Implementation](#implementation)
+-   [Features and examples](#features)
+-   [Full Description](#description)
 
 <br><br><br>
 
-**Installation:**  <a name="installation"></a>
-NPM:  [https://www.npmjs.com/package/@knighttower/adaptive](https://www.npmjs.com/package/@knighttower/adaptive)
+**Installation:** <a name="installation"></a>
+NPM: [https://www.npmjs.com/package/@knighttower/adaptive](https://www.npmjs.com/package/@knighttower/adaptive)
 
-GIT:  [https://github.com/knighttower/adaptive.js](https://github.com/knighttower/adaptive.js)
+GIT: [https://github.com/knighttower/adaptive.js](https://github.com/knighttower/adaptive.js)
 
-DOCS:  [https://knighttower.github.io/adaptive.js/](https://knighttower.github.io/adaptive.js/)
+DOCS: [https://knighttower.github.io/adaptive.js/](https://knighttower.github.io/adaptive.js/)
 
 npm:
+
 ```
 npm install adaptive.js
 ```
+
 yarn
+
 ```
 yarn add adaptive.js
 ```
+
 Dropin from CDN (no build step)
 
     <script src=" [https://cdn.jsdelivr.net/npm/@knighttower/adaptive@1.3/dist/Adaptive.min.js](https://cdn.jsdelivr.net/npm/@knighttower/adaptive@1.3/dist/Adaptive.min.js) "></script>
 
 ---
-<br/>
-<br/>  
 
-## Usage <a name="usage"></a>  
+<br/>
+<br/>
+
+## Usage <a name="usage"></a>
 
 ### As a module for Vue
+
 ```js
 const { createApp } = Vue;
 import Adaptive from 'adaptive.js';
@@ -68,12 +76,13 @@ App.mount('#app');
 
 ```html
 <script src="//cdn.jsdelivr.net/npm/@knighttower/adaptive@1.3/dist/Adaptive.min.js"></script>
- <script>
-     $adaptive.init();
- </script>
- ```
+<script>
+    $adaptive.init();
+</script>
+```
 
 ### As a module for React
+
 ```js
 import React from 'react';
 import ReactDom from 'react-dom';
@@ -84,29 +93,30 @@ Adaptive.useReact(React);
 Adaptive.init();
 // ... other code
 ```
+
 ---
+
 <br/>
 <br/>
 
-## Implementation examples  <a name="implementation"></a>
--   **Simple String**
-	- It just teleports, does not specify breakpoints and location
-``data-teleport-to="#hello"``
-``data-teleport-before="#hello"``  
-``data-teleport-after="#hello"``
+## Implementation examples <a name="implementation"></a>
+
+-   **Simple String** - It just teleports, does not specify breakpoints and location
+    `data-teleport="#hello"`
+    `data-teleport-before="#hello"`  
+    `data-teleport-after="#hello"`
 
 ```html
-<div data-teleport-to="#hello">
+<div data-teleport="#hello">
     <span style="background:#083d39; color: white;"
         >2 Static element that will teleport "hello" with data attribute using an array like string</span
     >
 </div>
 ```
 
--   **Dot notation**
-	- Allows to specify multiple breakpoints and locations
-``data-adaptive=[command].[breakpoint].[to|from|after](target_id_or_class)``  
-the "|" is "OR": [breakpoint]|[breakpoint]  
+-   **Dot notation** - Allows to specify multiple breakpoints and locations
+    `data-adaptive=[command].[breakpoint].[to|from|after](target_id_or_class)`  
+    the "|" is "OR": [breakpoint]|[breakpoint]
 
 ```html
 <!-- Teleporting only at mobile and desktop, all others will be set back to original position -->
@@ -118,7 +128,7 @@ the "|" is "OR": [breakpoint]|[breakpoint]
 ```
 
 -   **Object like**
-``data-adaptive={'command':{breakpoint:{[to|before|after]:target_id_or_class}}}``
+    `data-adaptive={'command':{breakpoint:{[to|before|after]:target_id_or_class}}}`
 
 ```html
 <div
@@ -133,19 +143,19 @@ the "|" is "OR": [breakpoint]|[breakpoint]
 ```
 
 -   **Array like**
-``data-teleport-to=[[after|before], target_id_or_class]``
+    `data-teleport=[[after|before], target_id_or_class]`
 
 ```html
-<div data-teleport-to="[after,'#hello']">
+<div data-teleport="[after,'#hello']">
     <span style="background:#083d39; color: white;"
         >2 Static element that will teleport "hello" with data attribute using an array like string</span
     >
 </div>
 ```
 
-- **Inside Vue**
-	- Array, object or dot notation works inside Vue, just use "v-adaptive=..." or 	" v-teleport-to..."
- - 
+-   **Inside Vue** - Array, object or dot notation works inside Vue, just use "v-adaptive=..." or " v-teleport-to..."
+-
+
 ```
 <div v-teleport-to="'#hello'">Getting teleported (teleport) from the component to "static Hello"</div>
 
@@ -163,6 +173,7 @@ the "|" is "OR": [breakpoint]|[breakpoint]
 ```
 
 ---
+
 <br/>
 <br/>
 
@@ -187,7 +198,7 @@ the "|" is "OR": [breakpoint]|[breakpoint]
 </div>
 
 <!-- Teleporting -->
-<div data-teleport-to="{'after':'#customQueries'}">
+<div data-teleport="{'after':'#customQueries'}">
     <span style="background:#067e74; color: white;"
         >Static element that will teleport "customQueries" with data attribute in hybrid mode</span
     >
@@ -243,7 +254,7 @@ For frameworks like React, Adaptive would work with them in a slightly different
 
             <br />
             <!-- Teleporting -->
-            <div data-teleport-to="{'after':'#customQueries'}">
+            <div data-teleport="{'after':'#customQueries'}">
                 <span style="background:#067e74; color: white;"
                     >Static element that will teleport "customQueries" with data attribute in hybrid mode</span
                 >
@@ -258,6 +269,7 @@ For frameworks like React, Adaptive would work with them in a slightly different
     </body>
 </html>
 ```
+
 <br/>
 
 ### Example as hybrid mode:
@@ -499,7 +511,7 @@ broadMediaQueries = {
 -   Array like
 
 ```html
-<div data-teleport-to="[after,'#hello']">
+<div data-teleport="[after,'#hello']">
     <span style="background:#083d39; color: white;"
         >2 Static element that will teleport "hello" with data attribute using an array like string</span
     >
@@ -538,7 +550,6 @@ Adaptive.js is not a CSS media query replacement nor should be the primary handl
 
 ![adaptive ex1](https://github.com/knighttower/adaptive.js/assets/649334/a15b62bd-25e3-48e2-9ea5-0804d1da17c8)
 
-
 <br/>
 
 ![adaptive ex2](https://github.com/knighttower/adaptive.js/assets/649334/9bcf8ae5-1ddd-46e4-a48f-09cc894d7e53)
@@ -575,8 +586,6 @@ Redundant code is a developer's bane. Adaptive.js champions the DRY (Don't Repea
 While Adaptive.js shines as a standalone tool, its real strength lies in its ability to play well with others. Its seamless integration with Vue and React ensures that you get the best of all worlds, enhancing and complementing without any friction.
 <br/>
 <br/>
-
-
 
 <br/>
 

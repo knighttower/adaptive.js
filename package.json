@@ -68,7 +68,7 @@
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
         "vue": "3.3.4",
-        "vue-loader": "17.0.0",
+        "vue-loader": "17.2.2",
         "vue-template-compiler": "2.7.14"
     },
     "dependencies": {

@@ -78,7 +78,7 @@
         "@knighttower/js-power-helper-functions": "^1.0.2",
         "@knighttower/js-teleport": "^1.0.0",
         "documentation": "^14.0.2",
-        "install": "^0.12.2",
+        "install": "^0.13.0",
         "jshint": "^2.13.4",
         "lint-staged": "11.1.2",
         "npm": "^8"

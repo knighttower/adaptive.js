@@ -17,7 +17,7 @@ It Uses/Offers:
 
 ---
 
-[![NPM published](https://github.com/knighttower/adaptive.js/actions/workflows/main.yml/badge.svg)](https://github.com/knighttower/adaptive.js/actions/workflows/main.yml) [![pages-build-deployment](https://github.com/knighttower/adaptive.js/actions/workflows/pages/pages-build-deployment/badge.svg)](https://github.com/knighttower/adaptive.js/actions/workflows/pages/pages-build-deployment) [![release version](https://github.com/knighttower/adaptive.js/actions/workflows/auto-release.yml/badge.svg)](https://github.com/knighttower/adaptive.js/actions/workflows/auto-release.yml)
+[![NPM published](https://github.com/knighttower/adaptive.js/actions/workflows/main.yml/badge.svg)](https://github.com/knighttower/adaptive.js/actions/workflows/main.yml) [![pages-build-deployment](https://github.com/knighttower/adaptive.js/actions/workflows/pages/pages-build-deployment/badge.svg?branch=development)](https://github.com/knighttower/adaptive.js/actions/workflows/pages/pages-build-deployment) [![release version](https://github.com/knighttower/adaptive.js/actions/workflows/auto-release.yml/badge.svg)](https://github.com/knighttower/adaptive.js/actions/workflows/auto-release.yml)
 
 ### Contents
 

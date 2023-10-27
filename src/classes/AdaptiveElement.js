@@ -2,7 +2,7 @@
 //  MIT License
 //  Copyright (c) [2022] [Knighttower] https://github.com/knighttower
 
-import Teleport from '@knighttower/js-teleport';
+import Teleport from '../Teleport.js';
 // when it imports, it also registers itself as global
 import QueryHandler from '../QueryHandler.js';
 

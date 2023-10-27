@@ -2,27 +2,15 @@
 // MIT License
 // Copyright (c) [2022] [Knighttower] https://github.com/knighttower
 
-const _ = {
-    forEach: require('lodash/forEach'),
-    reject: require('lodash/reject'),
-};
 /**
  * @class Detect DOM changes
  * @param {window} selector
  * @param {Funtion}
  * @return QueryHandler
  */
-(function(root, factory) {
-    'use strict';
-    if (typeof module === 'object' && typeof exports === 'object') {
-        module.exports = factory(root);
-    } else if (typeof define === 'function' && define.amd) {
-        define(factory);
-    } else {
-        factory(root);
-    }
-})(typeof window !== 'undefined' ? window : this, function(window) {
-    'use strict';
+export default (function QueryHandler() {
+    ('use strict');
+    const $window = typeof window !== 'undefined' ? window : {};
     /**
      * Query Handler Class Object
      * @private
@@ -96,27 +84,32 @@ const _ = {
         }
     };
 
+    /**
+     * Remove items from domQueriesMatch based on value and prop.
+     *
+     * @param {any} value - The value to be removed.
+     * @param {string} prop - The property to look up in the object.
+     */
     $this.remove = (value, prop) => {
-        _.forEach(domQueriesMatch, (collection, exp) => {
-            _.forEach(collection, (reg, key) => {
+        for (const [expression, collection] of Object.entries(domQueriesMatch)) {
+            for (const reg of collection) {
                 let type = typeof reg[1];
-                // -----------------------------------------
-                // LooUp by the prop value when the second arr is object
+                // LookUp by the prop value when the second array element is an object
                 if (prop && type === 'object') {
                     if (prop in reg[1] && reg[1][prop] === value) {
-                        domQueriesMatch[exp] = _.reject(domQueriesMatch[exp], function(o) {
-                            return o[1][prop] === value;
+                        console.log(domQueriesMatch[expression]);
+                        domQueriesMatch[expression] = domQueriesMatch[expression].filter(function (o) {
+                            return o[1][prop] !== value;
                         });
                     }
-                    // -----------------------------------------
-                    // LookUp by the value (function) and prop when is only string
+                    // LookUp by the value (function) and prop when the second array element is a string
                 } else if (type === 'string' && reg[1] === prop) {
-                    domQueriesMatch[exp] = _.reject(domQueriesMatch[exp], function(o) {
-                        return o[0] === value;
+                    domQueriesMatch[expression] = domQueriesMatch[expression].filter(function (o) {
+                        return o[0] !== value;
                     });
                 }
-            });
-        });
+            }
+        }
     };
 
     /**
@@ -139,7 +132,7 @@ const _ = {
      */
     $this.reset = () => {
         Object.keys(registeredQueries).forEach((queryExpression) => {
-            window.matchMedia(queryExpression).removeEventListener('change', registeredQueries[queryExpression]);
+            $window.matchMedia(queryExpression).removeEventListener('change', registeredQueries[queryExpression]);
             delete registeredQueries[queryExpression];
         });
         Object.keys(domQueriesMatch).forEach((key) => delete domQueriesMatch[key]);
@@ -151,9 +144,9 @@ const _ = {
     // --------------------------
 
     function singleRun(queryExpression) {
-        let mq = window.matchMedia(queryExpression);
+        let mq = $window.matchMedia(queryExpression);
         if (mq.matches) {
-            domQueriesMatch[mq.media].forEach(function(callback) {
+            domQueriesMatch[mq.media].forEach(function (callback) {
                 return callback[0](callback[1]);
             });
         }
@@ -227,14 +220,14 @@ const _ = {
         // If not already registered
         // This helps to avoid too many Listeners created
         if (!Boolean(registeredQueries[queryExpression])) {
-            let matchQuery = window.matchMedia(queryExpression);
+            let matchQuery = $window.matchMedia(queryExpression);
             let callback = (mq) => {
                 if (!mq.matches) {
-                    domQueriesUnMatch[mq.media].forEach(function(callback) {
+                    domQueriesUnMatch[mq.media].forEach(function (callback) {
                         return callback[0](callback[1]);
                     });
                 } else {
-                    domQueriesMatch[mq.media].forEach(function(callback) {
+                    domQueriesMatch[mq.media].forEach(function (callback) {
                         return callback[0](callback[1]);
                     });
                 }
@@ -249,5 +242,5 @@ const _ = {
         }
     }
 
-    return (window.QueryHandler = QueryHandler);
-});
+    return ($window.QueryHandler = QueryHandler);
+})();

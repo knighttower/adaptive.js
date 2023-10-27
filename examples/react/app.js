@@ -36,6 +36,6 @@ Adaptive.addQueryExpression('doggy', '(min-width: 900px)');
 Adaptive.useReact(React);
 
 // Do components and other stuff right after
-import './hello';
+import './hello.jsx';
 
 Adaptive.init();

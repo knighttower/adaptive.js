@@ -3151,7 +3151,7 @@ var AdaptiveElement = /*#__PURE__*/function () {
     this.Adaptive = Adaptive;
     for (var directive in props.settings) {
       // Matches the method name and passes the directives
-      // Ex: this[addClass]({...})
+
       this[directive](props.settings[directive]);
     }
   }
@@ -3548,7 +3548,9 @@ var _adaptive = function () {
    * @private
    * @return {Object}
    */
-  var $this = {};
+  var $this = {
+    _mutable: ['registerElement', 'addQueryMinMax', 'addQueryExpression']
+  };
   var Adaptive = (0,_knighttower_js_utility_functions__WEBPACK_IMPORTED_MODULE_0__.proxyObject)($this);
 
   /**
@@ -3767,7 +3769,7 @@ var _adaptive = function () {
     var observer = {};
     observer[breakdownId] = {
       _private: ['breakdownId', 'match', 'ifElse', 'do', 'removeAfterExec'],
-      _mutable: ['ifElse'],
+      _mutable: ['ifElse', 'match', 'removeAfterExec'],
       uid: (0,_knighttower_js_utility_functions__WEBPACK_IMPORTED_MODULE_0__.getDynamicId)(),
       breakdownId: breakdownId,
       match: false,

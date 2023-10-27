@@ -48,7 +48,7 @@ const _adaptive = (function () {
      * @private
      * @return {Object}
      */
-    const $this = {};
+    const $this = { _mutable: ['registerElement', 'addQueryMinMax', 'addQueryExpression'] };
 
     const Adaptive = proxyObject($this);
 
@@ -275,7 +275,7 @@ const _adaptive = (function () {
 
         observer[breakdownId] = {
             _private: ['breakdownId', 'match', 'ifElse', 'do', 'removeAfterExec'],
-            _mutable: ['ifElse'],
+            _mutable: ['ifElse', 'match', 'removeAfterExec'],
             uid: getDynamicId(),
             breakdownId: breakdownId,
             match: false,

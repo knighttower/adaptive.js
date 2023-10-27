@@ -24,7 +24,7 @@ export default class AdaptiveElement {
 
         for (let directive in props.settings) {
             // Matches the method name and passes the directives
-            // Ex: this[addClass]({...})
+
             this[directive](props.settings[directive]);
         }
     }

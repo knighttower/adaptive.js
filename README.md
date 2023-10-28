@@ -718,9 +718,10 @@ Adaptive.js is not a CSS media query replacement nor should be the primary handl
 
 ![adaptive ex2](https://github.com/knighttower/adaptive.js/assets/649334/9bcf8ae5-1ddd-46e4-a48f-09cc894d7e53)
 
-<br/>
-![adaptive ex3](https://github.com/knighttower/adaptive.js/assets/649334/160cc951-6001-47f9-a6b1-827dff0ea55b)
+<br/>  
 
+![adaptive ex3](https://github.com/knighttower/adaptive.js/assets/649334/160cc951-6001-47f9-a6b1-827dff0ea55b)
+  
 <br/>
 
 **Bridging the Gaps:**

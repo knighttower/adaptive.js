@@ -59,6 +59,17 @@ Dropin from CDN (no build step)
 ---
 
 <br/>
+
+## Files
+
+| File            | Size   |
+| --------------- | ------ |
+| /Adaptive.js    | 18 KiB |
+| /Adaptive.js.br | 9 KiB  |
+| /Adaptive.js.gz | 9 KiB  |
+
+By default the "import" or "require", will load the indexes automatically. But, in case of wanting to use individual files or other specific formats, all Files are available in the dist folder as ESM, CJS, AMD, IIFE, Browser, UMD and System formats. For ESM + JS 'next', use the files in the src folder or import directly from the index.js (index.cjs.js for commonJS) file.
+
 <br/>
 
 ## Usage <a name="usage"></a>

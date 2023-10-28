@@ -8,5 +8,7 @@ import AdaptiveElement from './src/classes/AdaptiveElement.js';
 import { TeleportGlobal } from './src/Teleport.js';
 // Default Module from: Teleport
 import Teleport from './src/Teleport.js';
+// Default Module from: TeleportTo
+import componentTeleportTo from './src/web-components/TeleportTo.js';
 
-export { Adaptive, adaptive, _adaptive, AdaptiveElement, TeleportGlobal, Teleport };
+export { Adaptive, adaptive, _adaptive, AdaptiveElement, TeleportGlobal, Teleport, componentTeleportTo };

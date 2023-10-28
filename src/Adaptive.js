@@ -429,7 +429,6 @@ const _adaptive = (function () {
             isHybrid = true;
         }
         if (typeof Vue === 'object' && typeof Vue.mixin === 'function') {
-            // const TeleportTo = import('./vue-components/TeleportTo.js');
             useVue = true;
             let installer = {
                 install: (app, options) => {

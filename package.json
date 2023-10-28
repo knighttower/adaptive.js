@@ -1,6 +1,6 @@
 {
     "name": "@knighttower/adaptive",
-    "version": "1.4.1",
+    "version": "2.0.0",
     "type": "module",
     "main": "index.cjs.js",
     "module": "index.js",
@@ -57,7 +57,7 @@
     },
     "scripts": {
         "dev": "mix watch",
-        "production": "mix --production",
+        "production": "npm run build",
         "build": "npm run webpack && npm run rollup && npm run buildExports && npm run bumpVersion",
         "bumpVersion": "node ./node_modules/@knighttower/js-utility-functions/nodeUtils/BumpVersion.cjs",
         "buildExports": "node ./node_modules/@knighttower/js-utility-functions/nodeUtils/BuildExports.js --dir ./src",

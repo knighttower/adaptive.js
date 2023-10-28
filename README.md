@@ -1,4 +1,3 @@
-
 (This docs still under construction, see "example" and "test" folders for extensive examples of usage)
 
 # Adaptive.js: Enhancing Layout Adaptability Beyond CSS, Navigating the Complexities of Modern Web Development
@@ -8,14 +7,15 @@ It Uses/Offers:
 -   Teleport - Teleport element base on the css breakpoint and reverse it back to its original place at command. It can be used as a drop-in into vanilla js projects or along with Vue or React. See stand-alone or docs for more info here-> [https://github.com/knighttower/JsTeleport](https://github.com/knighttower/JsTeleport)
 -   Dynamic Class and Attribute Management - Add remove classes or inline styles per breakpoint
 -   Execute JS function at CSS breakdowns - Helps to have specific code executing only when needed
--   Js Power Functions for Regex and other non standard edge cases. See Stand-alone or docs for more info -> [https://github.com/knighttower/JsPowerHelperFunctions](https://github.com/knighttower/JsPowerHelperFunctions)
--   ProxyHelper [https://github.com/knighttower/JsObjectProxyHelper](https://github.com/knighttower/JsObjectProxyHelper)
--   ElementHelper, tiny element DOM helper [https://github.com/knighttower/ElementHelper](https://github.com/knighttower/ElementHelper)
--   DomObserver, tiny class to help track of DOM changes --> [https://github.com/knighttower/JsDomObserver](https://github.com/knighttower/JsDomObserver)
 -   Vue and React support
 -   Supports all modern browsers
+-   Built as a module, can be used as a drop-in (for browser only use) or as a plugin for Vue or React.
 
 ---
+
+<br/>
+
+[![npm version](https://badge.fury.io/js/%40knighttower%2Fadaptive.svg)](https://badge.fury.io/js/%40knighttower%2Fadaptive)
 
 [![NPM published](https://github.com/knighttower/adaptive.js/actions/workflows/main.yml/badge.svg)](https://github.com/knighttower/adaptive.js/actions/workflows/main.yml) [![pages-build-deployment](https://github.com/knighttower/adaptive.js/actions/workflows/pages/pages-build-deployment/badge.svg?branch=development)](https://github.com/knighttower/adaptive.js/actions/workflows/pages/pages-build-deployment) [![release version](https://github.com/knighttower/adaptive.js/actions/workflows/auto-release.yml/badge.svg)](https://github.com/knighttower/adaptive.js/actions/workflows/auto-release.yml)
 
@@ -26,20 +26,16 @@ It Uses/Offers:
 -   [Implementation](#implementation)
 -   [Features and examples](#features)
 -   [Full Description](#description)
+-   DOCS: [https://knighttower.github.io/adaptive.js/](https://knighttower.github.io/adaptive.js/)
 
-<br><br><br>
+<br><br>
 
-**Installation:** <a name="installation"></a>
-NPM: [https://www.npmjs.com/package/@knighttower/adaptive](https://www.npmjs.com/package/@knighttower/adaptive)
+## Installation: <a name="installation"></a>
 
-GIT: [https://github.com/knighttower/adaptive.js](https://github.com/knighttower/adaptive.js)
+npm
 
-DOCS: [https://knighttower.github.io/adaptive.js/](https://knighttower.github.io/adaptive.js/)
-
-npm:
-
-```
-npm install adaptive.js
+```javascript
+npm i @knighttower/adaptive
 ```
 
 yarn
@@ -50,14 +46,35 @@ yarn add adaptive.js
 
 Dropin from CDN (no build step)
 
-    <script src=" [https://cdn.jsdelivr.net/npm/@knighttower/adaptive@1.3/dist/Adaptive.min.js](https://cdn.jsdelivr.net/npm/@knighttower/adaptive@1.3/dist/Adaptive.min.js) "></script>
+```html
+<script src="https://cdn.jsdelivr.net/npm/@knighttower/adaptive@latest/dist/browser/Adaptive.min.js"></script>
+// or if need to use ESM, CJS, UMD, via browser //ESM
+<script type="module">
+    import { Adaptive } from 'https://esm.run/@knighttower/adaptive@latest/index.js';
+</script>
+// UMD
+<script src="https://cdn.jsdelivr.net/npm/@knighttower/adaptive@latest/dist/umd/Adaptive.min.js"></script>
+```
 
 ---
 
 <br/>
+
+## Files
+
+| File            | Size   |
+| --------------- | ------ |
+| /Adaptive.js    | 18 KiB |
+| /Adaptive.js.br | 9 KiB  |
+| /Adaptive.js.gz | 9 KiB  |
+
+By default the "import" or "require", will load the indexes automatically. But, in case of wanting to use individual files or other specific formats, all Files are available in the dist folder as ESM, CJS, AMD, IIFE, Browser, UMD and System formats. For ESM + JS 'next', use the files in the src folder or import directly from the index.js (index.cjs.js for commonJS) file.
+
 <br/>
 
 ## Usage <a name="usage"></a>
+
+**see the "example" folder for all 'usage' implementation examples, including Browser, Vue and React.** --> [here](https://github.com/knighttower/adaptive.js/tree/development/examples)
 
 ### As a module for Vue
 
@@ -219,7 +236,7 @@ Adaptive.init();
 
     // OR
     // Run functions at specific layouts or special js needs
-    $adaptive.if('tablet', function() {
+    $adaptive.if('tablet', function () {
         // code to execute here
     });
 
@@ -446,17 +463,17 @@ or directly in the element
 
 ```js
 screens = {
-    '320': [1, 379],
-    '480': [380, 519],
-    '520': [520, 599] /* up to : mobiles */,
-    '600': [600, 699] /* up to : mid-size-tables */,
-    '700': [700, 799] /* up to : tablets / ipad */,
-    '800': [800, 919] /* transition in between tablets and desktop */,
-    '920': [920, 999] /* from here on for desktops */,
-    '1000': [1000, 1199],
-    '1200': [1200, 1439],
-    '1440': [1440, 1599],
-    '1600': [1600, 1700],
+    320: [1, 379],
+    480: [380, 519],
+    520: [520, 599] /* up to : mobiles */,
+    600: [600, 699] /* up to : mid-size-tables */,
+    700: [700, 799] /* up to : tablets / ipad */,
+    800: [800, 919] /* transition in between tablets and desktop */,
+    920: [920, 999] /* from here on for desktops */,
+    1000: [1000, 1199],
+    1200: [1200, 1439],
+    1440: [1440, 1599],
+    1600: [1600, 1700],
 };
 
 /**

@@ -21,7 +21,9 @@
         <br />
         <button @click="toggle">Show hide Lazy element</button>
         <br />
-        <div v-teleport-to="'#hello'">Getting teleported (teleport) from the component to "static Hello"</div>
+        <div style="background-color: white" v-teleport-to="'#hello'">
+            this is a VUE component... Getting teleported (teleport) from the component to "inside of static Hello"
+        </div>
         <br />
         <div ref="callmeback">Has a callback function at a defined breakdown</div>
         <br />
@@ -40,14 +42,14 @@ export default {
             tablet: null,
         };
     },
-    mounted: function() {
+    mounted: function () {
         // Example using the ref and custom registered media query (see the app.js)
         this.Adaptive.registerElement(this.$refs.six, { addClass: { doggy: 'seven' } });
 
         // can use this...
         this.Adaptive.registerElement(this.$refs.callmeback, {
             execute: {
-                mobile: function(element) {
+                mobile: function (element) {
                     console.log('This is a callback at mobile breakdown');
                     console.log(element);
                 },
@@ -56,7 +58,7 @@ export default {
         // or
         this.Adaptive.if('tablet', [this, 'tablet']);
         // or
-        this.Adaptive.if('tablet', function() {
+        this.Adaptive.if('tablet', function () {
             // code
         });
         // or

@@ -1,4 +1,4 @@
-import Teleport from '@knighttower/js-teleport';
+import Teleport from '../Teleport.js';
 
 class TeleportTo extends HTMLElement {
     constructor() {
@@ -14,5 +14,6 @@ class TeleportTo extends HTMLElement {
         }
     }
 }
-
-customElements.define('teleport-to', TeleportTo);
+export default function componentTeleportTo() {
+    customElements.define('teleport-to', TeleportTo);
+}

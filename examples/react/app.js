@@ -32,10 +32,10 @@ import Adaptive from 'Adaptive.js';
 Adaptive.addQueryMinMax('kitty', 900, 1400);
 // Optional | Add a custom media query expression (it accepts any valid media query)
 Adaptive.addQueryExpression('doggy', '(min-width: 900px)');
-// Register react object
-Adaptive.useReact(React);
+// Register react object and use in Hybrid mode (default is false)
+Adaptive.useReact(React, true);
 
 // Do components and other stuff right after
-import './hello';
+import './hello.jsx';
 
 Adaptive.init();

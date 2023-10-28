@@ -2,7 +2,7 @@
 //  MIT License
 //  Copyright (c) [2022] [Knighttower] https://github.com/knighttower
 
-import Teleport from '@knighttower/js-teleport';
+import Teleport from '../Teleport.js';
 // when it imports, it also registers itself as global
 import QueryHandler from '../QueryHandler.js';
 
@@ -24,51 +24,32 @@ export default class AdaptiveElement {
 
         for (let directive in props.settings) {
             // Matches the method name and passes the directives
-            // Ex: this[addClass]({...})
             this[directive](props.settings[directive]);
         }
     }
 
+    _addClass = ($classes) => {
+        $classes = $classes.split(' ');
+        $classes.forEach(($class) => {
+            this.props.domElement.classList.add($class);
+        });
+        return;
+    };
+
+    _removeClass = ($classes) => {
+        $classes = $classes.split(' ');
+        $classes.forEach(($class) => {
+            this.props.domElement.classList.remove($class);
+        });
+        return;
+    };
+
     addClass(queries) {
-        return QueryHandler.add(
-            queries,
-            ($classes) => {
-                $classes = $classes.split(' ');
-                $classes.forEach(($class) => {
-                    this.props.domElement.classList.add($class);
-                });
-                return;
-            },
-            ($classes) => {
-                $classes = $classes.split(' ');
-                $classes.forEach(($class) => {
-                    this.props.domElement.classList.remove($class);
-                });
-                return;
-            },
-            this.Adaptive
-        );
+        return QueryHandler.add(queries, this._addClass, this._removeClass, this.Adaptive);
     }
 
     removeClass(queries) {
-        return QueryHandler.add(
-            queries,
-            ($classes) => {
-                $classes = $classes.split(' ');
-                $classes.forEach(($class) => {
-                    this.props.domElement.classList.remove($class);
-                });
-                return;
-            },
-            ($classes) => {
-                $classes = $classes.split(' ');
-                $classes.forEach(($class) => {
-                    this.props.domElement.classList.add($class);
-                });
-                return;
-            },
-            this.Adaptive
-        );
+        return QueryHandler.add(queries, this._removeClass, this._addClass, this.Adaptive);
     }
 
     addStyle(queries) {

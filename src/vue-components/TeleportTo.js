@@ -1,9 +1,3 @@
-<template>
-    <div v-teleport-to="directive">
-        <slot></slot>
-    </div>
-</template>
-<script>
 /**
  * Adaptive Teleport
  * @module
@@ -31,5 +25,11 @@ export default {
             directive,
         };
     },
+    template: `
+        <div>
+            <div v-teleport-to="directive">
+                <slot></slot>
+            </div>
+        </div>
+    `,
 };
-</script>

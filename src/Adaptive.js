@@ -8,13 +8,17 @@
 
 // -----------------------------------------
 
-import { uniqueId } from 'lodash';
-const _ = { uniqueId };
-import { ElementHelper } from '@knighttower/element-helper';
+import {
+    getDynamicId,
+    selectElement,
+    proxyObject,
+    getDirectivesFromString as GetSettings,
+} from '@knighttower/js-utility-functions';
 import AdaptiveElement from './classes/AdaptiveElement.js';
-import Teleport from '@knighttower/js-teleport';
-import { getDirectivesFromString as GetSettings } from '@knighttower/js-power-helper-functions';
-import ProxyHelper from '@knighttower/js-object-proxy-helper';
+import { Teleport, TeleportGlobal } from './Teleport.js';
+import QueryHandler from './QueryHandler.js';
+import TeleportTo from './vue-components/TeleportTo.js';
+import componentTeleportTo from './web-components/TeleportTo.js';
 
 // =========================================
 // --> ADAPTIVE JS
@@ -29,24 +33,26 @@ import ProxyHelper from '@knighttower/js-object-proxy-helper';
  * @example Adaptive.registerElement(element)
  * @see "example" folder for more
  */
-export default (function(window) {
+const _adaptive = (function () {
     'use strict';
+
+    const $window = typeof window !== 'undefined' ? window : {};
 
     // -----------------------------------------
     // This will make it reuse the same instance if already imported without overwrites
-    if (window.$adaptive) {
-        return window.$adaptive;
+    if ($window.$adaptive) {
+        return $window.$adaptive;
     }
     // -----------------------------------------
 
     /**
-     * Register this library into the window
+     * Register this library into the $window
      * @private
      * @return {Object}
      */
-    const $this = {};
+    const $this = { _mutable: ['registerElement', 'addQueryMinMax', 'addQueryExpression'] };
 
-    const Adaptive = ProxyHelper($this);
+    const Adaptive = proxyObject($this);
 
     /**
      * All the elements that will be part of the grid
@@ -89,17 +95,17 @@ export default (function(window) {
      * @private
      */
     const screens = {
-        '320': [1, 379],
-        '480': [380, 519],
-        '520': [520, 599] /* up to : mobiles */,
-        '600': [600, 699] /* up to : mid-size-tables */,
-        '700': [700, 799] /* up to : tablets / ipad */,
-        '800': [800, 919] /* transition in between tablets and desktop */,
-        '920': [920, 999] /* from here on for desktops */,
-        '1000': [1000, 1199],
-        '1200': [1200, 1439],
-        '1440': [1440, 1599],
-        '1600': [1600, 1700],
+        320: [1, 379],
+        480: [380, 519],
+        520: [520, 599] /* up to : mobiles */,
+        600: [600, 699] /* up to : mid-size-tables */,
+        700: [700, 799] /* up to : tablets / ipad */,
+        800: [800, 919] /* transition in between tablets and desktop */,
+        920: [920, 999] /* from here on for desktops */,
+        1000: [1000, 1199],
+        1200: [1200, 1439],
+        1440: [1440, 1599],
+        1600: [1600, 1700],
     };
 
     /**
@@ -109,7 +115,7 @@ export default (function(window) {
     const devices = {
         mobile: [1, 599] /* Actual phones */,
         tablet: [600, 799] /* tablets in portrait or below */,
-        'odd-device': [800, 1023] /* small Laptops and Ipads in landscape */,
+        odd: [800, 1023] /* small Laptops and Ipads in landscape */,
         desktop: [1024, 1920] /* Most common resolutions below 1920 */,
     };
 
@@ -177,11 +183,12 @@ export default (function(window) {
      * @return {Void}
      */
     $this.registerElement = (elementOrSelector, data) => {
-        let helper = new ElementHelper(elementOrSelector);
+        let helper = selectElement(elementOrSelector);
+
         if (helper.isInDom()) {
             return registerThis(helper, data);
         } else {
-            helper.whenInDom().then(function(element) {
+            helper.whenInDom().then(function (element) {
                 return registerThis(element, data);
             });
         }
@@ -198,6 +205,10 @@ export default (function(window) {
         // Register only unique non indexed elements
         if (!element.getAttribute('data-adaptive-id')) {
             let uniqueId = element.getHash();
+
+            let settings = GetSettings(data || element.getAttribute('data-adaptive')).directive;
+
+            //set the unique id to the element for later use
             element.domElement.setAttribute('data-adaptive-id', uniqueId);
 
             domElements[uniqueId] = new AdaptiveElement(
@@ -206,7 +217,7 @@ export default (function(window) {
                     helper: element,
                     domElement: element.domElement,
                     xpath: element.getXpathTo(),
-                    settings: GetSettings(data || element.getAttribute('data-adaptive')),
+                    settings: settings,
                     useVue: useVue,
                     useReact: useReact,
                 },
@@ -226,7 +237,7 @@ export default (function(window) {
      * @param {Number} max Number only, no units attached as it only handles pixels here
      * @return {Void}
      */
-    $this.addQueryMinMax = function(id, min, max) {
+    $this.addQueryMinMax = function (id, min, max) {
         if (!customMinMaxQueries[id]) {
             if (!min || !max) {
                 throw new Exception('Min or Max must be passed (id, min, max)', 1);
@@ -244,7 +255,7 @@ export default (function(window) {
      * @param {Number} max Number only, no units attached as it only handles pixels here
      * @return {Void}
      */
-    $this.addQueryExpression = function(id, query) {
+    $this.addQueryExpression = function (id, query) {
         if (!customExpressionQueries[id]) {
             customExpressionQueries[id] = query;
         }
@@ -259,15 +270,15 @@ export default (function(window) {
      * @example Adaptive.if('mobile', [object, propertyId]) || Adaptive.if('mobile', () => {})
      * @return {Object} Proxy
      */
-    $this.if = function(breakdownId, callback = null) {
+    $this.if = function (breakdownId, callback = null) {
         let isFunction = callback && typeof callback === 'function';
         let isArray = callback && Array.isArray(callback);
         let observer = {};
 
         observer[breakdownId] = {
             _private: ['breakdownId', 'match', 'ifElse', 'do', 'removeAfterExec'],
-            _mutable: ['ifElse'],
-            uid: _.uniqueId(),
+            _mutable: ['ifElse', 'match', 'removeAfterExec'],
+            uid: getDynamicId(),
             breakdownId: breakdownId,
             match: false,
             executed: false,
@@ -325,7 +336,7 @@ export default (function(window) {
             $this
         );
 
-        return ProxyHelper(observer[breakdownId]);
+        return proxyObject(observer[breakdownId]);
     };
 
     /**
@@ -350,16 +361,20 @@ export default (function(window) {
      */
     function _init() {
         isMounted = true;
-        Array.from(document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])')).forEach(function(
-            element,
-            index
-        ) {
+        document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])').forEach(function (element, index) {
             $this.registerElement(element);
         });
 
         QueryHandler.init();
-        if (isHybrid) {
-            new Teleport().global();
+        if (useVue || useReact) {
+            // hybrid mode
+            // support for static and dynamic elements
+            if (isHybrid) {
+                TeleportGlobal();
+            }
+        } else {
+            // vanilla js
+            TeleportGlobal();
         }
     }
 
@@ -382,8 +397,8 @@ export default (function(window) {
         } else {
             // Use the handy event callback
             document.addEventListener('DOMContentLoaded', domIsReady);
-            // A fallback to window.onload, that will always work
-            window.addEventListener('load', domIsReady);
+            // A fallback to $window.onload, that will always work
+            $window.addEventListener('load', domIsReady);
         }
 
         return;
@@ -395,7 +410,7 @@ export default (function(window) {
      */
     function domIsReady() {
         document.removeEventListener('DOMContentLoaded', domIsReady);
-        window.removeEventListener('load', domIsReady);
+        $window.removeEventListener('load', domIsReady);
         _init();
 
         return;
@@ -414,7 +429,6 @@ export default (function(window) {
             isHybrid = true;
         }
         if (typeof Vue === 'object' && typeof Vue.mixin === 'function') {
-            const TeleportTo = require('./vue-components/TeleportTo.vue').default;
             useVue = true;
             let installer = {
                 install: (app, options) => {
@@ -475,7 +489,7 @@ export default (function(window) {
      */
     $this.useWebComponent = () => {
         if (!useWeb && !useVue) {
-            require('./web-components/TeleportTo.js').deafult;
+            componentTeleportTo();
             useWeb = true;
         }
     };
@@ -498,5 +512,7 @@ export default (function(window) {
         }
     };
 
-    return (window.$adaptive = Adaptive);
-})(typeof window !== 'undefined' ? window : this);
+    return ($window.$adaptive = Adaptive);
+})();
+
+export { _adaptive as Adaptive, _adaptive as default, _adaptive as adaptive };

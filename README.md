@@ -15,14 +15,13 @@ It Uses/Offers:
 
 <br/>
 
-[![npm version](https://badge.fury.io/js/%40knighttower%2Fadaptive.svg)](https://badge.fury.io/js/%40knighttower%2Fadaptive)
-
 [![NPM published](https://github.com/knighttower/adaptive.js/actions/workflows/main.yml/badge.svg)](https://github.com/knighttower/adaptive.js/actions/workflows/main.yml) [![pages-build-deployment](https://github.com/knighttower/adaptive.js/actions/workflows/pages/pages-build-deployment/badge.svg?branch=development)](https://github.com/knighttower/adaptive.js/actions/workflows/pages/pages-build-deployment) [![release version](https://github.com/knighttower/adaptive.js/actions/workflows/auto-release.yml/badge.svg)](https://github.com/knighttower/adaptive.js/actions/workflows/auto-release.yml)
 
 ### Contents
 
 -   [Installation](#installation)
 -   [Usage](#usage)
+-   [API](#api)
 -   [Implementation](#implementation)
 -   [Features and examples](#features)
 -   [Full Description](#description)
@@ -112,10 +111,159 @@ Adaptive.init();
 
 ---
 
-<br/>
-<br/>
+<br/> <br/>
 
-## Implementation examples <a name="implementation"></a>
+## API <a name="api"></a>
+
+### `getMinMaxQueries()`
+
+**Returns**: `Object`  
+**Description**: Returns all available min-max queries.
+
+#### Example
+
+```javascript
+const minMaxQueries = Adaptive.getMinMaxQueries();
+```
+
+---
+
+### `getExpQueries()`
+
+**Returns**: `Object`  
+**Description**: Returns all available expression queries.
+
+#### Example
+
+```javascript
+const expQueries = Adaptive.getExpQueries();
+```
+
+---
+
+### `registerElement(elementOrSelector: String | Object, data: Object)`
+
+**Parameters**:
+
+-   `elementOrSelector` (String | Object): Element or selector string.
+-   `data` (Object): Optional, used mostly for Vue.
+
+**Returns**: `Void`  
+**Description**: Registers an element for adaptive behavior.
+
+#### Example
+
+```javascript
+Adaptive.registerElement('#myElement', { directive: 'someValue' });
+```
+
+---
+
+### `addQueryMinMax(id: String, min: Number, max: Number)`
+
+**Parameters**:
+
+-   `id` (String): Identifier for the query.
+-   `min` (Number): Minimum value.
+-   `max` (Number): Maximum value.
+
+**Returns**: `Void`  
+**Description**: Registers a custom min-max query.
+
+#### Example
+
+```javascript
+Adaptive.addQueryMinMax('custom', 200, 400);
+```
+
+---
+
+### `addQueryExpression(id: String, query: String)`
+
+**Parameters**:
+
+-   `id` (String): Identifier for the query.
+-   `query` (String): Media query string.
+
+**Returns**: `Void`  
+**Description**: Registers a custom expression query.
+
+#### Example
+
+```javascript
+Adaptive.addQueryExpression('custom', 'screen and (max-width: 500em)');
+```
+
+---
+
+### `if(breakdownId: String, callback: Function | Array): Object`
+
+**Parameters**:
+
+-   `breakdownId` (String): Identifier like "tablet" or "mobile", etc.
+-   `callback` (Function | Array): Function/Method or Array with object and property to set.
+
+**Returns**: `Object`: Proxy  
+**Description**: Executes callback based on the media query match.
+
+#### Example
+
+```javascript
+Adaptive.if('mobile', [object, 'propertyId']) || Adaptive.if('mobile', () => {});
+```
+
+---
+
+### `init()`
+
+**Returns**: `Void`  
+**Description**: Initializes or re-initializes after the DOM has loaded.
+
+#### Example
+
+```javascript
+Adaptive.init();
+```
+
+---
+
+### `useVue(Vue: Object, hybrid: Boolean)`
+
+**Parameters**:
+
+-   `Vue` (Object): Vue instance.
+-   `hybrid` (Boolean): Allow support for both static and dynamic elements.
+
+**Returns**: `Vue`  
+**Description**: Configures the library for use with Vue.
+
+#### Example
+
+```javascript
+Adaptive.useVue(VueInstance, true);
+```
+
+---
+
+### `useReact(React: Object, hybrid: Boolean)`
+
+**Parameters**:
+
+-   `React` (Object): React instance.
+-   `hybrid` (Boolean): Allow support for both static and dynamic elements.
+
+**Returns**: `Void`  
+**Description**: Configures the library for use with React.
+
+#### Example
+
+```javascript
+Adaptive.useReact(ReactInstance, true);
+```
+
+<br/><br/>
+
+# Implementation examples <a name="implementation"></a>
 
 -   **Simple String** - It just teleports, does not specify breakpoints and location
     `data-teleport="#hello"`

@@ -17,6 +17,8 @@ import {
 import AdaptiveElement from './classes/AdaptiveElement.js';
 import { Teleport, TeleportGlobal } from './Teleport.js';
 import QueryHandler from './QueryHandler.js';
+import TeleportTo from './vue-components/TeleportTo.js';
+import componentTeleportTo from './web-components/TeleportTo.js';
 
 // =========================================
 // --> ADAPTIVE JS
@@ -427,7 +429,7 @@ const _adaptive = (function () {
             isHybrid = true;
         }
         if (typeof Vue === 'object' && typeof Vue.mixin === 'function') {
-            const TeleportTo = import('./vue-components/TeleportTo.vue');
+            // const TeleportTo = import('./vue-components/TeleportTo.js');
             useVue = true;
             let installer = {
                 install: (app, options) => {
@@ -488,7 +490,7 @@ const _adaptive = (function () {
      */
     $this.useWebComponent = () => {
         if (!useWeb && !useVue) {
-            import('./web-components/TeleportTo.js');
+            componentTeleportTo();
             useWeb = true;
         }
     };

@@ -14,5 +14,6 @@ class TeleportTo extends HTMLElement {
         }
     }
 }
-
-customElements.define('teleport-to', TeleportTo);
+export default function componentTeleportTo() {
+    customElements.define('teleport-to', TeleportTo);
+}

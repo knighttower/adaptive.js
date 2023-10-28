@@ -5,6 +5,7 @@ const fs = require('fs');
 mix.js('examples/vue/app.js', 'examples/vue/app.min.js').vue();
 mix.js('examples/react/app.js', 'examples/react/app.min.js').react();
 mix.js('src/Adaptive.js', 'dist/Adaptive.js');
+mix.js('src/Adaptive.js', 'dist/browser/Adaptive.js');
 
 mix.webpackConfig({
     externals: {

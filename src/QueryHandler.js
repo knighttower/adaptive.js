@@ -3,9 +3,7 @@
 // Copyright (c) [2022] [Knighttower] https://github.com/knighttower
 
 /**
- * @class Detect DOM changes
- * @param {window} selector
- * @param {Funtion}
+ * @class CSS Query Handler
  * @return QueryHandler
  */
 export default (function QueryHandler() {

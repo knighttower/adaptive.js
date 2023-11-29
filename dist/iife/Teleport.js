@@ -1,4 +1,4 @@
-var adaptive = (function (exports) {
+var Teleport = (function (exports) {
   'use strict';
 
   function _iterableToArrayLimit(r, l) {
@@ -633,7 +633,6 @@ var adaptive = (function (exports) {
     if (match) {
       return match[2].trim(); // Extract and trim the content between brackets
     }
-
     return strExp; // Return the original string if no brackets found at start and end
   }
 
@@ -1630,7 +1629,9 @@ var adaptive = (function (exports) {
     function Teleport(props) {
       _classCallCheck(this, Teleport);
       // Early exit if no props are provided
-      if (!typeCheck('string | object', props).test()) { return; }
+      if (!typeCheck('string | object', props).test()) {
+        return;
+      }
       this.props = props;
       if (!this.props.adaptiveId) {
         var _element$getAttribute;
@@ -1679,6 +1680,7 @@ var adaptive = (function (exports) {
             settings = ['default', settings];
             break;
           case 'object':
+            // eslint-disable-next-line no-case-declarations
             var key = Object.keys(settings)[0];
             settings = [key, settings[key]];
             break;
@@ -1753,7 +1755,9 @@ var adaptive = (function (exports) {
    */
   function TeleportGlobal() {
     // Exit if already initialized
-    if (TeleportIsGlobal) { return; }
+    if (TeleportIsGlobal) {
+      return;
+    }
 
     // Use forEach directly on NodeList
     document.querySelectorAll('[data-teleport]').forEach(function (element) {
@@ -1767,6 +1771,7 @@ var adaptive = (function (exports) {
   exports.Teleport = Teleport;
   exports.TeleportGlobal = TeleportGlobal;
   exports.default = Teleport;
+  exports.teleport = Teleport;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 

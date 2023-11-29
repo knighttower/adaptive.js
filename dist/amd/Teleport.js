@@ -632,7 +632,6 @@ define(['exports'], (function (exports) { 'use strict';
     if (match) {
       return match[2].trim(); // Extract and trim the content between brackets
     }
-
     return strExp; // Return the original string if no brackets found at start and end
   }
 
@@ -1629,7 +1628,9 @@ define(['exports'], (function (exports) { 'use strict';
     function Teleport(props) {
       _classCallCheck(this, Teleport);
       // Early exit if no props are provided
-      if (!typeCheck('string | object', props).test()) { return; }
+      if (!typeCheck('string | object', props).test()) {
+        return;
+      }
       this.props = props;
       if (!this.props.adaptiveId) {
         var _element$getAttribute;
@@ -1678,6 +1679,7 @@ define(['exports'], (function (exports) { 'use strict';
             settings = ['default', settings];
             break;
           case 'object':
+            // eslint-disable-next-line no-case-declarations
             var key = Object.keys(settings)[0];
             settings = [key, settings[key]];
             break;
@@ -1752,7 +1754,9 @@ define(['exports'], (function (exports) { 'use strict';
    */
   function TeleportGlobal() {
     // Exit if already initialized
-    if (TeleportIsGlobal) { return; }
+    if (TeleportIsGlobal) {
+      return;
+    }
 
     // Use forEach directly on NodeList
     document.querySelectorAll('[data-teleport]').forEach(function (element) {
@@ -1766,6 +1770,7 @@ define(['exports'], (function (exports) { 'use strict';
   exports.Teleport = Teleport;
   exports.TeleportGlobal = TeleportGlobal;
   exports.default = Teleport;
+  exports.teleport = Teleport;
 
   Object.defineProperty(exports, '__esModule', { value: true });
 

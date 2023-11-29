@@ -34,7 +34,9 @@ class Teleport {
      */
     constructor(props) {
         // Early exit if no props are provided
-        if (!typeCheck('string | object', props).test()) return;
+        if (!typeCheck('string | object', props).test()) {
+            return;
+        }
 
         this.props = props;
         if (!this.props.adaptiveId) {
@@ -81,6 +83,7 @@ class Teleport {
                 settings = ['default', settings];
                 break;
             case 'object':
+                // eslint-disable-next-line no-case-declarations
                 const key = Object.keys(settings)[0];
                 settings = [key, settings[key]];
                 break;
@@ -151,7 +154,9 @@ let TeleportIsGlobal = false;
  */
 function TeleportGlobal() {
     // Exit if already initialized
-    if (TeleportIsGlobal) return;
+    if (TeleportIsGlobal) {
+        return;
+    }
 
     // Use forEach directly on NodeList
     document.querySelectorAll('[data-teleport]').forEach((element) => {
@@ -162,4 +167,4 @@ function TeleportGlobal() {
     TeleportIsGlobal = true;
 }
 
-export { Teleport, TeleportGlobal, Teleport as default };
+export { Teleport, TeleportGlobal, Teleport as default, Teleport as teleport };

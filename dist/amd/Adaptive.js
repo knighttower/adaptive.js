@@ -390,7 +390,7 @@ define(['exports'], (function (exports) { 'use strict';
       observer.observe(document.body, config);
     }
   })();
-  var DomObserver$1 = {
+  var DomObserver = {
     executeOnNodeChanged: executeOnNodeChanged,
     addOnNodeChange: addOnNodeChange,
     removeOnNodeChange: removeOnNodeChange,
@@ -452,12 +452,12 @@ define(['exports'], (function (exports) { 'use strict';
         var callbackId = Date.now() + Math.floor(Math.random() * 1000);
         return new Promise(function (resolveThis) {
           if (!$this.isInDom()) {
-            DomObserver$1.addOnNodeChange(callbackId, function () {
+            DomObserver.addOnNodeChange(callbackId, function () {
               var element = new ElementHelper($this.selector);
               if (element.isInDom()) {
                 $this = element;
                 resolveThis($this);
-                DomObserver$1.removeOnNodeChange(callbackId);
+                DomObserver.removeOnNodeChange(callbackId);
               }
             });
           } else {
@@ -541,10 +541,8 @@ define(['exports'], (function (exports) { 'use strict';
     return ElementHelper;
   }();
 
-  /* Author Knighttower
-      MIT License
-      [2023] [Knighttower] https://github.com/knighttower
-  */
+  // [2023] [Knighttower] https://github.com/knighttower
+
   /**
    * @module ProxyHelper
    * Convert to proxy to protect objects
@@ -819,7 +817,6 @@ define(['exports'], (function (exports) { 'use strict';
     if (match) {
       return match[2].trim(); // Extract and trim the content between brackets
     }
-
     return strExp; // Return the original string if no brackets found at start and end
   }
 
@@ -1816,7 +1813,9 @@ define(['exports'], (function (exports) { 'use strict';
     function Teleport(props) {
       _classCallCheck(this, Teleport);
       // Early exit if no props are provided
-      if (!typeCheck('string | object', props).test()) { return; }
+      if (!typeCheck('string | object', props).test()) {
+        return;
+      }
       this.props = props;
       if (!this.props.adaptiveId) {
         var _element$getAttribute;
@@ -1865,6 +1864,7 @@ define(['exports'], (function (exports) { 'use strict';
             settings = ['default', settings];
             break;
           case 'object':
+            // eslint-disable-next-line no-case-declarations
             var key = Object.keys(settings)[0];
             settings = [key, settings[key]];
             break;
@@ -1894,11 +1894,11 @@ define(['exports'], (function (exports) { 'use strict';
         }
 
         // Add observer if the target is not in the DOM
-        DomObserver$1.addOnNodeChange(this.props.adaptiveId, function () {
+        DomObserver.addOnNodeChange(this.props.adaptiveId, function () {
           var observedTarget = selectElement(selector);
           if (observedTarget.isInDom()) {
             observedTarget.domElement.insertAdjacentElement(position, _this.props.domElement);
-            DomObserver$1.removeOnNodeChange(_this.props.adaptiveId);
+            DomObserver.removeOnNodeChange(_this.props.adaptiveId);
           }
         });
       }
@@ -1926,7 +1926,7 @@ define(['exports'], (function (exports) { 'use strict';
     }, {
       key: "cancel",
       value: function cancel() {
-        DomObserver$1.removeOnNodeChange(this.props.adaptiveId);
+        DomObserver.removeOnNodeChange(this.props.adaptiveId);
       }
     }]);
     return Teleport;
@@ -1939,7 +1939,9 @@ define(['exports'], (function (exports) { 'use strict';
    */
   function TeleportGlobal() {
     // Exit if already initialized
-    if (TeleportIsGlobal) { return; }
+    if (TeleportIsGlobal) {
+      return;
+    }
 
     // Use forEach directly on NodeList
     document.querySelectorAll('[data-teleport]').forEach(function (element) {
@@ -1958,7 +1960,7 @@ define(['exports'], (function (exports) { 'use strict';
    * @class CSS Query Handler
    * @return QueryHandler
    */
-  var QueryHandler = (function QueryHandler() {
+  var QH = function QueryHandler() {
     var $window = typeof window !== 'undefined' ? window : {};
     /**
      * Query Handler Class Object
@@ -1967,7 +1969,7 @@ define(['exports'], (function (exports) { 'use strict';
      */
     var $this = {};
     var QueryHandler = new Proxy($this, {
-      get: function get(target, prop, receiver) {
+      get: function get(target, prop) {
         if (prop in target) {
           return target[prop];
         }
@@ -2022,7 +2024,7 @@ define(['exports'], (function (exports) { 'use strict';
         var queryExpression = (_getPreset = getPreset(query, Adaptive)) !== null && _getPreset !== void 0 ? _getPreset : query;
 
         // If it does not exists, add it as an array
-        if (!Boolean(domQueriesMatch[queryExpression])) {
+        if (!domQueriesMatch[queryExpression]) {
           domQueriesMatch[queryExpression] = [];
           domQueriesUnMatch[queryExpression] = [];
         }
@@ -2183,7 +2185,7 @@ define(['exports'], (function (exports) { 'use strict';
     function registerQueryListener(queryExpression) {
       // If not already registered
       // This helps to avoid too many Listeners created
-      if (!Boolean(registeredQueries[queryExpression])) {
+      if (!registeredQueries[queryExpression]) {
         var matchQuery = $window.matchMedia(queryExpression);
         var callback = function callback(mq) {
           if (!mq.matches) {
@@ -2204,8 +2206,9 @@ define(['exports'], (function (exports) { 'use strict';
         singleRun(queryExpression);
       }
     }
-    return $window.QueryHandler = QueryHandler;
-  })();
+    $window.QueryHandler = QueryHandler;
+    return $window.QueryHandler;
+  }();
 
   /**
    * @class Adds some extra functionality to interact with a DOM element
@@ -2246,12 +2249,12 @@ define(['exports'], (function (exports) { 'use strict';
     _createClass(AdaptiveElement, [{
       key: "addClass",
       value: function addClass(queries) {
-        return QueryHandler.add(queries, this._addClass, this._removeClass, this.Adaptive);
+        return QH.add(queries, this._addClass, this._removeClass, this.Adaptive);
       }
     }, {
       key: "removeClass",
       value: function removeClass(queries) {
-        return QueryHandler.add(queries, this._removeClass, this._addClass, this.Adaptive);
+        return QH.add(queries, this._removeClass, this._addClass, this.Adaptive);
       }
     }, {
       key: "addStyle",
@@ -2259,9 +2262,11 @@ define(['exports'], (function (exports) { 'use strict';
         var _this2 = this;
         // Save the original style in memory to not discard them
         this.props.originalStyle = this.props.domElement.getAttribute('style');
-        return QueryHandler.add(queries, function ($styles) {
+        return QH.add(queries, function ($styles) {
+          // eslint-disable-next-line no-return-assign
           return _this2.props.domElement.style.cssText += $styles;
         }, function () {
+          // eslint-disable-next-line no-return-assign
           return _this2.props.domElement.style.cssText = _this2.props.originalStyle;
         }, this.Adaptive);
       }
@@ -2269,7 +2274,7 @@ define(['exports'], (function (exports) { 'use strict';
       key: "teleport",
       value: function teleport(queries) {
         var $element = new Teleport(this.props);
-        return QueryHandler.add(queries, function ($directive) {
+        return QH.add(queries, function ($directive) {
           return $element.beam($directive);
         }, function () {
           $element.back();
@@ -2286,7 +2291,7 @@ define(['exports'], (function (exports) { 'use strict';
           domElement: $element.props.domElement,
           xpath: $element.props.xpath
         };
-        return QueryHandler.add(queries, function ($callback) {
+        return QH.add(queries, function ($callback) {
           if ($callback && typeof $callback === 'function') {
             return $callback(attrs);
           }
@@ -2568,7 +2573,7 @@ define(['exports'], (function (exports) { 'use strict';
     $this.addQueryMinMax = function (id, min, max) {
       if (!customMinMaxQueries[id]) {
         if (!min || !max) {
-          throw new Exception('Min or Max must be passed (id, min, max)', 1);
+          throw new Error('Min or Max must be passed (id, min, max)', 1);
         }
         customMinMaxQueries[id] = [min, max];
       }
@@ -2620,7 +2625,7 @@ define(['exports'], (function (exports) { 'use strict';
         onlyOnce: function onlyOnce() {
           this.removeAfterExec = true;
           if (this.executed) {
-            QueryHandler.remove(this.uid, 'uid');
+            QH.remove(this.uid, 'uid');
           }
         },
         "do": function _do() {
@@ -2632,7 +2637,7 @@ define(['exports'], (function (exports) { 'use strict';
               callback[0][callback[1]] = true;
             }
             if (this.removeAfterExec) {
-              QueryHandler.remove(this.uid, 'uid');
+              QH.remove(this.uid, 'uid');
             }
             this.executed = true;
             return true;
@@ -2646,7 +2651,7 @@ define(['exports'], (function (exports) { 'use strict';
           return false;
         }
       };
-      QueryHandler.add(observer, function (o) {
+      QH.add(observer, function (o) {
         o.match = true;
         o["do"]();
       }, function (o) {
@@ -2666,7 +2671,7 @@ define(['exports'], (function (exports) { 'use strict';
         return delete domElements[key];
       });
       DomObserver.cleanup();
-      QueryHandler.reset();
+      QH.reset();
       isMounted = false;
     };
 
@@ -2680,10 +2685,10 @@ define(['exports'], (function (exports) { 'use strict';
      */
     function _init() {
       isMounted = true;
-      document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])').forEach(function (element, index) {
+      document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])').forEach(function (element) {
         $this.registerElement(element);
       });
-      QueryHandler.init();
+      QH.init();
       if (useVue || useReact) {
         // hybrid mode
         // support for static and dynamic elements
@@ -2742,10 +2747,9 @@ define(['exports'], (function (exports) { 'use strict';
         isHybrid = true;
       }
       if (_typeof(Vue) === 'object' && typeof Vue.mixin === 'function') {
-        // const TeleportTo = import('./vue-components/TeleportTo.js');
         useVue = true;
         var installer = {
-          install: function install(app, options) {
+          install: function install(app) {
             // For Options API
             app.config.globalProperties.Adaptive = Adaptive;
             // For composition API
@@ -2763,7 +2767,7 @@ define(['exports'], (function (exports) { 'use strict';
          * @private
          */
         Vue.directive('adaptive', {
-          mounted: function mounted(element, binding, vnode, prevVnode) {
+          mounted: function mounted(element, binding) {
             Adaptive.registerElement(element, binding.value);
           }
         });
@@ -2773,11 +2777,11 @@ define(['exports'], (function (exports) { 'use strict';
          * @private
          */
         Vue.directive('teleport-to', {
-          mounted: function mounted(element, binding, vnode, prevVnode) {
+          mounted: function mounted(element, binding) {
             return new Teleport(element).beam(binding.value);
           }
         });
-        Vue.component('teleport-to', TeleportTo$1);
+        Vue.component('TeleportTo', TeleportTo$1);
 
         /**
          * Adaptive used for non Vue elements register with data-adaptive attr
@@ -2824,7 +2828,8 @@ define(['exports'], (function (exports) { 'use strict';
         useReact = true;
       }
     };
-    return $window.$adaptive = Adaptive;
+    $window.$adaptive = Adaptive;
+    return $window.$adaptive;
   }();
 
   exports.Adaptive = _adaptive;

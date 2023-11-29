@@ -6,7 +6,7 @@
  * @class CSS Query Handler
  * @return QueryHandler
  */
-export default (function QueryHandler() {
+const QH = (function QueryHandler() {
     ('use strict');
     const $window = typeof window !== 'undefined' ? window : {};
     /**
@@ -16,7 +16,7 @@ export default (function QueryHandler() {
      */
     const $this = {};
     const QueryHandler = new Proxy($this, {
-        get(target, prop, receiver) {
+        get(target, prop) {
             if (prop in target) {
                 return target[prop];
             }
@@ -68,7 +68,7 @@ export default (function QueryHandler() {
             let queryExpression = getPreset(query, Adaptive) ?? query;
 
             // If it does not exists, add it as an array
-            if (!Boolean(domQueriesMatch[queryExpression])) {
+            if (!domQueriesMatch[queryExpression]) {
                 domQueriesMatch[queryExpression] = [];
                 domQueriesUnMatch[queryExpression] = [];
             }
@@ -217,7 +217,7 @@ export default (function QueryHandler() {
     function registerQueryListener(queryExpression) {
         // If not already registered
         // This helps to avoid too many Listeners created
-        if (!Boolean(registeredQueries[queryExpression])) {
+        if (!registeredQueries[queryExpression]) {
             let matchQuery = $window.matchMedia(queryExpression);
             let callback = (mq) => {
                 if (!mq.matches) {
@@ -239,6 +239,9 @@ export default (function QueryHandler() {
             singleRun(queryExpression);
         }
     }
+    $window.QueryHandler = QueryHandler;
 
-    return ($window.QueryHandler = QueryHandler);
+    return $window.QueryHandler;
 })();
+
+export { QH as QueryHandler, QH as queryHandler, QH as default };

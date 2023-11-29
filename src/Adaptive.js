@@ -12,6 +12,7 @@ import {
     getDynamicId,
     selectElement,
     proxyObject,
+    DomObserver,
     getDirectivesFromString as GetSettings,
 } from '@knighttower/js-utility-functions';
 import AdaptiveElement from './classes/AdaptiveElement.js';
@@ -221,7 +222,7 @@ const _adaptive = (function () {
                     useVue: useVue,
                     useReact: useReact,
                 },
-                $this
+                $this,
             );
 
             return uniqueId;
@@ -240,7 +241,7 @@ const _adaptive = (function () {
     $this.addQueryMinMax = function (id, min, max) {
         if (!customMinMaxQueries[id]) {
             if (!min || !max) {
-                throw new Exception('Min or Max must be passed (id, min, max)', 1);
+                throw new Error('Min or Max must be passed (id, min, max)', 1);
             }
             customMinMaxQueries[id] = [min, max];
         }
@@ -333,7 +334,7 @@ const _adaptive = (function () {
                 o.match = false;
                 o.do();
             },
-            $this
+            $this,
         );
 
         return proxyObject(observer[breakdownId]);
@@ -361,7 +362,7 @@ const _adaptive = (function () {
      */
     function _init() {
         isMounted = true;
-        document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])').forEach(function (element, index) {
+        document.querySelectorAll('[data-adaptive]:not([data-adaptive-id])').forEach(function (element) {
             $this.registerElement(element);
         });
 
@@ -431,7 +432,7 @@ const _adaptive = (function () {
         if (typeof Vue === 'object' && typeof Vue.mixin === 'function') {
             useVue = true;
             let installer = {
-                install: (app, options) => {
+                install: (app) => {
                     // For Options API
                     app.config.globalProperties.Adaptive = Adaptive;
                     // For composition API
@@ -449,7 +450,7 @@ const _adaptive = (function () {
              * @private
              */
             Vue.directive('adaptive', {
-                mounted: (element, binding, vnode, prevVnode) => {
+                mounted: (element, binding) => {
                     Adaptive.registerElement(element, binding.value);
                 },
             });
@@ -459,12 +460,12 @@ const _adaptive = (function () {
              * @private
              */
             Vue.directive('teleport-to', {
-                mounted: (element, binding, vnode, prevVnode) => {
+                mounted: (element, binding) => {
                     return new Teleport(element).beam(binding.value);
                 },
             });
 
-            Vue.component('teleport-to', TeleportTo);
+            Vue.component('TeleportTo', TeleportTo);
 
             /**
              * Adaptive used for non Vue elements register with data-adaptive attr
@@ -512,7 +513,9 @@ const _adaptive = (function () {
         }
     };
 
-    return ($window.$adaptive = Adaptive);
+    $window.$adaptive = Adaptive;
+
+    return $window.$adaptive;
 })();
 
 export { _adaptive as Adaptive, _adaptive as default, _adaptive as adaptive };

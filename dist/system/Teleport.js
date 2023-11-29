@@ -1,4 +1,4 @@
-System.register('adaptive', [], (function (exports) {
+System.register('Teleport', [], (function (exports) {
   'use strict';
   return {
     execute: (function () {
@@ -637,7 +637,6 @@ System.register('adaptive', [], (function (exports) {
         if (match) {
           return match[2].trim(); // Extract and trim the content between brackets
         }
-
         return strExp; // Return the original string if no brackets found at start and end
       }
 
@@ -1634,7 +1633,9 @@ System.register('adaptive', [], (function (exports) {
         function Teleport(props) {
           _classCallCheck(this, Teleport);
           // Early exit if no props are provided
-          if (!typeCheck('string | object', props).test()) { return; }
+          if (!typeCheck('string | object', props).test()) {
+            return;
+          }
           this.props = props;
           if (!this.props.adaptiveId) {
             var _element$getAttribute;
@@ -1683,6 +1684,7 @@ System.register('adaptive', [], (function (exports) {
                 settings = ['default', settings];
                 break;
               case 'object':
+                // eslint-disable-next-line no-case-declarations
                 var key = Object.keys(settings)[0];
                 settings = [key, settings[key]];
                 break;
@@ -1748,7 +1750,7 @@ System.register('adaptive', [], (function (exports) {
           }
         }]);
         return Teleport;
-      }(); exports({ Teleport: Teleport, default: Teleport }); // Storage
+      }(); exports({ Teleport: Teleport, default: Teleport, teleport: Teleport }); // Storage
       var TeleportIsGlobal = false;
 
       /**
@@ -1757,7 +1759,9 @@ System.register('adaptive', [], (function (exports) {
        */
       function TeleportGlobal() {
         // Exit if already initialized
-        if (TeleportIsGlobal) { return; }
+        if (TeleportIsGlobal) {
+          return;
+        }
 
         // Use forEach directly on NodeList
         document.querySelectorAll('[data-teleport]').forEach(function (element) {

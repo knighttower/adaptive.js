@@ -1,8 +1,8 @@
 {
     "name": "@knighttower/adaptive",
-    "version": "2.0.3",
+    "version": "2.1.0",
     "type": "module",
-    "main": "index.cjs.js",
+    "main": "index.cjs",
     "module": "index.js",
     "jsdeliver": "dist/browser/Adaptive.js",
     "unpkg": "dist/browser/Adaptive.js",
@@ -16,13 +16,14 @@
         "src",
         "examples",
         "index.js",
-        "index.cjs.js"
+        "index.cjs"
     ],
     "exports": {
         ".": {
             "import": "./index.js",
             "require": "./index.cjs.js"
-        }
+        },
+        "./dist/*": "./dist/*"
     },
     "keywords": [
         "media query",
@@ -61,7 +62,7 @@
         "production": "npm run build",
         "build": "npm run webpack && npm run rollup && npm run buildExports && npm run bumpVersion",
         "bumpVersion": "node ./node_modules/@knighttower/js-utility-functions/nodeUtils/BumpVersion.cjs",
-        "buildExports": "node ./node_modules/@knighttower/js-utility-functions/nodeUtils/BuildExports.js --dir ./src",
+        "buildExports": "node ./node_modules/@knighttower/js-utility-functions/nodeUtils/BuildExports.js --dir ./src --cdir ./dist/cjs",
         "rollup": "rollup -c ./node_modules/@knighttower/js-utility-functions/nodeUtils/rollup.config.cjs",
         "webpack": "webpack --mode production --config ./node_modules/@knighttower/js-utility-functions/nodeUtils/webpack.config.cjs",
         "test": "npm run format && npm run eslint && vitest",
@@ -70,41 +71,41 @@
         "eslint": "eslint -c .eslintrc.json --fix ./src --ext .js,.cjs,.mjs"
     },
     "devDependencies": {
-        "@babel/core": "^7.23.2",
-        "@babel/plugin-proposal-class-properties": "^7.18",
-        "@babel/plugin-syntax-class-properties": "^7.12",
-        "@babel/plugin-transform-object-assign": "^7.22.5",
-        "@babel/preset-env": "^7.23.2",
-        "@babel/preset-react": "^7.18.6",
+        "@babel/core": "^7.23.5",
+        "@babel/plugin-proposal-class-properties": "^7.18.6",
+        "@babel/plugin-syntax-class-properties": "^7.12.13",
+        "@babel/plugin-transform-object-assign": "^7.23.3",
+        "@babel/preset-env": "^7.23.5",
+        "@babel/preset-react": "^7.23.3",
         "@rollup/plugin-babel": "^6.0.4",
         "@rollup/plugin-buble": "^1.0.3",
-        "@rollup/plugin-commonjs": "^25.0.5",
+        "@rollup/plugin-commonjs": "^25.0.7",
         "@rollup/plugin-node-resolve": "^15.2.3",
         "@rollup/plugin-terser": "^0.4.4",
         "compression-webpack-plugin": "^10.0.0",
-        "eslint": "^8.52.0",
+        "eslint": "^8.54.0",
         "eslint-config-prettier": "^9.0.0",
         "eslint-plugin-prettier": "^5.0.1",
-        "eslint-plugin-vue": "^9.17.0",
+        "eslint-plugin-vue": "^9.18.1",
         "jsdom": "^22.1.0",
-        "jshint": "^2.13.4",
-        "laravel-mix": "^6.0.43",
-        "prettier": "^3.0.3",
+        "jshint": "^2.13.6",
+        "laravel-mix": "^6.0.49",
+        "prettier": "^3.1.0",
         "pretty-quick": "^3.1.3",
         "react": "^18.2.0",
         "react-dom": "^18.2.0",
-        "rollup": "^4.0.2",
-        "terser": "^5.21.0",
+        "rollup": "^4.6.0",
+        "terser": "^5.24.0",
         "vitest": "^0.34.6",
-        "vue": "^3.3.4",
-        "vue-loader": "^17.2.2",
-        "vue-template-compiler": "^2.7.14",
+        "vue": "^3.3.9",
+        "vue-loader": "^17.3.1",
+        "vue-template-compiler": "^2.7.15",
         "webpack": "^5.89.0",
         "webpack-cli": "^5.1.4"
     },
     "dependencies": {
-        "@knighttower/js-utility-functions": "^3.1.5",
-        "@knighttower/type-check-js": "^1.2.4"
+        "@knighttower/js-utility-functions": "^3.2.0",
+        "@knighttower/type-check-js": "^1.3.1"
     },
     "bugs": {
         "url": "https://github.com/knighttower/adaptive.js/issues"

@@ -1,6 +1,6 @@
 {
     "name": "@knighttower/adaptive",
-    "version": "2.1.0",
+    "version": "2.1.1",
     "type": "module",
     "main": "index.cjs",
     "module": "index.js",
@@ -21,7 +21,7 @@
     "exports": {
         ".": {
             "import": "./index.js",
-            "require": "./index.cjs.js"
+            "require": "./index.cjs"
         },
         "./dist/*": "./dist/*"
     },

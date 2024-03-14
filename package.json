@@ -59,7 +59,7 @@
     },
     "scripts": {
         "dev": "mix watch",
-        "build": "npm run webpack && npm run rollup && npm run buildExports && npm run bumpVersion",
+        "build": "npm run webpack && npm run rollup && npm run buildExports && npm run bumpVersion && npm publish --access public",
         "fixIndexFormat": "prettier --config .prettierrc.json --write ./index.js && prettier --config .prettierrc.json --write ./index.cjs",
         "bumpVersion": "node ./node_modules/knighttower/packages/utility/nodeUtils/BumpVersion.cjs --exe",
         "buildExports": "node ./node_modules/knighttower/packages/utility/nodeUtils/BuildExports.js --dir ./dist/esm && node ./node_modules/knighttower/packages/utility/nodeUtils/BuildExports.js --dir ./dist/cjs --type=cjs",

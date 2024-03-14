@@ -14,8 +14,8 @@
     },
     "extends": [
         "eslint:recommended",
-        "prettier",
-        "plugin:vue/recommended"
+        "prettier"
+        // "plugin:vue/recommended"
     ],
     "plugins": [
         "prettier"
@@ -80,10 +80,11 @@
         "semi": [
             "error",
             "always"
-        ],
-        "vue/html-indent": [
-            "warn",
-            4
         ]
+        // ,
+        // "vue/html-indent": [
+        //     "warn",
+        //     4
+        // ]
     }
 }

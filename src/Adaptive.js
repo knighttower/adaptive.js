@@ -14,7 +14,7 @@ import {
     proxyObject,
     DomObserver,
     getDirectivesFromString as GetSettings,
-} from '@knighttower/js-utility-functions';
+} from 'knighttower/utility';
 import AdaptiveElement from './classes/AdaptiveElement.js';
 import { Teleport, TeleportGlobal } from './Teleport.js';
 import QueryHandler from './QueryHandler.js';

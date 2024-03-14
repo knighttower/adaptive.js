@@ -1,30 +1,17 @@
 // Single Modules and Aliases from: Adaptive
-import { Adaptive, adaptive } from './src/Adaptive.js';
+import { Adaptive, adaptive } from './dist/esm/Adaptive.mjs';
 // Default Module from: Adaptive
-import _adaptive from './src/Adaptive.js';
-// Default Module from: AdaptiveElement
-import AdaptiveElement from './src/classes/AdaptiveElement.js';
-// Single Modules and Aliases from: QueryHandler
-import { QueryHandler, queryHandler } from './src/QueryHandler.js';
-// Default Module from: QueryHandler
-import QH from './src/QueryHandler.js';
+import _adaptive from './dist/esm/Adaptive.mjs';
 // Single Modules and Aliases from: Teleport
-import { TeleportGlobal, teleport } from './src/Teleport.js';
+import { TeleportGlobal, teleport } from './dist/esm/Teleport.mjs';
 // Default Module from: Teleport
-import Teleport from './src/Teleport.js';
-// Default Module from: TeleportTo
-import componentTeleportTo from './src/web-components/TeleportTo.js';
+import Teleport from './dist/esm/Teleport.mjs';
 
-export {
-    Adaptive,
-    adaptive,
-    _adaptive,
-    AdaptiveElement,
-    QueryHandler,
-    queryHandler,
-    QH,
-    TeleportGlobal,
-    teleport,
-    Teleport,
-    componentTeleportTo,
-};
+ export { 
+ Adaptive,
+adaptive,
+_adaptive,
+TeleportGlobal,
+teleport,
+Teleport 
+ };

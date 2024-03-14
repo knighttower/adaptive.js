@@ -1,13 +1,8 @@
 // author Knighttower
 //  MIT License
 //  Copyright (c) [2022] [Knighttower] https://github.com/knighttower
-import {
-    selectElement,
-    DomObserver,
-    getDirectivesFromString as GetSettings,
-    typeOf,
-} from '@knighttower/js-utility-functions';
-import { typeCheck } from '@knighttower/type-check-js';
+import { selectElement, DomObserver, getDirectivesFromString as GetSettings, typeOf } from 'knighttower/utility';
+import { validType } from 'knighttower/type-check';
 
 /**
  * @module Teleport
@@ -34,7 +29,7 @@ class Teleport {
      */
     constructor(props) {
         // Early exit if no props are provided
-        if (!typeCheck('string | object', props).test()) {
+        if (!validType(props, 'string|object')) {
             return;
         }
 

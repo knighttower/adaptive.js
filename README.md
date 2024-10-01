@@ -1,3 +1,5 @@
+# ⚠ This Repo has been moved as part of a MonoRepo ==> https://github.com/knighttower/JsUtility
+---
 (This docs still under construction, see "example" and "test" folders for extensive examples of usage)
 
 # Adaptive.js: Enhancing Layout Adaptability Beyond CSS, Navigating the Complexities of Modern Web Development
